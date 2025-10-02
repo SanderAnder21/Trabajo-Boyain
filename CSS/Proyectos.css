@@ -1,0 +1,15 @@
+.Proyectos {
+    padding: 50px 0;
+    text-align: center;
+}
+.Proyectos h2{
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+.Proyectos p{
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+body {
+    background-color: #fcfcfcf3;
+}
