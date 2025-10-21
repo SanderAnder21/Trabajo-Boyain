@@ -1,8 +1,8 @@
 .contenedor-imagen nav{
     position: absolute;
     top: 10%;
-    left: 60%;
-    z-index: 10;
+    left: 5%;
+    z-index: 20;
 }
 
 .contenedor-imagen nav ul {
@@ -10,7 +10,7 @@
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 20px;
+    gap: 40px;
 }
 .contenedor-imagen nav a {
     text-decoration: none;
@@ -32,25 +32,4 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-}
-.contenedor-imagen nav1 {
-    position: absolute;
-    top: 10%;
-    left: 5%;
-    z-index: 10;
-}
-.contenedor-imagen nav1 a {
-    text-decoration: none;
-    color: white;
-    background-color: rgba(0,0,0,0);
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 30px;
-    font-weight: bold;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease;
-}
-.contenedor-imagen nav1 a:hover {
-    background-color: rgba(0,0,0,0.3);
-    color: #ffffff
 }
