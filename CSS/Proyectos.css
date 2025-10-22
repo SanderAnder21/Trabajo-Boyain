@@ -1,15 +1,18 @@
 .Proyectos {
-    padding: 50px 0;
+    padding: 50px 20px; /* Añadido padding horizontal */
     text-align: center;
+    max-width: 900px; /* Ancho máximo para legibilidad */
+    margin: 0 auto; /* Centrar el bloque */
 }
 .Proyectos h2{
     font-size: 30px;
     margin-bottom: 20px;
 }
 .Proyectos p{
-    font-size: 20px;
+    font-size: 18px; /* Reducido ligeramente para mejor lectura */
     margin-bottom: 20px;
+    color: #555; /* Un gris un poco más suave que el negro puro */
 }
-body {
-    background-color: #fcfcfcf3;
-}
+/* body {
+    background-color: #fcfcfcf3; <-- Eliminado, ahora está en Estilos.css
+} */

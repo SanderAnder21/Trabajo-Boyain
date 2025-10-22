@@ -1,36 +1,93 @@
-form {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #7c7c7c;
-    border-radius: 5px;
-}
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #333;
-    font-size: 16px;
-    margin-top: 10px;
+.CrearCuenta {
+    padding: 50px 20px;
+    max-width: 900px;
+    margin: 40px auto;
+    background-color: #f0f2f5;
+    border-radius: 16px;
 }
 
-input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
+h1 {
+    text-align: left;
+    color: #000;
+    margin-bottom: 30px;
+    padding-left: 10px;
+    }
+
+form {
+    flex: 1; 
+    max-width: 100%; 
+    margin: 0;
+    padding: 30px;
+    background: #ffffff;
+    border: none; 
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
 select {
     width: 100%;
-    padding: 8px;
+    padding: 12px 16px;
     margin-bottom: 10px;
     box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
 input[type="submit"] {
-    background-color: #000;
+    width: 100%;
+    padding: 14px;
+    background: #000;
     color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
     cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 20px;
 }
+
 input[type="submit"]:hover {
-    background-color: #333;
+    background: #333;
+}
+
+.contenido-dividido {
+    display: flex;   
+    align-items: center;  
+    gap: 40px;            
+}     
+
+.imagen-lado {
+    flex: 1;
+    text-align: center;
+}
+
+.imagen-lado img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
 }

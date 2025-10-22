@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <link rel="stylesheet" href="../CSS/index.css">
     <link rel="stylesheet" href="../CSS/Estilos.css">
     <link rel="stylesheet" href="../CSS/Proyectos.css">
@@ -12,25 +12,37 @@
     <div class= "contenedor-imagen">
         <img src="https://scontent.fzcl2-1.fna.fbcdn.net/v/t1.6435-9/148836878_1282571898810858_5360166585111770798_n.jpg?stp=dst-jpg_s600x600_tt6&_nc_cat=104&ccb=1-7&_nc_sid=f727a1&_nc_eui2=AeHb3vvP9tp45e1XzcVdE6R-EmlXMjRjsQUSaVcyNGOxBZlgN5OxqsGVX9Z5NF83Nrd-YSffw3ttPqQqjK_kk0OE&_nc_ohc=hlbXE6OVpPsQ7kNvwE6tu--&_nc_oc=AdnrXY7wfkM6-tX1eOLygi8ZTo7Et6Ldx5qC5XnS6K73uyJOF5GVHTLyVd0gi7MmYCg&_nc_zt=23&_nc_ht=scontent.fzcl2-1.fna&_nc_gid=kgU3Mdl9CZ3mnnEEUNr-iw&oh=00_Afav63gUjGM2u1Zwy0RdfuvYF5Wavqu0qK2cylhEbRceNw&oe=69053598" alt="imagen inicio">
 
-        <nav1>
-            <a href="../INDEX.html" class="logo">EIGP_ARCHITECT</a>
+        <nav1> 
+            <ul>
+                <li><a href="../INDEX.html" class="logo">PortArq</a></li>
+            </ul>
         </nav1>
         <nav>
             <ul>
-                <li><a href="Proyectos.html">Proyectos</a></li>
-                <li><a href="SobreNosotros.html">Sobre Mi</a></li>
+                <li><a href="Proyectos.html">Explorar Proyectos</a></li>
                 <li><a href="Contactanos.html">Contáctanos</a></li>
-                <li><a href="CrearCuenta.html">Crear Cuenta</a></li>
-            </ul>
+                <li class="dropdown">
+                    <a href="#" id="userIcon" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+
+                <div id="dropdownMenu" class="dropdown-content">
+                    <a href="CrearCuenta.html">Crear Cuenta</a>
+                    <a href="AdministrarCuenta.html">Administrar Cuenta</a>
+                    <a href="SubirProyecto.html">Subir Proyectos</a>
+                    <a>Cerrar sesion</a>
+                </div>
+            </li>
+        </ul>
         </nav>
-        <div class="Introduccion-pag">
-            <h1>Descubre acerca de nuestros proyectos.</h1>
-            
-        </div>
     </div>
     <div class="Proyectos">
         <h2>Proyectos Realizados</h2>
         <p>Aquí puedes ver algunos de nuestros proyectos más recientes.</p>
     </div>
+    <script src="../JS/AdministrarCuentas.js"></script>
 </body>
 </html>

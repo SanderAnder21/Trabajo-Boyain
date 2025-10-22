@@ -12,12 +12,13 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.4);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.3); /* Opacidad base para mejor legibilidad */
+    opacity: 1; /* La opacidad ahora está en el color de fondo */
+    transition: background-color 0.3s ease; /* Transición en el color */
 }
 
 .contenedor-imagen:hover::after{
+    background-color: rgba(0, 0, 0, 0.6); /* Se oscurece más al pasar el mouse */
     opacity:1;
 }
 
@@ -50,15 +51,21 @@
     opacity: 1;
     top: 50%;
     left: 5%;
+    transform: translateY(-50%); /* Centrado verticalmente un poco mejor */
     z-index: 10;
     color: white;
-    text-align: center;
+    text-align: left; /* El texto alineado a la izquierda suele verse mejor aquí */
+    max-width: 600px; /* Evita que el texto sea demasiado ancho */
 }
 .Introduccion-pag h1{
     font-size: 40px;
     margin-bottom: 20px;
+    /* Sombra de texto para legibilidad sobre cualquier imagen */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6); 
 }
 .Introduccion-pag p{
     font-size: 20px;
     margin-bottom: 20px;
+    /* Sombra de texto para legibilidad */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }

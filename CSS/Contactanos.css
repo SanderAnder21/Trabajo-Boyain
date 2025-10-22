@@ -1,18 +1,21 @@
 .Contactanos {
-    padding: 50px 0;
+    padding: 50px 20px; /* Añadido padding horizontal */
     text-align: center;
     background-color: #fcfcfcf3;
+    max-width: 900px; /* Ancho máximo para legibilidad */
+    margin: 0 auto; /* Centrar el bloque */
 }
 .Contactanos h2{
     font-size: 30px;
     margin-bottom: 20px;
 }
 .Contactanos p{
-    font-size: 20px;
+    font-size: 18px; /* Reducido ligeramente */
     margin-bottom: 20px;
+    color: #555;
 }
 .contact-form {
-    background: #9b9b9b;
+    background: #ffffff; 
     padding: 30px;
     border-radius: 12px;
     max-width: 700px;
@@ -35,17 +38,19 @@
     margin-bottom: 8px;
     font-weight: 500;
     color: #333;
+    text-align: left; 
 }
 
 .form-group input,
 .form-group textarea {
-    width: 90%;
+    width: 100%; 
     padding: 12px 16px;
     border: 1px solid #ddd;
     border-radius: 8px;
     font-size: 1rem;
     font-family: inherit;
     transition: border-color 0.3s;
+    box-sizing: border-box;
 }
 
 .form-group input:focus,
@@ -75,4 +80,3 @@
 .btn-submit:hover {
     background: #282828;
 }
-
