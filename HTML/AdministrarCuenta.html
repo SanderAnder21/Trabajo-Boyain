@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Cuenta - PortArq</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <link rel="stylesheet" href="../CSS/Estilos.css">
+    <link rel="stylesheet" href="../CSS/AdministrarCuenta.css">
+</head>
+
+<body>
+    <div class="contenedor-imagen">
+        <img src="../IMG/arq4.jpg" alt="imagen inicio">
+        <nav1>
+            <ul>
+                <li><a href="../INDEX.html" class="logo">PortArq</a></li>
+            </ul>
+        </nav1>
+        <nav>
+            <ul>
+                <li><a href="Proyectos.html">Explorar Proyectos</a></li>
+                <li><a href="Contactanos.html">Contáctanos</a></li>
+                <li class="dropdown">
+                    <a href="#" id="userIcon" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+                    <div id="dropdownMenu" class="dropdown-content">
+                        <a href="CrearCuenta.html">Crear Cuenta</a>
+                        <a href="AdministrarCuenta.html">Administrar Cuenta</a>
+                        <a href="SubirProyecto.html">Subir Proyectos</a>
+                        <a>Cerrar sesion</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Administrar Cuenta</h1>
+            <p>Gestiona tu perfil y proyectos</p>
+        </div>
+
+        <div class="admin-content">
+            <!-- Sección de Información Personal -->
+            <div class="info-section">
+                <h2>Información Personal</h2>
+                <form class="personal-form">
+                    <div class="form-group">
+                        <label for="nombre">Nombre Completo</label>
+                        <input type="text" id="nombre" name="nombre" value="Juan Pérez" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" value="juan@ejemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="especialidad">Especialidad</label>
+                        <input type="text" id="especialidad" name="especialidad" value="Arquitectura Residencial">
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">Biografía</label>
+                        <textarea id="bio" name="bio" rows="4">Arquitecto con 10 años de experiencia en diseño residencial y comercial.</textarea>
+                    </div>
+                    <button type="submit" class="btn-guardar">Guardar Cambios</button>
+                </form>
+            </div>
+
+            <!-- Sección de Subir Proyectos -->
+            <div class="projects-section">
+                <h2>Subir Nuevo Proyecto</h2>
+                <form id="projectForm" class="project-form" enctype="multipart/form-data">
+                    <!-- Información General del Proyecto -->
+                    <div class="form-group">
+                        <label for="projectName">Nombre del Proyecto *</label>
+                        <input type="text" id="projectName" name="projectName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="projectDescription">Descripción General del Proyecto *</label>
+                        <textarea id="projectDescription" name="projectDescription" rows="4" required placeholder="Describe tu proyecto..."></textarea>
+                    </div>
+
+                    <!-- Etiquetas del Proyecto -->
+                    <div class="form-group">
+                        <label>Etiquetas del Proyecto * (Mínimo 3 de 4)</label>
+                        <div class="tags-container">
+                            <label class="tag-checkbox">
+                                <input type="checkbox" name="tags" value="plano2d">
+                                <span>Plano 2D</span>
+                            </label>
+                            <label class="tag-checkbox">
+                                <input type="checkbox" name="tags" value="modelo3d">
+                                <span>Modelo 3D</span>
+                            </label>
+                            <label class="tag-checkbox">
+                                <input type="checkbox" name="tags" value="proyectoConstruido">
+                                <span>Proyecto Construido</span>
+                            </label>
+                            <label class="tag-checkbox">
+                                <input type="checkbox" name="tags" value="maqueta">
+                                <span>Maqueta</span>
+                            </label>
+                        </div>
+                        <small class="tag-count">Seleccionados: <span id="tagCount">0</span>/4</small>
+                    </div>
+
+                    <!-- Archivos del Proyecto -->
+                    <div class="form-group">
+                        <label>Archivos del Proyecto</label>
+                        <div id="fileUploads">
+                            <!-- Los inputs de archivo se agregarán dinámicamente aquí -->
+                        </div>
+                        <button type="button" id="addFileBtn" class="btn-add-file">+ Agregar Archivo</button>
+                    </div>
+
+                    <button type="submit" class="btn-submit-project">Subir Proyecto</button>
+                </form>
+            </div>
+
+            <!-- Proyectos Existentes -->
+            <div class="existing-projects">
+                <h2>Mis Proyectos</h2>
+                <div id="projectsList" class="projects-list">
+                    <!-- Los proyectos se cargarán dinámicamente aquí -->
+                    <div class="no-projects">
+                        <p>No hay proyectos subidos aún.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="burbuja-flotante">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3 class="logo-text">PortArq</h3>
+                <p>
+                    Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
+                </p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="../INDEX.html">Inicio</a></li>
+                    <li><a href="Proyectos.html">Proyectos</a></li>
+                    <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
+                    <li><a href="Contactanos.html">Contáctanos</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social">
+                <h3>Síguenos</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">X</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 PortArq. Todos los derechos reservados.</p>
+            <p>Diseñado y desarrollado por DevPME</p>
+        </div>
+    </footer>
+
+    <script src="../JS/AdministrarCuentas.js"></script>
+    <script src="../JS/AdministrarProyectos.js"></script>
+    <script src="../JS/chatbot.js"></script>
+</body>
+</html>
