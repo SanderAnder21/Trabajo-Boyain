@@ -1,0 +1,32 @@
+{
+  "name": "trabajo-boyain",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "nota: la carpeta de \"documentacion&seguimiento\" solo se sube aqui para tener un control de todo el proyecto en conjunto",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SanderAnder21/Trabajo-Boyain.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SanderAnder21/Trabajo-Boyain/issues"
+  },
+  "homepage": "https://github.com/SanderAnder21/Trabajo-Boyain#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "openai": "^6.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
