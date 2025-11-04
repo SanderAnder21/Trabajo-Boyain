@@ -47,11 +47,11 @@
         <h2>Explorar Proyectos</h2>
         <p>Descubre increíbles proyectos arquitectónicos de profesionales talentosos.</p>
 
-        <!-- Filtros y búsqueda -->
-        <!-- En Proyectos.html - versión corregida -->
+        <!-- Filtros y búsqueda - CORREGIDO -->
         <div class="projects-filters">
             <div class="search-box">
-                <input type="text" placeholder="Buscar proyectos, arquitectos...">
+                <!-- AGREGAR ID al input -->
+                <input type="text" id="projectSearch" placeholder="Buscar proyectos, arquitectos...">
                 <span class="search-icon">🔍</span>
             </div>
             <div class="filter-options">
@@ -125,9 +125,16 @@
         </div>
     </footer>
 
+    <!-- SCRIPTS CORREGIDOS - ELIMINAR DUPLICADOS Y USAR RUTAS CONSISTENTES -->
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/chatbot.js"></script>
-    <script src="../JS/projectsGallery.js"></script>
+    
+    <!-- ELIMINAR projectsGallery.js si existe - puede estar causando conflicto -->
+    <!-- <script src="../JS/projectsGallery.js"></script> -->
+    
+    <!-- Mantener solo estos dos para la lista de proyectos -->
+    <script src="../JS/projects.js"></script>
+    <script src="../JS/projectList.js"></script>
 </body>
 
 </html>

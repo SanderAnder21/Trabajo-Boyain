@@ -19,21 +19,21 @@ class ProjectDetail {
     }
     
     async loadProject() {
-        // Proyectos de prueba con diferentes tipos de archivos
-        const projects = {
-            '1': {
-                id: 1,
-                title: "Casa Moderna con Imágenes",
-                architect: {
-                    name: "María González",
-                    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-                    specialty: "Arquitectura Residencial",
-                    experience: "8 años",
-                    contact: "maria@arquitectura.com",
-                    bio: "Especializada en diseño residencial contemporáneo con enfoque en sostenibilidad y integración con el entorno natural."
-                },
-                description: "Proyecto residencial moderno con galería completa de imágenes del proceso constructivo y resultado final.",
-                fullDescription: `Este proyecto representa la perfecta armonía entre la arquitectura moderna y la naturaleza. Situado en un entorno privilegiado, la casa se integra con el paisaje mediante el uso de materiales locales y técnicas de construcción sostenible.
+    // Proyectos de prueba con diferentes tipos de archivos
+    const projects = {
+        '1': {
+            id: 1,
+            title: "Casa Moderna con Imágenes",
+            architect: {
+                name: "María González",
+                avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+                specialty: "Arquitectura Residencial",
+                experience: "8 años",
+                contact: "maria@arquitectura.com",
+                bio: "Especializada en diseño residencial contemporáneo con enfoque en sostenibilidad y integración con el entorno natural."
+            },
+            description: "Proyecto residencial moderno con galería completa de imágenes del proceso constructivo y resultado final.",
+            fullDescription: `Este proyecto representa la perfecta armonía entre la arquitectura moderna y la naturaleza. Situado en un entorno privilegiado, la casa se integra con el paisaje mediante el uso de materiales locales y técnicas de construcción sostenible.
 
 ## Características Principales:
 
@@ -46,39 +46,41 @@ class ProjectDetail {
 ## Proceso Constructivo:
 
 El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo siempre el respeto por el entorno natural y utilizando técnicas de construcción de bajo impacto ambiental.`,
-                image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
-                images: [
-                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop"
-                ],
-                styles: ["moderno", "minimalista", "sostenible"],
-                technicalTags: ["Imágenes", "Proyecto Construido", "Fotografía Profesional"],
-                type: "residencial",
-                rating: 4.8,
-                views: 124,
-                date: "2024-01-15",
-                location: "Bosque de las Lomas, Ciudad de México",
-                area: "320 m²",
-                budget: "$450,000 USD",
-                duration: "18 meses",
-                fileType: "images"
+            image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
+            images: [
+                "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop"
+            ],
+            pdfs: [],
+            model3d: { hasModel: false },
+            styles: ["moderno", "minimalista", "sostenible"],
+            technicalTags: ["Imágenes", "Proyecto Construido", "Fotografía Profesional"],
+            type: "residencial",
+            rating: 4.8,
+            views: 124,
+            date: "2024-01-15",
+            location: "Bosque de las Lomas, Ciudad de México",
+            area: "320 m²",
+            budget: "$450,000 USD",
+            duration: "18 meses",
+            fileType: "images"
+        },
+        '2': {
+            id: 2,
+            title: "Planos de Edificio Corporativo",
+            architect: {
+                name: "Carlos Rodríguez",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                specialty: "Arquitectura Comercial",
+                experience: "12 años",
+                contact: "carlos@estudiocomercial.com",
+                bio: "Experto en diseño de espacios corporativos y comerciales, con más de 50 proyectos ejecutados a nivel nacional."
             },
-            '2': {
-                id: 2,
-                title: "Planos de Edificio Corporativo",
-                architect: {
-                    name: "Carlos Rodríguez",
-                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-                    specialty: "Arquitectura Comercial",
-                    experience: "12 años",
-                    contact: "carlos@estudiocomercial.com",
-                    bio: "Expert o en diseño de espacios corporativos y comerciales, con más de 50 proyectos ejecutados a nivel nacional."
-                },
-                description: "Documentación completa de planos arquitectónicos en PDF: plantas, elevaciones y detalles constructivos.",
-                fullDescription: `Documentación técnica exhaustiva del edificio corporativo "Torre Empresarial Norte", un proyecto emblemático de arquitectura comercial contemporánea.
+            description: "Documentación completa de planos arquitectónicos en PDF: plantas, elevaciones y detalles constructivos.",
+            fullDescription: `Documentación técnica exhaustiva del edificio corporativo "Torre Empresarial Norte", un proyecto emblemático de arquitectura comercial contemporánea.
 
 ## Documentación Incluida:
 
@@ -96,36 +98,38 @@ El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo s
 • **Estructura**: Acero y concreto
 • **Fachada**: Vidrio inteligente y aluminio compuesto
 • **Sostenibilidad**: Certificación LEED Gold objetivo`,
-                image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop",
-                pdfs: [
-                    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-                    "https://www.africau.edu/images/default/sample.pdf"
-                ],
-                styles: ["moderno", "industrial"],
-                technicalTags: ["Planos PDF", "Documentación Técnica", "Planos Arquitectónicos"],
-                type: "comercial",
-                rating: 4.6,
-                views: 89,
-                date: "2024-01-10",
-                location: "Santa Fe, Ciudad de México",
-                area: "2,800 m²",
-                budget: "$2.5M USD",
-                duration: "24 meses",
-                fileType: "pdf"
+            image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=500&fit=crop",
+            images: [],
+            pdfs: [
+                "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                "https://www.africau.edu/images/default/sample.pdf"
+            ],
+            model3d: { hasModel: false },
+            styles: ["moderno", "industrial"],
+            technicalTags: ["Planos PDF", "Documentación Técnica", "Planos Arquitectónicos"],
+            type: "comercial",
+            rating: 4.6,
+            views: 89,
+            date: "2024-01-10",
+            location: "Santa Fe, Ciudad de México",
+            area: "2,800 m²",
+            budget: "$2.5M USD",
+            duration: "24 meses",
+            fileType: "pdf"
+        },
+        '3': {
+            id: 3,
+            title: "Modelado 3D Residencial",
+            architect: {
+                name: "Ana Martínez",
+                avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+                specialty: "Visualización 3D y BIM",
+                experience: "6 años",
+                contact: "ana@modelados3d.com",
+                bio: "Especialista en modelado 3D arquitectónico y implementación de metodologías BIM para proyectos de alta complejidad."
             },
-            '3': {
-                id: 3,
-                title: "Modelado 3D Residencial",
-                architect: {
-                    name: "Ana Martínez",
-                    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-                    specialty: "Visualización 3D y BIM",
-                    experience: "6 años",
-                    contact: "ana@modelados3d.com",
-                    bio: "Especialista en modelado 3D arquitectónico y implementación de metodologías BIM para proyectos de alta complejidad."
-                },
-                description: "Modelo 3D interactivo de proyecto residencial con visualización de espacios interiores y exteriores.",
-                fullDescription: `Modelo tridimensional interactivo del proyecto "Casa Contemporánea", desarrollado con tecnología de vanguardia para visualización arquitectónica.
+            description: "Modelo 3D interactivo de proyecto residencial con visualización de espacios interiores y exteriores.",
+            fullDescription: `Modelo tridimensional interactivo del proyecto "Casa Contemporánea", desarrollado con tecnología de vanguardia para visualización arquitectónica.
 
 ## Características del Modelo 3D:
 
@@ -149,38 +153,91 @@ El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo s
 • **Rueda del mouse** para zoom
 • **Click derecho** para pan
 • **Botones de control** para funciones específicas`,
-                image: "https://images.unsplash.com/photo-1600585154340-9635ecca45d9?w=800&h=500&fit=crop",
-                model3d: {
-                    file: "../IMG/project3.obj",
-                    format: "obj",
-                    hasModel: true,
-                    textures: [
-                        "../IMG/textures/concrete.jpg",
-                        "../IMG/textures/wood.jpg",
-                        "../IMG/textures/glass.png",
-                        "/IMG/textures/glass.png"
-                    ]
-                },
-                images: [
-                    "https://images.unsplash.com/photo-1600585154340-9635ecca45d9?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600607687920-9d7bf7c7bda3?w=800&h=600&fit=crop"
-                ],
-                styles: ["contemporaneo", "sostenible"],
-                technicalTags: ["Modelo 3D", "Interactivo", "BIM", "Visualización"],
-                type: "residencial",
-                rating: 4.9,
-                views: 156,
-                date: "2024-01-05",
-                location: "Interlomas, Estado de México",
-                area: "450 m²",
-                budget: "$680,000 USD",
-                duration: "14 meses",
-                fileType: "3d"
-            }
-        };
-        
-        this.project = projects[this.projectId] || projects['1'];
-    }
+            image: "https://images.unsplash.com/photo-1600585154340-9635ecca45d9?w=800&h=500&fit=crop",
+            images: [
+                "https://images.unsplash.com/photo-1600585154340-9635ecca45d9?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1600607687920-9d7bf7c7bda3?w=800&h=600&fit=crop"
+            ],
+            pdfs: [],
+            model3d: {
+                file: "../IMG/project3.obj",
+                format: "obj",
+                hasModel: true,
+                textures: [
+                    "../IMG/textures/concrete.jpg",
+                    "../IMG/textures/wood.jpg",
+                    "../IMG/textures/glass.png"
+                ]
+            },
+            styles: ["contemporaneo", "sostenible"],
+            technicalTags: ["Modelo 3D", "Interactivo", "BIM", "Visualización"],
+            type: "residencial",
+            rating: 4.9,
+            views: 156,
+            date: "2024-01-05",
+            location: "Interlomas, Estado de México",
+            area: "450 m²",
+            budget: "$680,000 USD",
+            duration: "14 meses",
+            fileType: "3d"
+        },
+        '4': {
+            id: 4,
+            title: "Restauración de Casa Colonial",
+            architect: {
+                name: "Roberto Sánchez",
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+                specialty: "Restauración Patrimonial",
+                experience: "15 años",
+                contact: "roberto@restauracion.com",
+                bio: "Especialista en restauración de patrimonio arquitectónico con más de 20 proyectos de conservación."
+            },
+            description: "Proyecto de restauración y conservación de casa del siglo XVIII.",
+            fullDescription: `Intervención especializada en una casa colonial del siglo XVIII ubicada en el corazón del Centro Histórico. El proyecto combinó técnicas tradicionales de restauración con tecnología moderna para preservar el valor patrimonial.
+
+## Proceso de Restauración:
+
+• **Análisis histórico** y documentación fotogramétrica
+• **Consolidación estructural** con materiales compatibles
+• **Restauración de elementos originales**: herrería, carpintería, yeserías
+• **Instalación de servicios modernos** de forma no invasiva
+• **Preservación de patios** y áreas comunes originales
+
+## Técnicas Utilizadas:
+
+• Fotogrametría 3D para documentación
+• Análisis de materiales históricos
+• Técnicas de conservación preventiva
+• Reintegraciones cromáticas respetuosas`,
+            image: "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=800&h=500&fit=crop",
+            images: [
+                "https://images.unsplash.com/photo-1513584684374-8bab748fbf90?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&h=600&fit=crop",
+                "https://images.unsplash.com/photo-1494522358652-17c2b4772b1b?w=800&h=600&fit=crop"
+            ],
+            pdfs: [],
+            model3d: { hasModel: false },
+            styles: ["colonial", "patrimonial", "tradicional"],
+            technicalTags: ["Restauración", "Patrimonio", "Conservación"],
+            type: "restauracion", 
+            rating: 4.7,
+            views: 203,
+            date: "2024-01-20",
+            location: "Centro Histórico, Ciudad de México",
+            area: "280 m²",
+            budget: "$320,000 USD", 
+            duration: "22 meses",
+            fileType: "images"
+        }
+    };
+    
+    this.project = projects[this.projectId] || projects['1'];
+    
+    // Debug: verificar que se cargó el proyecto
+    console.log('Proyecto cargado:', this.project);
+    console.log('ID solicitado:', this.projectId);
+    console.log('Proyecto encontrado:', this.project ? 'SÍ' : 'NO');
+}
     
     renderProject() {
         // Información básica
