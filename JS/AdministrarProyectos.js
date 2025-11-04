@@ -4,7 +4,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const addFileBtn = document.getElementById('addFileBtn');
     const tagCheckboxes = document.querySelectorAll('input[name="tags"]');
     const tagCountElement = document.getElementById('tagCount');
-    
+    const stylecheckboxes = document.querySelectorAll('input[name="styles"]');
+    const styleTagCountElement = document.getElementById('styleCount');
+ 
     let fileCount = 0;
 
     // Contador de etiquetas
@@ -16,18 +18,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const selectedTags = document.querySelectorAll('input[name="tags"]:checked').length;
         tagCountElement.textContent = selectedTags;
         
-        // Validar mínimo 3 etiquetas
         const submitBtn = document.querySelector('.btn-submit-project');
-        if (selectedTags < 3) {
+        if (selectedTags < 1) {
             submitBtn.disabled = true;
             submitBtn.style.opacity = '0.6';
-            submitBtn.title = 'Selecciona al menos 3 etiquetas';
+            submitBtn.title = 'Selecciona al menos 1 etiqueta';
         } else {
             submitBtn.disabled = false;
             submitBtn.style.opacity = '1';
             submitBtn.title = '';
         }
     }
+
+    // Contador de estilos
+    stylecheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', updateStyleCount);
+    });
+
+    function updateStyleTagCount() {
+        const selectedStyles = document.querySelectorAll('input[name="styles"]:checked').length;
+        styleTagCountElement.textContent = `${selectedStyles}/3`;
+        
+        if (selectedStyles > 3) {
+            alert('Máximo 3 estilos arquitectonicos permitidos.');
+            this.checked= false;
+            updateStyleTagCount();
+            return;
+        }
+    }
+
+
 
     // Agregar campo de archivo
     addFileBtn.addEventListener('click', function() {
@@ -122,4 +142,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializar contador de etiquetas
     updateTagCount();
+    updateStyleTagCount();
 });

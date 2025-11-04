@@ -70,64 +70,9 @@
                     <button type="submit" class="btn-guardar">Guardar Cambios</button>
                 </form>
             </div>
-
-            <!-- Sección de Subir Proyectos -->
-            <div class="projects-section">
-                <h2>Subir Nuevo Proyecto</h2>
-                <form id="projectForm" class="project-form" enctype="multipart/form-data">
-                    <!-- Información General del Proyecto -->
-                    <div class="form-group">
-                        <label for="projectName">Nombre del Proyecto *</label>
-                        <input type="text" id="projectName" name="projectName" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="projectDescription">Descripción General del Proyecto *</label>
-                        <textarea id="projectDescription" name="projectDescription" rows="4" required placeholder="Describe tu proyecto..."></textarea>
-                    </div>
-
-                    <!-- Etiquetas del Proyecto -->
-                    <div class="form-group">
-                        <label>Etiquetas del Proyecto * (Mínimo 3 de 4)</label>
-                        <div class="tags-container">
-                            <label class="tag-checkbox">
-                                <input type="checkbox" name="tags" value="plano2d">
-                                <span>Plano 2D</span>
-                            </label>
-                            <label class="tag-checkbox">
-                                <input type="checkbox" name="tags" value="modelo3d">
-                                <span>Modelo 3D</span>
-                            </label>
-                            <label class="tag-checkbox">
-                                <input type="checkbox" name="tags" value="proyectoConstruido">
-                                <span>Proyecto Construido</span>
-                            </label>
-                            <label class="tag-checkbox">
-                                <input type="checkbox" name="tags" value="maqueta">
-                                <span>Maqueta</span>
-                            </label>
-                        </div>
-                        <small class="tag-count">Seleccionados: <span id="tagCount">0</span>/4</small>
-                    </div>
-
-                    <!-- Archivos del Proyecto -->
-                    <div class="form-group">
-                        <label>Archivos del Proyecto</label>
-                        <div id="fileUploads">
-                            <!-- Los inputs de archivo se agregarán dinámicamente aquí -->
-                        </div>
-                        <button type="button" id="addFileBtn" class="btn-add-file">+ Agregar Archivo</button>
-                    </div>
-
-                    <button type="submit" class="btn-submit-project">Subir Proyecto</button>
-                </form>
-            </div>
-
-            <!-- Proyectos Existentes -->
             <div class="existing-projects">
                 <h2>Mis Proyectos</h2>
                 <div id="projectsList" class="projects-list">
-                    <!-- Los proyectos se cargarán dinámicamente aquí -->
                     <div class="no-projects">
                         <p>No hay proyectos subidos aún.</p>
                     </div>
