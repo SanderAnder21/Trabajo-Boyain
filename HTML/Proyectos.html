@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
-<link rel="stylesheet" href="../CSS/index.css">
-<link rel="stylesheet" href="../CSS/Estilos.css">
-<link rel="stylesheet" href="../CSS/Proyectos.css">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyectos</title>
+    <title>Explorar Proyectos - PortArq</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <link rel="stylesheet" href="../CSS/Estilos.css">
+    <link rel="stylesheet" href="../CSS/Proyectos.css">
 </head>
 
 <body>
@@ -31,7 +32,6 @@
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </a>
-
                     <div id="dropdownMenu" class="dropdown-content">
                         <a href="CrearCuenta.html">Crear Cuenta</a>
                         <a href="AdministrarCuenta.html">Administrar Cuenta</a>
@@ -42,10 +42,53 @@
             </ul>
         </nav>
     </div>
+
     <div class="Proyectos">
-        <h2>Proyectos Realizados</h2>
-        <p>Aquí puedes ver algunos de nuestros proyectos más recientes.</p>
+        <h2>Explorar Proyectos</h2>
+        <p>Descubre increíbles proyectos arquitectónicos de profesionales talentosos.</p>
+
+        <!-- Filtros y búsqueda -->
+        <!-- En Proyectos.html - versión corregida -->
+        <div class="projects-filters">
+            <div class="search-box">
+                <input type="text" placeholder="Buscar proyectos, arquitectos...">
+                <span class="search-icon">🔍</span>
+            </div>
+            <div class="filter-options">
+                <select class="filter-select" id="filterStyle">
+                    <option value="">Todos los estilos</option>
+                    <option value="minimalista">Minimalista</option>
+                    <option value="moderno">Moderno</option>
+                    <option value="contemporaneo">Contemporáneo</option>
+                    <option value="gotico">Gótico</option>
+                    <option value="colonial">Colonial</option>
+                    <option value="rustico">Rústico</option>
+                    <option value="industrial">Industrial</option>
+                    <option value="sostenible">Sostenible</option>
+                </select>
+
+                <select class="filter-select" id="filterType">
+                    <option value="">Todos los tipos</option>
+                    <option value="residencial">Residencial</option>
+                    <option value="comercial">Comercial</option>
+                    <option value="industrial">Industrial</option>
+                    <option value="institucional">Institucional</option>
+                </select>
+
+                <select class="filter-select" id="filterSort">
+                    <option value="newest">Más recientes</option>
+                    <option value="popular">Más populares</option>
+                    <option value="rating">Mejor calificados</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Grid de proyectos -->
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Los proyectos se cargarán dinámicamente con JavaScript -->
+        </div>
     </div>
+
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -54,14 +97,12 @@
     </div>
     <footer>
         <div class="footer-content">
-
             <div class="footer-section about">
                 <h3 class="logo-text">PortArq</h3>
                 <p>
                     Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
                 </p>
             </div>
-
             <div class="footer-section links">
                 <h3>Enlaces Rápidos</h3>
                 <ul>
@@ -71,23 +112,22 @@
                     <li><a href="Contactanos.html">Contáctanos</a></li>
                 </ul>
             </div>
-
             <div class="footer-section social">
                 <h3>Síguenos</h3>
                 <a href="#">Instagram</a>
                 <a href="#">Facebook</a>
                 <a href="#">X</a>
             </div>
-
         </div>
-
         <div class="footer-bottom">
             <p>&copy; 2025 PortArq. Todos los derechos reservados.</p>
             <p>Diseñado y desarrollado por DevPME</p>
         </div>
     </footer>
+
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/chatbot.js"></script>
+    <script src="../JS/projectsGallery.js"></script>
 </body>
 
 </html>

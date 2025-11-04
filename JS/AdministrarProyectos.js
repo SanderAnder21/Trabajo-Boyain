@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Contador de estilos
     stylecheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', updateStyleCount);
+        checkbox.addEventListener('change', updateStyleTagCount);
     });
 
     function updateStyleTagCount() {

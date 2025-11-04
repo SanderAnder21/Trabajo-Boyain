@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Proyecto - PortArq</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <link rel="stylesheet" href="../CSS/Estilos.css">
+    <link rel="stylesheet" href="../CSS/ProyectoDetalle.css">
+</head>
+
+<body>
+    <div class="contenedor-imagen">
+        <img src="../IMG/arq4.jpg" alt="imagen inicio">
+        <nav1>
+            <ul>
+                <li><a href="../INDEX.html" class="logo">PortArq</a></li>
+            </ul>
+        </nav1>
+        <nav>
+            <ul>
+                <li><a href="Proyectos.html">Explorar Proyectos</a></li>
+                <li><a href="Contactanos.html">Contáctanos</a></li>
+                <li class="dropdown">...</li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="project-detail">
+        <!-- Header del proyecto -->
+        <div class="project-header">
+            <div class="project-hero">
+                <div>
+                    <img id="projectMainImage" src="" alt="Imagen principal del proyecto" class="project-main-image">
+                </div>
+                <div class="project-info">
+                    <h1 id="projectTitle" class="project-title"></h1>
+                    
+                    <div class="architect-info">
+                        <img id="architectAvatar" src="" alt="Arquitecto" class="architect-avatar-large">
+                        <div class="architect-details">
+                            <h3 id="architectName"></h3>
+                            <p id="architectSpecialty" class="architect-specialty"></p>
+                            <button class="contact-architect">Contactar Arquitecto</button>
+                        </div>
+                    </div>
+                    
+                    <div class="project-stats">
+                        <div class="stat-item">
+                            <span id="projectRating" class="stat-number">0.0</span>
+                            <span class="stat-label">Calificación</span>
+                        </div>
+                        <div class="stat-item">
+                            <span id="projectViews" class="stat-number">0</span>
+                            <span class="stat-label">Visualizaciones</span>
+                        </div>
+                        <div class="stat-item">
+                            <span id="projectDate" class="stat-number">-</span>
+                            <span class="stat-label">Fecha</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descripción completa -->
+        <div class="project-description-full">
+            <h2>Descripción del Proyecto</h2>
+            <p id="projectFullDescription"></p>
+            
+            <div class="project-tags-full" id="projectTagsFull"></div>
+        </div>
+
+        <!-- Archivos del proyecto -->
+        <div class="project-files-section">
+            <h2>Documentos y Archivos</h2>
+            
+            <div class="files-tabs">
+                <button class="file-tab active" data-tab="images">Imágenes</button>
+                <button class="file-tab" data-tab="pdfs">Planos PDF</button>
+                <button class="file-tab" data-tab="3d">Modelos 3D</button>
+            </div>
+            
+            <div class="files-content">
+                <!-- Imágenes -->
+                <div id="images-pane" class="file-pane active">
+                    <div class="images-grid" id="imagesGrid"></div>
+                </div>
+                
+                <!-- PDFs -->
+                <div id="pdfs-pane" class="file-pane">
+                    <div class="pdf-viewer">
+                        <iframe id="pdfFrame" src=""></iframe>
+                    </div>
+                </div>
+                
+                <!-- Modelos 3D -->
+                <div id="3d-pane" class="file-pane">
+                    <div class="model-viewer">
+                        <canvas id="project3DViewer"></canvas>
+                        <div class="model-controls">
+                            <button onclick="threeViewer.rotateModel()">🔄 Rotar</button>
+                            <button onclick="threeViewer.zoomIn()">➕ Acercar</button>
+                            <button onclick="threeViewer.zoomOut()">➖ Alejar</button>
+                            <button onclick="threeViewer.resetView()">⭕ Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer y chatbot -->
+    <div class="burbuja-flotante">...</div>
+    <footer>...</footer>
+
+    <script src="../JS/AdministrarCuentas.js"></script>
+    <script src="../JS/chatbot.js"></script>
+    <script src="../JS/projectDetail.js"></script>
+    <!-- Incluir Three.js si usas modelos 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</body>
+</html>

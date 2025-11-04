@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,37 +41,177 @@
         </nav>
     </div>
 
-    <div class="admin-container">
-        <div class="admin-header">
-            <h1>Administrar Cuenta</h1>
-            <p>Gestiona tu perfil y proyectos</p>
+    <div class="admin-layout">
+        <!-- Menú Lateral -->
+        <div class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>Mi Cuenta</h2>
+            </div>
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="#personal" class="nav-link active" data-section="personal">
+                        <span class="sidebar-icon">👤</span>
+                        Datos Personales
+                    </a>
+                </li>
+                <li>
+                    <a href="#contacto" class="nav-link" data-section="contacto">
+                        <span class="sidebar-icon">📧</span>
+                        Datos de Contacto
+                    </a>
+                </li>
+                <li>
+                    <a href="#profesional" class="nav-link" data-section="profesional">
+                        <span class="sidebar-icon">💼</span>
+                        Información Profesional
+                    </a>
+                </li>
+                <li>
+                    <a href="#suscripcion" class="nav-link" data-section="suscripcion">
+                        <span class="sidebar-icon">⭐</span>
+                        Mi Suscripción
+                    </a>
+                </li>
+                <li>
+                    <a href="#proyectos" class="nav-link" data-section="proyectos">
+                        <span class="sidebar-icon">🏗️</span>
+                        Mis Proyectos
+                    </a>
+                </li>
+                <li>
+                    <a href="#seguridad" class="nav-link" data-section="seguridad">
+                        <span class="sidebar-icon">🔒</span>
+                        Seguridad
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <div class="admin-content">
-            <!-- Sección de Información Personal -->
-            <div class="info-section">
-                <h2>Información Personal</h2>
+        <!-- Contenido Principal -->
+        <div class="admin-main">
+            <!-- Sección Datos Personales -->
+            <div id="personal" class="admin-section active">
+                <h2>Datos Personales</h2>
                 <form class="personal-form">
-                    <div class="form-group">
-                        <label for="nombre">Nombre Completo</label>
-                        <input type="text" id="nombre" name="nombre" value="Juan Pérez" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nombre">Nombre Completo *</label>
+                            <input type="text" id="nombre" name="nombre" value="Juan Pérez" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                            <input type="date" id="fechaNacimiento" name="fechaNacimiento">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="email">Correo Electrónico</label>
-                        <input type="email" id="email" name="email" value="juan@ejemplo.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="especialidad">Especialidad</label>
-                        <input type="text" id="especialidad" name="especialidad" value="Arquitectura Residencial">
-                    </div>
-                    <div class="form-group">
-                        <label for="bio">Biografía</label>
-                        <textarea id="bio" name="bio" rows="4">Arquitecto con 10 años de experiencia en diseño residencial y comercial.</textarea>
+                        <label for="bio">Biografía Profesional</label>
+                        <textarea id="bio" name="bio" rows="4"
+                            placeholder="Cuéntanos sobre tu experiencia y especialidades...">Arquitecto con 10 años de experiencia en diseño residencial y comercial.</textarea>
                     </div>
                     <button type="submit" class="btn-guardar">Guardar Cambios</button>
                 </form>
             </div>
-            <div class="existing-projects">
+
+            <!-- Sección Datos de Contacto -->
+            <div id="contacto" class="admin-section">
+                <h2>Datos de Contacto</h2>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico *</label>
+                        <input type="email" id="email" name="email" value="juan@ejemplo.com" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" value="+34 612 345 678">
+                        </div>
+                        <div class="form-group">
+                            <label for="pais">País</label>
+                            <input type="text" id="pais" name="pais" value="España">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Tu dirección profesional">
+                    </div>
+                    <div class="form-group">
+                        <label for="website">Sitio Web</label>
+                        <input type="url" id="website" name="website" placeholder="https://tusitio.com">
+                    </div>
+                    <button type="submit" class="btn-guardar">Actualizar Contacto</button>
+                </form>
+            </div>
+
+            <!-- Sección Información Profesional -->
+            <div id="profesional" class="admin-section">
+                <h2>Información Profesional</h2>
+                <form class="professional-form">
+                    <div class="form-group">
+                        <label for="especialidad">Especialidad Principal *</label>
+                        <select id="especialidad" name="especialidad" required>
+                            <option value="residencial">Arquitectura Residencial</option>
+                            <option value="comercial">Arquitectura Comercial</option>
+                            <option value="industrial">Arquitectura Industrial</option>
+                            <option value="paisajismo">Paisajismo</option>
+                            <option value="interiorismo">Diseño de Interiores</option>
+                            <option value="sostenible">Arquitectura Sostenible</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="experiencia">Años de Experiencia</label>
+                        <input type="number" id="experiencia" name="experiencia" value="10" min="0" max="60">
+                    </div>
+                    <div class="form-group">
+                        <label for="titulacion">Titulación</label>
+                        <input type="text" id="titulacion" name="titulacion" value="Máster en Arquitectura">
+                    </div>
+                    <div class="form-group">
+                        <label for="habilidades">Habilidades y Competencias</label>
+                        <textarea id="habilidades" name="habilidades" rows="3"
+                            placeholder="Lista tus habilidades principales...">Diseño 3D, Planificación urbana, Sostenibilidad, Gestión de proyectos</textarea>
+                    </div>
+                    <button type="submit" class="btn-guardar">Guardar Perfil Profesional</button>
+                </form>
+            </div>
+
+            <!-- Sección Suscripción -->
+            <div id="suscripcion" class="admin-section">
+                <h2>Mi Suscripción</h2>
+                <div class="subscription-status">
+                    <div class="subscription-info">
+                        <h3>Plan Profesional
+                            <span class="subscription-badge">Activa</span>
+                        </h3>
+                        <div class="subscription-details">
+                            <p>Vence el: 15 de Enero, 2025</p>
+                            <p>Proyectos activos: 8/10</p>
+                        </div>
+                        <button class="btn-renew">Renovar Suscripción</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">8</span>
+                        <span class="stat-label">Proyectos Activos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">24</span>
+                        <span class="stat-label">Proyectos Totales</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4.8</span>
+                        <span class="stat-label">Calificación Promedio</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">156</span>
+                        <span class="stat-label">Visualizaciones</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección Proyectos (existente) -->
+            <div id="proyectos" class="admin-section">
                 <h2>Mis Proyectos</h2>
                 <div id="projectsList" class="projects-list">
                     <div class="no-projects">
@@ -78,16 +219,54 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Sección Seguridad -->
+            <div id="seguridad" class="admin-section">
+                <h2>Seguridad de la Cuenta</h2>
+                <form class="security-form">
+                    <div class="form-group">
+                        <label for="currentPassword">Contraseña Actual</label>
+                        <input type="password" id="currentPassword" name="currentPassword">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="newPassword">Nueva Contraseña</label>
+                            <input type="password" id="newPassword" name="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirmar Contraseña</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-guardar">Cambiar Contraseña</button>
+                </form>
+
+                <div class="security-options">
+                    <h3>Opciones de Seguridad</h3>
+                    <div class="security-item">
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                            Notificaciones por email
+                        </label>
+                    </div>
+                    <div class="security-item">
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                            Autenticación de dos factores
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     </div>
-
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
@@ -121,5 +300,28 @@
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/AdministrarProyectos.js"></script>
     <script src="../JS/chatbot.js"></script>
+    <script>
+        // Navegación del menú lateral
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.admin-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    // Remover active de todos
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+
+                    // Agregar active al clickeado
+                    this.classList.add('active');
+                    const targetSection = this.getAttribute('data-section');
+                    document.getElementById(targetSection).classList.add('active');
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>
