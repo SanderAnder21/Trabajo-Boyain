@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,8 +21,23 @@
         <nav>
             <ul>
                 <li><a href="Proyectos.html">Explorar Proyectos</a></li>
-                <li><a href="Contactanos.html">Contáctanos</a></li>
-                <li class="dropdown">...</li>
+                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li class="dropdown">
+                    <a href="#" id="userIcon" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+
+                    <div id="dropdownMenu" class="dropdown-content">
+                        <a href="CrearCuenta.html">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="SubirProyecto.html">Administrar Proyectos</a>
+                    </div>
+                </li>
+                </li>
             </ul>
         </nav>
     </div>
@@ -35,7 +51,7 @@
                 </div>
                 <div class="project-info">
                     <h1 id="projectTitle" class="project-title"></h1>
-                    
+
                     <div class="architect-info">
                         <img id="architectAvatar" src="" alt="Arquitecto" class="architect-avatar-large">
                         <div class="architect-details">
@@ -44,7 +60,7 @@
                             <button class="contact-architect">Contactar Arquitecto</button>
                         </div>
                     </div>
-                    
+
                     <div class="project-stats">
                         <div class="stat-item">
                             <span id="projectRating" class="stat-number">0.0</span>
@@ -67,33 +83,33 @@
         <div class="project-description-full">
             <h2>Descripción del Proyecto</h2>
             <p id="projectFullDescription"></p>
-            
+
             <div class="project-tags-full" id="projectTagsFull"></div>
         </div>
 
         <!-- Archivos del proyecto -->
         <div class="project-files-section">
             <h2>Documentos y Archivos</h2>
-            
+
             <div class="files-tabs">
                 <button class="file-tab active" data-tab="images">Imágenes</button>
                 <button class="file-tab" data-tab="pdfs">Planos PDF</button>
                 <button class="file-tab" data-tab="3d">Modelos 3D</button>
             </div>
-            
+
             <div class="files-content">
                 <!-- Imágenes -->
                 <div id="images-pane" class="file-pane active">
                     <div class="images-grid" id="imagesGrid"></div>
                 </div>
-                
+
                 <!-- PDFs -->
                 <div id="pdfs-pane" class="file-pane">
                     <div class="pdf-viewer">
                         <iframe id="pdfFrame" src=""></iframe>
                     </div>
                 </div>
-                
+
                 <!-- Modelos 3D -->
                 <div id="3d-pane" class="file-pane">
                     <div class="model-viewer">
@@ -110,7 +126,7 @@
         </div>
     </div>
 
-<div class="burbuja-flotante">
+    <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -152,4 +168,5 @@
     <!-- Incluir Three.js si usas modelos 3D -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Proyectos - PortArq</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <link rel="stylesheet" href="../CSS/Estilos.css">
+    <link rel="stylesheet" href="../CSS/Proyectos.css">
+    <link rel="stylesheet" href="../CSS/MisProyectos.css">
+</head>
+
+<body>
+    <div class="contenedor-imagen">
+        <img src="../IMG/arq4.jpg" alt="imagen mis proyectos">
+        <nav1>
+            <ul>
+                <li><a href="../INDEX.html" class="logo">PortArq</a></li>
+            </ul>
+        </nav1>
+        <nav>
+            <ul>
+                <li><a href="Proyectos.html">Explorar Proyectos</a></li>
+                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li class="dropdown">
+                    <a href="#" id="userIcon" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+
+                    <div id="dropdownMenu" class="dropdown-content">
+                        <a href="CrearCuenta.html">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="SubirProyecto.html">Administrar Proyectos</a>
+                    </div>
+                </li>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="mis-proyectos-container">
+        <h2>Mis Proyectos</h2>
+
+        <div class="tabs-navigation">
+            <button class="tab-link active" onclick="openTab(event, 'publicados')">Publicados</button>
+            <button class="tab-link" onclick="openTab(event, 'guardados')">Guardados</button>
+        </div>
+
+        <div id="publicados" class="tab-content active">
+            <h3>Mis Proyectos Publicados</h3>
+            <p>Estos son los proyectos que has compartido con la comunidad.</p>
+            <div class="projects-grid" id="proyectosPublicadosGrid">
+                <div class="project-card">
+                    <img src="../IMG/project1.jpg" alt="Proyecto Publicado 1">
+                    <div class="project-info">
+                        <h4>Casa Moderna en el Bosque</h4>
+                        <p>Por: Tu Nombre de Arquitecto</p>
+                        <div class="project-stats">
+                            <span>❤️ 150</span>
+                            <span>👁️ 1.2k</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="guardados" class="tab-content">
+            <h3>Mis Proyectos Guardados</h3>
+            <p>Aquí encontrarás los proyectos de otros arquitectos que has guardado.</p>
+            <div class="projects-grid" id="proyectosGuardadosGrid">
+                <div class="project-card">
+                    <img src="../IMG/arq2.jpg" alt="Proyecto Guardado 1">
+                    <div class="project-info">
+                        <h4>Torre Residencial Sostenible</h4>
+                        <p>Por: Otro Arquitecto</p>
+                        <div class="project-stats">
+                            <span>❤️ 320</span>
+                            <span>👁️ 4.5k</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="../IMG/arq3.jpg" alt="Proyecto Guardado 2">
+                    <div class="project-info">
+                        <h4>Centro Cultural Minimalista</h4>
+                        <p>Por: Arquitectura XYZ</p>
+                        <div class="project-stats">
+                            <span>❤️ 450</span>
+                            <span>👁️ 8.1k</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="burbuja-flotante">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3 class="logo-text">PortArq</h3>
+                <p>
+                    Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
+                </p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="../INDEX.html">Inicio</a></li>
+                    <li><a href="Proyectos.html">Proyectos</a></li>
+                    <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
+                    <li><a href="Contactanos.html">Contáctanos</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social">
+                <h3>Síguenos</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">X</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 PortArq. Todos los derechos reservados.</p>
+            <p>Diseñado y desarrollado por DevPME</p>
+        </div>
+    </footer>
+
+    <script src="../JS/AdministrarCuentas.js"></script>
+    <script src="../JS/chatbot.js"></script>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+
+            // Ocultar todo el contenido de las pestañas
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+
+            // Quitar la clase "active" de todos los botones
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            // Mostrar la pestaña actual y agregar la clase "active" al botón
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Mostrar la primera pestaña por defecto
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("publicados").style.display = "block";
+        });
+    </script>
+</body>
+
+</html>

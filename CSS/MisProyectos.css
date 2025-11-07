@@ -1,0 +1,83 @@
+/* Estilos para la página "Mis Proyectos" */
+
+.mis-proyectos-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mis-proyectos-container h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+/* Estilos de las pestañas */
+.tabs-navigation {
+    overflow: hidden;
+    border-bottom: 2px solid #eee;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.tab-link {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #888;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-link:hover {
+    color: #555;
+}
+
+.tab-link.active {
+    color: #333;
+    border-bottom: 3px solid #333;
+}
+
+/* Contenido de las pestañas */
+.tab-content {
+    display: none;
+    padding: 1rem 0;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.5s;
+}
+
+.tab-content h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.tab-content p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Asegurarse que el grid de proyectos se vea bien */
+.projects-grid {
+    /* Ya tienes estilos para .projects-grid en Proyectos.css, 
+       así que debería funcionar bien. 
+       Puedes agregar más estilos específicos aquí si es necesario. */
+}

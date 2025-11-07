@@ -1,0 +1,68 @@
+/* Estilos para la página de perfil del arquitecto */
+
+.perfil-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.perfil-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-right: 2rem;
+    object-fit: cover;
+}
+
+.perfil-info h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.especialidad {
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.perfil-contacto {
+    margin-top: 1rem;
+}
+
+.perfil-contacto p {
+    margin: 0.5rem 0;
+}
+
+.perfil-redes {
+    margin-top: 1rem;
+}
+
+.perfil-redes a {
+    margin-right: 1rem;
+    color: #333;
+    text-decoration: none;
+}
+
+.perfil-redes a:hover {
+    text-decoration: underline;
+}
+
+.perfil-section {
+    margin-bottom: 2rem;
+}
+
+.perfil-section h2 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
