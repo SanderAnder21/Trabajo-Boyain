@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<link rel="stylesheet" href="../CSS/index.css">
+<link rel="stylesheet" href="../CSS/Estilos.css">
+<link rel="stylesheet" href="../CSS/IniciarSesion.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactanos</title>
+</head>
+
+<body>
+    <div class="contenedor-imagen">
+        <img src="../IMG/arq5.jpg" alt="imagen inicio">
+        <nav1>
+            <ul>
+                <li><a href="../INDEX.html" class="logo">PortArq</a></li>
+            </ul>
+        </nav1>
+        <nav>
+            <ul>
+                <li><a href="Proyectos.html">Explorar Proyectos</a></li>
+                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li class="dropdown">
+                    <a href="#" id="userIcon" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+
+                    <div id="dropdownMenu" class="dropdown-content">
+                        <a href="CrearCuenta.html">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="SubirProyecto.html">Administrar Proyectos</a>
+                    </div>
+                </li>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="IniciarSesion">
+        <h2>Iniciar Sesión</h2>
+        <p>Ingresa tus datos para acceder a tu cuenta.</p>
+    </div>
+    <div class="iniciar-sesion-form">
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required><br>
+            </div>
+            <button type="submit" class="btn-submit">Iniciar Sesión</button>
+            <p>¿No tienes una cuenta? <a href="CrearCuenta.html">Crea una aquí</a></p>
+        </form>
+    </div>
+    </div>
+    <div class="burbuja-flotante">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </div>
+    <footer>
+        <div class="footer-content">
+
+            <div class="footer-section about">
+                <h3 class="logo-text">PortArq</h3>
+                <p>
+                    Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
+                </p>
+            </div>
+
+            <div class="footer-section links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="../INDEX.html">Inicio</a></li>
+                    <li><a href="Proyectos.html">Proyectos</a></li>
+                    <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
+                    <li><a href="Contactanos.html">Contáctanos</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section social">
+                <h3>Síguenos</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">X</a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 PortArq. Todos los derechos reservados.</p>
+            <p>Diseñado y desarrollado por DevPME</p>
+        </div>
+    </footer>
+    <script src="../JS/AdministrarCuentas.js"></script>
+    <script src="../JS/chatbot.js"></script>
+</body>
+<html>

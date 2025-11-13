@@ -61,6 +61,52 @@
                         <label for="projectDescription">Descripción General del Proyecto *</label>
                         <textarea id="projectDescription" name="projectDescription" rows="4" required
                             placeholder="Describe tu proyecto..."></textarea>
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label for="projectLocation">Ubicación</label>
+                                <input type="text" id="projectLocation" name="projectLocation"
+                                    placeholder="Ej: Santa Fe, Ciudad de México">
+                            </div>
+                            <div class="form-group">
+                                <label for="projectType">Tipo de Proyecto</label>
+                                <select id="projectType" name="projectType" class="form-group">
+                                    <option value="">Selecciona un tipo</option>
+                                    <option value="residencial">Residencial</option>
+                                    <option value="comercial">Comercial</option>
+                                    <option value="restauracion">Restauración</option>
+                                    <option value="industrial">Industrial</option>
+                                    <option value="otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label for="projectArea">Área Construida</label>
+                                <input type="text" id="projectArea" name="projectArea" placeholder="Ej: 320 m²">
+                            </div>
+                            <div class="form-group">
+                                <label for="projectBudget">Presupuesto</label>
+                                <input type="text" id="projectBudget" name="projectBudget"
+                                    placeholder="Ej: $450,000 USD">
+                            </div>
+                            <div class="form-group">
+                                <label for="projectDuration">Duración</label>
+                                <input type="text" id="projectDuration" name="projectDuration"
+                                    placeholder="Ej: 18 meses">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectDescription">Descripción Breve (para la tarjeta) *</label>
+                            <textarea id="projectDescription" name="projectDescription" rows="3" required
+                                placeholder="Describe tu proyecto en 1-2 líneas..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectFullDescription">Descripción Completa (con detalles) *</label>
+                            <textarea id="projectFullDescription" name="projectFullDescription" rows="8" required
+                                placeholder="Describe a fondo tu proyecto. Puedes usar Markdown simple (ej. ## Título)"></textarea>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Etiquetas del Proyecto * (Mínimo 1 de 4)</label>
@@ -140,20 +186,37 @@
                             <div class="tags-summary">
                                 <div class="tag-group">
                                     <h4>Estilos</h4>
-                                    <div class="tag-count" id="styleTagCount">0/3</div>
+                                    <div class="tag-count" id="styleCount">0/3</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Archivos del Proyecto</label>
-                        <div id="fileUploads">
-                        </div>
-                        <button type="button" id="addFileBtn" class="btn-add-file">+ Agregar Archivo</button>
+                        <label>Imagen de Portada * (La imagen principal)</label>
+                        <p style="font-size: 0.9rem; color: #666; margin-top: -5px;">Esta será la imagen que se muestre
+                            en la galería.</p>
+                        <input type="file" id="projectCoverImage" name="projectCoverImage" accept="image/*" required>
                     </div>
 
-                    <button type="submit" class="btn-submit-project">Subir Proyecto</button>
+                    <div class="form-group">
+                        <label>Imágenes de la Galería (Selecciona varias)</label>
+                        <p style="font-size: 0.9rem; color: #666; margin-top: -5px;">Imágenes adicionales que se verán
+                            en la página de detalle.</p>
+                        <input type="file" id="projectGalleryImages" name="projectGalleryImages" accept="image/*"
+                            multiple>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Planos PDF (Selecciona varios)</label>
+                        <input type="file" id="projectPDFs" name="projectPDFs" accept=".pdf" multiple>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Modelo 3D (Opcional, .obj, .fbx, etc.)</label>
+                        <input type="file" id="projectModel3D" name="projectModel3D" accept=".obj,.fbx,.gltf,.glb,.skp">
+                    </div>
+                    <button type="submit" class="btn-submit">Subir Proyecto</button>
                 </form>
             </div>
             <div class="existing-projects">

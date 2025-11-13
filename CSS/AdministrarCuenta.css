@@ -559,3 +559,37 @@
     color: #666;
     font-size: 14px;
 }
+/* --- Estilos para Foto de Perfil --- */
+.profile-picture-container {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 30px;
+}
+
+.profile-preview-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%; /* Hace la imagen redonda */
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    background-color: #f8f8f8; /* Color de fondo por si no carga */
+}
+
+.profile-picture-container .btn-upload-picture {
+    background: #000;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+    width: fit-content; /* Esta regla ahora sí ganará */
+}
+
+.btn-upload-picture:hover {
+    background: #333;
+}

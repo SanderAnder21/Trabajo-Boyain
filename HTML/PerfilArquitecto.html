@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../CSS/index.css">
     <link rel="stylesheet" href="../CSS/Estilos.css">
     <link rel="stylesheet" href="../CSS/PerfilArquitecto.css">
+    <link rel="stylesheet" href="../CSS/Proyectos.css">
 </head>
 
 <body>
@@ -42,40 +43,35 @@
         </nav>
     </div>
 
-    <main class="perfil-container">
+    <div class="perfil-container">
         <header class="perfil-header">
-            <img src="../IMG/avatar1.jpg" alt="Foto de Perfil" class="perfil-avatar">
             <div class="perfil-info">
-                <h1>Nombre del Arquitecto</h1>
-                <p class="especialidad">Arquitecto de Interiores y Paisajista</p>
+            </div>
+            <img id="perfil-avatar" src="" alt="Foto de Perfil" class="perfil-avatar">
+            <div class="perfil-info">
+                <h1 id="perfil-nombre"></h1>
+                <p id="perfil-especialidad" class="especialidad"></p>
                 <div class="perfil-contacto">
-                    <p><strong>Email:</strong> email@example.com</p>
-                    <p><strong>Teléfono:</strong> +123 456 7890</p>
-                    <p><strong>Ubicación:</strong> Ciudad, País</p>
+                    <p><strong>Email:</strong> <a id="perfil-email" href=""></a></p>
                 </div>
-                <div class="perfil-redes">
-                    <a href="#">LinkedIn</a>
-                    <a href="#">Instagram</a>
-                    <a href="#">Behance</a>
+                <div id="perfil-redes" class="perfil-redes">
                 </div>
             </div>
         </header>
 
         <section class="perfil-section">
             <h2>Sobre Mí</h2>
-            <p>
-                Soy un apasionado arquitecto con más de 10 años de experiencia en el diseño de espacios residenciales y
-                comerciales. Mi enfoque se centra en la creación de ambientes funcionales, estéticos y sostenibles que
-                reflejen la personalidad y necesidades de mis clientes.
-            </p>
+            <p id="perfil-bio"></p>
         </section>
 
         <section class="perfil-section">
-            <h2>Mis Proyectos</h2>
+            <h2>Proyectos</h2>
+            
             <div class="projects-grid" id="proyectosArquitecto">
-            </div>
+                </div>
         </section>
     </main>
+    </div>
 
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -114,8 +110,13 @@
         </div>
     </footer>
 
-    <script src="../JS/AdministrarCuentas.js"></script>
-    <script src="../JS/chatbot.js"></script>
+<script src="../JS/AdministrarCuentas.js"></script>
+<script src="../JS/chatbot.js"></script>
+
+<script src="../JS/projects.js"></script> 
+<script src="../JS/architects.js"></script> 
+<script src="../JS/perfilArquitecto.js"></script> 
+
 </body>
 
 </html>

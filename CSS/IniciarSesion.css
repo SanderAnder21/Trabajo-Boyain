@@ -1,0 +1,83 @@
+/* Estilos específicos para la página de Iniciar Sesión */
+.iniciar-sesion-form {
+    padding: 50px 20px;
+    text-align: center;
+    background-color: #fcfcfcf3;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.IniciarSesion h2 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.IniciarSesion p {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #555;
+    text-align: center;
+}
+
+.login-form {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 0 auto 50px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.login-form h3 {
+    font-size: 1.5rem;
+    margin-bottom: 26px;
+    color: #000;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    text-align: left;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    border-color: #000;
+    outline: none;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.btn-submit:hover {
+    background: #282828;
+}

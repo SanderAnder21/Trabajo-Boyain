@@ -2,7 +2,7 @@
     position: relative;
     display: inline-block;
     overflow: hidden;
-    width: 100vw;
+    width: 98.78vw;
     height: 100vh;
 }
 .contenedor-imagen::after{

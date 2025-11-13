@@ -44,52 +44,59 @@
     </div>
 
     <div class="Proyectos">
-        <h2>Explorar Proyectos</h2>
-        <p>Descubre increíbles proyectos arquitectónicos de profesionales talentosos.</p>
+        <h2>Explorar</h2>
+        <p>Descubre increíbles proyectos y arquitectos talentosos.</p>
 
-        <!-- Filtros y búsqueda - CORREGIDO -->
-        <div class="projects-filters">
-            <div class="search-box">
-                <!-- AGREGAR ID al input -->
-                <input type="text" id="projectSearch" placeholder="Buscar proyectos, arquitectos...">
-                <span class="search-icon">🔍</span>
-            </div>
-            <div class="filter-options">
-                <select class="filter-select" id="filterStyle">
-                    <option value="">Todos los estilos</option>
-                    <option value="minimalista">Minimalista</option>
-                    <option value="moderno">Moderno</option>
-                    <option value="contemporaneo">Contemporáneo</option>
-                    <option value="gotico">Gótico</option>
-                    <option value="colonial">Colonial</option>
-                    <option value="rustico">Rústico</option>
-                    <option value="industrial">Industrial</option>
-                    <option value="sostenible">Sostenible</option>
-                </select>
-
-                <select class="filter-select" id="filterType">
-                    <option value="">Todos los tipos</option>
-                    <option value="residencial">Residencial</option>
-                    <option value="comercial">Comercial</option>
-                    <option value="industrial">Industrial</option>
-                    <option value="institucional">Institucional</option>
-                </select>
-
-                <select class="filter-select" id="filterSort">
-                    <option value="newest">Más recientes</option>
-                    <option value="popular">Más populares</option>
-                    <option value="rating">Mejor calificados</option>
-                </select>
-            </div>
+        <div class="tabs-navigation">
+            <button class="tab-link active" onclick="openTab(event, 'explore-projects')">Proyectos</button>
+            <button class="tab-link" onclick="openTab(event, 'explore-architects')">Arquitectos</button>
         </div>
 
-        <!-- Grid de proyectos -->
-        <div class="projects-grid" id="projectsGrid">
-            <!-- Los proyectos se cargarán dinámicamente con JavaScript -->
-        </div>
-    </div>
+        <div id="explore-projects" class="tab-content active">
 
-    <div class="burbuja-flotante">
+            <div class="projects-filters">
+                <div class="search-box">
+                    <input type="text" id="projectSearch" placeholder="Buscar proyectos, arquitectos...">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="filter-options">
+                    <select class="filter-select" id="filterStyle">
+                        <option value="">Todos los estilos</option>
+                        <option value="minimalista">Minimalista</option>
+                        <option value="moderno">Moderno</option>
+                        <option value="contemporaneo">Contemporáneo</option>
+                        <option value="gotico">Gótico</option>
+                        <option value="colonial">Colonial</option>
+                        <option value="rustico">Rústico</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="sostenible">Sostenible</option>
+                    </select>
+
+                    <select class="filter-select" id="filterType">
+                        <option value="">Todos los tipos</option>
+                        <option value="residencial">Residencial</option>
+                        <option value="comercial">Comercial</option>
+                        <option value="industrial">Industrial</option>
+                        <option value="institucional">Institucional</option>
+                    </select>
+
+                    <select class="filter-select" id="filterSort">
+                        <option value="newest">Más recientes</option>
+                        <option value="popular">Más populares</option>
+                        <option value="rating">Mejor calificados</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="projects-grid" id="projectsGrid">
+                </div>
+
+        </div> <div id="explore-architects" class="tab-content">
+
+            <div class="projects-grid" id="architectsGrid">
+                </div>
+
+        </div> </div> <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -125,12 +132,61 @@
         </div>
     </footer>
 
-    <!-- SCRIPTS CORREGIDOS - ELIMINAR DUPLICADOS Y USAR RUTAS CONSISTENTES -->
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/chatbot.js"></script>
+    <script src="../JS/projectGallery.js"></script>
+    <script src="../JS/architects.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
 
-    <script src="../JS/projects.js"></script>
-    <script src="../JS/projectList.js"></script>
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Función (NUEVA) para cargar los arquitectos
+        function loadArchitects() {
+            const container = document.getElementById('architectsGrid');
+            if (!container) return;
+
+            // Creamos una instancia para obtener los datos
+            const architectDB = new ArchitectManager();
+            const architects = architectDB.architects; //
+
+            container.innerHTML = ''; // Limpiar
+            architects.forEach(architect => {
+                const architectCard = document.createElement('a');
+                architectCard.href = `PerfilArquitecto.html?id=${architect.id}`;
+                architectCard.className = 'architect-card'; // Usamos el estilo CSS nuevo
+
+                architectCard.innerHTML = `
+                    <img src="${architect.avatar}" alt="${architect.name}" class="architect-avatar">
+                    <h3 class="architect-name">${architect.name}</h3>
+                    <p class="architect-specialty">${architect.specialty}</p>
+                `;
+                container.appendChild(architectCard);
+            });
+        }
+
+        // Cargar los arquitectos cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', () => {
+            loadArchitects();
+            // Asegurarnos que la pestaña de proyectos se muestre por defecto
+            document.getElementById("explore-projects").style.display = "block";
+        });
+    </script>
 </body>
 
 </html>

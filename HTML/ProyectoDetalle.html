@@ -114,12 +114,6 @@
                 <div id="3d-pane" class="file-pane">
                     <div class="model-viewer">
                         <canvas id="project3DViewer"></canvas>
-                        <div class="model-controls">
-                            <button onclick="threeViewer.rotateModel()">🔄 Rotar</button>
-                            <button onclick="threeViewer.zoomIn()">➕ Acercar</button>
-                            <button onclick="threeViewer.zoomOut()">➖ Alejar</button>
-                            <button onclick="threeViewer.resetView()">⭕ Reset</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -132,6 +126,33 @@
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     </div>
+
+    <div id="contactModal" class="contact-modal">
+        <div class="contact-modal-content">
+            <span class="close-contact-modal">&times;</span>
+            <h2>Información de Contacto</h2>
+
+            <div class="architect-info"
+                style="background: none; padding: 0; margin-bottom: 20px; border-bottom: 1px solid #e0e0e0;">
+                <img id="modalArchitectAvatar" src="" alt="Arquitecto" class="architect-avatar-large">
+                <div class="architect-details">
+                    <h3 id="modalArchitectName" style="font-size: 1.5rem;"></h3>
+                    <p id="modalArchitectSpecialty" class="architect-specialty" style="margin-bottom: 0;"></p>
+                </div>
+            </div>
+
+            <div class="contact-details-body">
+                <p>Puedes contactar a este arquitecto a través de los siguientes medios:</p>
+                <p>
+                    <strong>Email:</strong>
+                    <a id="modalArchitectEmail" href=""></a>
+                </p>
+                <p><strong>Biografía:</strong></p>
+                <p id="modalArchitectBio" style="font-size: 0.95rem; color: #555;"></p>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
@@ -164,9 +185,12 @@
 
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/chatbot.js"></script>
+
+    <script src="https.cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
     <script src="../JS/projectDetail.js"></script>
-    <!-- Incluir Three.js si usas modelos 3D -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </body>
 
 </html>

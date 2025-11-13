@@ -52,9 +52,10 @@ class ProjectsGallery {
                 views: 89,
                 date: "2024-01-10",
                 tags: ["Planos PDF", "Documentación"],
-                // PDF de ejemplo (puedes reemplazar con tu PDF)
+
                 pdfs: [
-                    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
+                    "../IMG/PLANO-3-35-12.pdf",
+                    "../IMG/R-3_PROT._ARQUITECTONICOS.pdf"
                 ],
                 fileType: "pdf"
             },
@@ -66,7 +67,7 @@ class ProjectsGallery {
                     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
                 },
                 description: "Modelo 3D interactivo de proyecto residencial con visualización de espacios interiores y exteriores.",
-                image: "https://images.unsplash.com/photo-1600585154340-9635ecca45d9?w=400&h=250&fit=crop",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWlBhIl8rv7EUWNxHu92uvcChKp4NEcCSQ0w&s",
                 styles: ["contemporaneo", "sostenible"],
                 type: "residencial",
                 rating: 4.9,
