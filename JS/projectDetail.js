@@ -3,6 +3,7 @@ class ProjectDetail {
     constructor() {
         this.projectId = this.getProjectIdFromURL();
         this.project = null;
+        this.viewerInitialized = false; // <--- AÑADE ESTA LÍNEA
         this.init();
     }
 
@@ -163,7 +164,7 @@ El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo s
                 ],
                 pdfs: [],
                 model3d: {
-                    file: "../IMG/project3.obj",
+                    file: "/IMG/project3.obj",
                     format: "obj",
                     hasModel: true,
                     textures: [
@@ -269,7 +270,6 @@ El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo s
 `;
         // Estadísticas
         document.getElementById('projectRating').textContent = this.project.rating;
-        document.getElementById('projectViews').textContent = this.project.views;
         document.getElementById('projectDate').textContent = this.formatDate(this.project.date);
 
         // Información adicional del proyecto
@@ -280,6 +280,8 @@ El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo s
 
         // Archivos según el tipo
         this.renderFiles();
+
+        this.setupRating();
     }
 
     renderProjectDetails() {
@@ -398,90 +400,14 @@ El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo s
     }
 
     render3DModels() {
-        const modelViewer = document.getElementById('project3DViewer');
-
-        if (this.project.model3d && this.project.model3d.hasModel) {
-            // Mostrar interfaz de modelo 3D
-            modelViewer.style.display = 'block';
-            this.setup3DViewer();
-        } else {
+        if (!this.project.model3d || !this.project.model3d.hasModel) {
             document.getElementById('3d-pane').innerHTML = `
                 <div class="no-files-message">
                     <p>No hay modelos 3D disponibles para este proyecto.</p>
-                    ${this.project.images ? `
-                        <p>Puedes explorar las imágenes del proyecto en la pestaña de Imágenes.</p>
-                    ` : ''}
                 </div>
             `;
         }
-    }
-
-setup3DViewer() {
-        const container = document.querySelector('.model-viewer');
-        const canvas = document.getElementById('project3DViewer');
-        if (!container || !canvas) return;
-
-        // 1. Configuración básica de Three.js
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xf8f8f8); // Fondo gris claro
-
-        const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.z = 5; // Alejar la cámara
-
-        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-
-        // 2. Añadir luces
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-        scene.add(ambientLight);
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        directionalLight.position.set(0, 1, 1);
-        scene.add(directionalLight);
-
-        // 3. Añadir Controles (rotar/zoom con el mouse)
-        const controls = new THREE.OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true; // Suaviza el movimiento
-
-        // 4. Cargar el modelo .OBJ
-        const loader = new THREE.OBJLoader();
-        const modelPath = this.project.model3d.file; //
-
-        loader.load(
-            // Ruta al modelo
-            modelPath,
-            // onSuccess (cuando se carga)
-            function (object) {
-                // Centrar el modelo en la escena
-                new THREE.Box3().setFromObject(object).getCenter(object.position).multiplyScalar(-1);
-                scene.add(object);
-            },
-            // onProgress (mientras carga)
-            function (xhr) {
-                console.log((xhr.loaded / xhr.total * 100) + '% cargado');
-            },
-            // onError (si falla)
-            function (error) {
-                console.error('Error al cargar el modelo 3D', error);
-                container.innerHTML = `<div class="no-files-message"><p>Error al cargar el modelo 3D.</p></div>`;
-            }
-        );
-
-        // 5. Bucle de animación
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update(); // Actualizar controles
-            renderer.render(scene, camera);
-        }
-
-        // Iniciar la animación
-        animate();
-
-        // Ajustar el tamaño si la ventana cambia
-        window.addEventListener('resize', () => {
-            camera.aspect = container.clientWidth / container.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(container.clientWidth, container.clientHeight);
-        });
+        
     }
 
     hideEmptyTabs() {
@@ -648,11 +574,55 @@ setup3DViewer() {
             return dateString;
         }
     }
+
+    setupRating() {
+        const stars = document.querySelectorAll('.star-rating .star');
+
+        stars.forEach(star => {
+            // 2. Evento al hacer clic
+            star.addEventListener('click', () => {
+                const rating = star.dataset.value;
+                console.log(`Calificación seleccionada: ${rating} estrellas`);
+                
+                // Desactivamos las estrellas para que no voten dos veces
+                document.querySelector('.star-rating').classList.add('disabled');
+                
+                // Aquí llamamos a la función que envía los datos al backend
+                this.sendRating(rating);
+            });
+        });
+    }
+
+    async sendRating(rating) {
+        const projectId = this.projectId;
+        console.log(`Enviando calificación ${rating} para el proyecto ${projectId}`);
+
+        try {
+            const response = await fetch(`/api/projects/${projectId}/rate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rating: parseInt(rating) })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al enviar la calificación');
+            }
+
+            const result = await response.json();
+            
+            // Actualizar la UI con la nueva calificación promedio
+            document.getElementById('projectRating').textContent = result.newAverageRating.toFixed(1);
+            document.getElementById('projectRatingLabel').textContent = `(${result.totalVotes} Votos)`;
+            
+            alert('¡Gracias por tu calificación!');
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Hubo un problema al guardar tu calificación.');
+        }
+    }
 }
 
-// Inicializar la página de detalle
-// CAMBIO: Usar 'load' en lugar de 'DOMContentLoaded'
-// Esto espera a que scripts externos (como Three.js) terminen de cargarse.
 window.addEventListener('load', () => {
     new ProjectDetail();
 });

@@ -63,12 +63,15 @@
 
                     <div class="project-stats">
                         <div class="stat-item">
-                            <span id="projectRating" class="stat-number">0.0</span>
-                            <span class="stat-label">Calificación</span>
-                        </div>
-                        <div class="stat-item">
-                            <span id="projectViews" class="stat-number">0</span>
-                            <span class="stat-label">Visualizaciones</span>
+                            <div class="star-rating">
+                                <span class="star" data-value="1">&#9733;</span>
+                                <span class="star" data-value="2">&#9733;</span>
+                                <span class="star" data-value="3">&#9733;</span>
+                                <span class="star" data-value="4">&#9733;</span>
+                                <span class="star" data-value="5">&#9733;</span>
+                            </div>
+                            <span id="projectRating" class="stat-number">4.8</span>
+                            <span id="projectRatingLabel" class="stat-label">(15 Votos)</span>
                         </div>
                         <div class="stat-item">
                             <span id="projectDate" class="stat-number">-</span>
@@ -112,9 +115,11 @@
 
                 <!-- Modelos 3D -->
                 <div id="3d-pane" class="file-pane">
-                    <div class="model-viewer">
-                        <canvas id="project3DViewer"></canvas>
-                    </div>
+
+                    <model-viewer src="/IMG/project3.glb" alt="Modelo 3D del proyecto" shadow-intensity="1"
+                        camera-controls auto-rotate>
+                    </model-viewer>
+
                 </div>
             </div>
         </div>
@@ -186,9 +191,7 @@
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/chatbot.js"></script>
 
-    <script src="https.cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
     <script src="../JS/projectDetail.js"></script>
 </body>

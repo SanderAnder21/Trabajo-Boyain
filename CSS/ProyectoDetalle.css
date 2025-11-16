@@ -492,3 +492,26 @@
 .contact-details-body a:hover {
     text-decoration: underline;
 }
+
+.star-rating {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+    flex-direction: reverse; 
+}
+
+.star-rating .star {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.star-rating:hover .star {
+    color: #ffc107;
+}
+
+
+.star-rating .star:hover ~ .star {
+    color: #ccc;
+}
