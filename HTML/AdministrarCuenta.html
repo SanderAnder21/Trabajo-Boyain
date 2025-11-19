@@ -73,6 +73,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="#suscripcion" class="nav-link" data-section="suscripcion">
+                        <span class="sidebar-icon">💶</span>
+                        Mi suscripción
+                    </a>
+                </li>
+                <li>
                     <a href="#seguridad" class="nav-link" data-section="seguridad">
                         <span class="sidebar-icon">🔒</span>
                         Seguridad
@@ -88,8 +94,10 @@
 
                     <div class="form-group profile-picture-container">
                         <label>Foto de Perfil</label>
-                        <img src="../IMG/default-avatar.jpg" alt="Vista previa de perfil" id="profilePicturePreview" class="profile-preview-img">
-                        <input type="file" id="profilePictureInput" name="profilePicture" accept="image/png, image/jpeg" style="display: none;">
+                        <img src="../IMG/default-avatar.jpg" alt="Vista previa de perfil" id="profilePicturePreview"
+                            class="profile-preview-img">
+                        <input type="file" id="profilePictureInput" name="profilePicture" accept="image/png, image/jpeg"
+                            style="display: none;">
                         <label for="profilePictureInput" class="btn-upload-picture">Cambiar Foto</label>
                     </div>
 
@@ -178,6 +186,76 @@
                 </div>
             </div>
 
+            <div id="suscripcion" class="admin-section">
+                <h2>Mi Suscripción</h2>
+
+                <!-- Estado actual de la suscripción -->
+                <div class="subscription-status">
+                    <div class="subscription-info">
+                        <h3>Estado Actual <span class="subscription-badge">Activa</span></h3>
+                        <div class="subscription-details">
+                            <p><strong>Plan Actual:</strong> Profesional</p>
+                            <p><strong>Fecha de Renovación:</strong> 15 de Agosto de 2024</p>
+                            <p><strong>Método de Pago:</strong> Tarjeta de Crédito terminada en 1234</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planes de suscripción disponibles -->
+                <div class="subscription-plans">
+                    <h3>Planes Disponibles</h3>
+                    <div class="plans-container">
+                        <div class="plan-card">
+                            <div class="plan-header">
+                                <h4 class="plan-name">Básico</h4>
+                                <div class="plan-price">$99<span>/mes</span></div>
+                            </div>
+                            <ul class="plan-features">
+                                <li>Hasta 5 proyectos</li>
+                                <li>Soporte por email</li>
+                            </ul>
+                            <button class="btn-select-plan" data-plan="basico">Seleccionar Plan</button>
+                        </div>
+
+                        <div class="plan-card popular">
+                            <div class="popular-badge">Más Popular</div>
+                            <div class="plan-header">
+                                <h4 class="plan-name">Profesional</h4>
+                                <div class="plan-price">$199<span>/mes</span></div>
+                            </div>
+                            <ul class="plan-features">
+                                <li>Proyectos ilimitados</li>
+                                <li>Acceso a subir PDF</li>
+                                <li>Acceso a subir modelos 3d</li>
+                                <li>Soporte prioritario</li>
+                            </ul>
+                            <button class="btn-select-plan" data-plan="profesional">Seleccionar Plan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métodos de pago -->
+                <div class="payment-methods">
+                    <h3>Método de Pago</h3>
+                    <div class="payment-options">
+                        <button class="btn-payment-method active" data-method="tarjeta">
+                            <span class="payment-icon">💳</span>
+                            Tarjeta de Crédito/Débito
+                        </button>
+                        <button class="btn-payment-method" data-method="efectivo">
+                            <span class="payment-icon">💰</span>
+                            Pago en Efectivo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Acciones de suscripción -->
+                <div class="subscription-actions">
+                    <button class="btn-cancelar">Cancelar Suscripción</button>
+                    <button class="btn-actualizar" id="btn-actualizar-pago">Actualizar Método de Pago</button>
+                </div>
+            </div>
+
             <div id="seguridad" class="admin-section">
                 <h2>Seguridad de la Cuenta</h2>
                 <form class="security-form">
@@ -218,6 +296,88 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de pago -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Completar Pago</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+
+            <!-- Pestañas de métodos de pago -->
+            <div class="payment-tabs">
+                <button class="payment-tab active" data-tab="tarjeta">
+                    <span class="payment-icon">💳</span>
+                    Tarjeta
+                </button>
+                <button class="payment-tab" data-tab="efectivo">
+                    <span class="payment-icon">💰</span>
+                    Efectivo
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Formulario de tarjeta -->
+                <div id="cardPayment" class="payment-form active">
+                    <h4>Información de Tarjeta</h4>
+                    <form id="cardForm">
+                        <div class="form-group">
+                            <label for="cardNumber">Número de Tarjeta</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Fecha de Expiración</label>
+                                <input type="text" id="expiryDate" placeholder="MM/AA" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" placeholder="123" maxlength="3">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Nombre en la Tarjeta</label>
+                            <input type="text" id="cardName" placeholder="JUAN PEREZ">
+                        </div>
+                        <button type="submit" class="btn-pagar">Pagar Ahora</button>
+                    </form>
+                </div>
+
+                <!-- Información de pago en efectivo -->
+                <div id="cashPayment" class="payment-form">
+                    <h4>Pago en Efectivo</h4>
+                    <div class="cash-instructions">
+                        <div class="reference-info">
+                            <p>Para completar tu pago, realiza un depósito en cualquier tienda OXXO con los siguientes
+                                datos:</p>
+                            <div class="reference-number">
+                                <strong>Número de Referencia:</strong>
+                                <span id="referenceNumber">7894 5621 3654 7895</span>
+                                <button class="btn-copy" data-clipboard-target="#referenceNumber">Copiar</button>
+                            </div>
+                            <div class="payment-details">
+                                <p><strong>Monto a pagar:</strong> <span id="paymentAmount">$199.00 MXN</span></p>
+                                <p><strong>Válido hasta:</strong> <span id="expiryDateCash">15/08/2024</span></p>
+                            </div>
+                        </div>
+                        <div class="oxxo-instructions">
+                            <h5>Instrucciones:</h5>
+                            <ol>
+                                <li>Acude a cualquier tienda OXXO</li>
+                                <li>Entrega el número de referencia al cajero</li>
+                                <li>Realiza el pago en efectivo</li>
+                                <li>Guarda tu comprobante</li>
+                                <li>Tu suscripción se activará en un plazo de 2 horas</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <button class="btn-confirm-cash" disabled>Esperando pago...</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -235,7 +395,7 @@
             <div class="footer-section links">
                 <h3>Enlaces Rápidos</h3>
                 <ul>
-                    <li><a href="../INDEX.html">Inicio</a></li>
+                    <li><a href="../index.html">Inicio</a></li>
                     <li><a href="Proyectos.html">Proyectos</a></li>
                     <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
                     <li><a href="Contactanos.html">Contáctanos</a></li>
@@ -260,7 +420,7 @@
     <script>
         // Navegación del menú lateral
         document.addEventListener('DOMContentLoaded', function () {
-            
+
             // --- Código para el Menú Lateral ---
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('.admin-section');
@@ -281,22 +441,20 @@
             });
             // --- Fin del código de Menú Lateral ---
 
-
             // --- Lógica para Vista Previa de Foto de Perfil ---
             const profileInput = document.getElementById('profilePictureInput');
             const profilePreview = document.getElementById('profilePicturePreview');
 
             if (profileInput && profilePreview) {
-                profileInput.addEventListener('change', function(event) {
+                profileInput.addEventListener('change', function (event) {
                     const file = event.target.files[0];
                     if (file) {
                         const reader = new FileReader();
-                        
-                        // ESTA LÍNEA ESTÁ CORREGIDA
-                        reader.onload = function(e) {
-                            profilePreview.src = e.target.result; 
+
+                        reader.onload = function (e) {
+                            profilePreview.src = e.target.result;
                         }
-                        
+
                         // Lee el archivo como una URL de datos
                         reader.readAsDataURL(file);
                     }
@@ -304,6 +462,160 @@
             }
             // --- Fin del código de Vista Previa ---
 
+            // --- Funcionalidad para la sección de suscripción ---
+            const paymentModal = document.getElementById('paymentModal');
+            const closeModal = document.querySelector('.close-modal');
+            const btnActualizarPago = document.getElementById('btn-actualizar-pago');
+            const paymentTabs = document.querySelectorAll('.payment-tab');
+            const cardForm = document.getElementById('cardForm');
+            const btnCopy = document.querySelector('.btn-copy');
+            const planButtons = document.querySelectorAll('.btn-select-plan');
+
+            // Elementos de los formularios
+            const cardPayment = document.getElementById('cardPayment');
+            const cashPayment = document.getElementById('cashPayment');
+
+            // Función para cambiar pestañas
+            function switchTab(tabType) {
+                // Actualizar pestañas activas
+                paymentTabs.forEach(tab => tab.classList.remove('active'));
+
+                // Ocultar todos los formularios
+                cardPayment.classList.remove('active');
+                cashPayment.classList.remove('active');
+
+                // Mostrar solo el formulario seleccionado
+                if (tabType === 'tarjeta') {
+                    document.querySelector('[data-tab="tarjeta"]').classList.add('active');
+                    cardPayment.classList.add('active');
+                } else if (tabType === 'efectivo') {
+                    document.querySelector('[data-tab="efectivo"]').classList.add('active');
+                    cashPayment.classList.add('active');
+                }
+            }
+
+            // Abrir modal
+            if (btnActualizarPago) {
+                btnActualizarPago.addEventListener('click', function () {
+                    paymentModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                    switchTab('tarjeta'); // Mostrar tarjeta por defecto
+                });
+            }
+
+            // Cerrar modal
+            if (closeModal) {
+                closeModal.addEventListener('click', function () {
+                    paymentModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            }
+
+            // Cerrar modal al hacer clic fuera
+            window.addEventListener('click', function (event) {
+                if (event.target === paymentModal) {
+                    paymentModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Cambiar entre pestañas de pago
+            paymentTabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const tabType = this.getAttribute('data-tab');
+                    switchTab(tabType);
+                });
+            });
+
+            // Seleccionar plan
+            planButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const plan = this.getAttribute('data-plan');
+                    alert(`Has seleccionado el plan ${plan}. Serás redirigido al pago.`);
+                    paymentModal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                    switchTab('tarjeta'); // Mostrar tarjeta por defecto
+                });
+            });
+
+            // Formatear número de tarjeta
+            const cardNumberInput = document.getElementById('cardNumber');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function (e) {
+                    let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+                    let formattedValue = '';
+
+                    for (let i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) {
+                            formattedValue += ' ';
+                        }
+                        formattedValue += value[i];
+                    }
+
+                    e.target.value = formattedValue;
+                });
+            }
+
+            // Formatear fecha de expiración
+            const expiryDateInput = document.getElementById('expiryDate');
+            if (expiryDateInput) {
+                expiryDateInput.addEventListener('input', function (e) {
+                    let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+
+                    if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+
+                    e.target.value = value;
+                });
+            }
+
+            // Copiar número de referencia
+            if (btnCopy) {
+                btnCopy.addEventListener('click', function () {
+                    const referenceNumber = document.getElementById('referenceNumber').textContent;
+                    navigator.clipboard.writeText(referenceNumber).then(function () {
+                        const originalText = btnCopy.textContent;
+                        btnCopy.textContent = '¡Copiado!';
+                        setTimeout(function () {
+                            btnCopy.textContent = originalText;
+                        }, 2000);
+                    });
+                });
+            }
+
+            // Enviar formulario de tarjeta
+            if (cardForm) {
+                cardForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Validación básica
+                    const cardNumber = document.getElementById('cardNumber').value;
+                    const expiryDate = document.getElementById('expiryDate').value;
+                    const cvv = document.getElementById('cvv').value;
+                    const cardName = document.getElementById('cardName').value;
+
+                    if (!cardNumber || !expiryDate || !cvv || !cardName) {
+                        alert('Por favor, completa todos los campos.');
+                        return;
+                    }
+
+                    // Simular procesamiento de pago
+                    const btnPagar = document.querySelector('.btn-pagar');
+                    btnPagar.textContent = 'Procesando...';
+                    btnPagar.disabled = true;
+
+                    setTimeout(function () {
+                        alert('¡Pago procesado exitosamente! Tu suscripción ha sido activada.');
+                        paymentModal.style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        btnPagar.textContent = 'Pagar Ahora';
+                        btnPagar.disabled = false;
+                        cardForm.reset();
+                    }, 2000);
+                });
+            }
+            // --- Fin de la funcionalidad de suscripción ---
         });
     </script>
 </body>
