@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import database from './database.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,6 +26,18 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
+
+// Inicializar base de datos
+async function initializeDatabase() {
+    try {
+        await database.connect();
+        await database.createTables();
+        console.log('✅ Base de datos inicializada correctamente');
+    } catch (error) {
+        console.error('❌ Error iniciando la base de datos:', error.message);
+        process.exit(1);
+    }
+}
 
 // Ruta para el chatbot
 app.post('/api/chat', async (req, res) => {
@@ -63,6 +76,8 @@ app.get('/', (req, res) => {
 });
 
 // Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`✅ Servidor ejecutándose en http://localhost:${PORT}`);
+initializeDatabase().then(() => {
+    app.listen(PORT, () => {
+        console.log(`✅ Servidor ejecutándose en http://localhost:${PORT}`);
+    });
 });
