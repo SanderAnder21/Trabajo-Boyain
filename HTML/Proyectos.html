@@ -41,9 +41,12 @@
                 </li>
             </ul>
         </nav>
+        <a href="#contenidoPrincipal" class="btn-scroll-down">
+            🢃
+        </a>
     </div>
 
-    <div class="Proyectos">
+    <div class="Proyectos" id="contenidoPrincipal">
         <h2>Explorar</h2>
         <p>Descubre increíbles proyectos y arquitectos talentosos.</p>
 
@@ -89,25 +92,28 @@
             </div>
 
             <div class="projects-grid" id="projectsGrid">
-                </div>
+            </div>
 
-        </div> 
+        </div>
         <div id="explore-architects" class="tab-content">
 
             <div class="projects-filters">
                 <div class="search-box">
-                    <input type="text" id="architectSearch" placeholder="Buscar arquitectos por nombre o especialidad...">
+                    <input type="text" id="architectSearch"
+                        placeholder="Buscar arquitectos por nombre o especialidad...">
                     <span class="search-icon">🔍</span>
                 </div>
             </div>
             <div class="projects-grid" id="architectsGrid">
-                </div>
+            </div>
         </div>
 
-            <div class="projects-grid" id="architectsGrid">
-                </div>
+        <div class="projects-grid" id="architectsGrid">
+        </div>
 
-        </div> </div> <div class="burbuja-flotante">
+    </div>
+    </div>
+    <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -147,6 +153,7 @@
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/projectGallery.js"></script>
     <script src="../JS/architects.js"></script>
+    <script src="../JS/scrollDown.js"></script>
     <script>
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
@@ -176,7 +183,7 @@
         function renderArchitects(architectList) {
             const container = document.getElementById('architectsGrid');
             if (!container) return;
-            
+
             container.innerHTML = ''; // Limpiar
 
             // Mensaje si no hay resultados
@@ -205,12 +212,12 @@
             allArchitects = architectDB.architects; // Guardar en la variable global
             renderArchitects(allArchitects); // Renderizar la lista completa
         }
-        
+
         // Función para FILTRAR la lista de arquitectos
         function filterArchitects() {
             // Obtener el término de búsqueda de la NUEVA barra
             const searchTerm = document.getElementById('architectSearch').value.toLowerCase();
-            
+
             // Filtrar la lista guardada
             const filteredList = allArchitects.filter(architect => {
                 const matchesName = architect.name.toLowerCase().includes(searchTerm);
@@ -226,7 +233,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Cargar la lista inicial de arquitectos
             loadArchitects();
-            
+
             // Configurar el listener para la NUEVA barra de búsqueda
             const architectSearchInput = document.getElementById('architectSearch');
             if (architectSearchInput) {
@@ -237,7 +244,7 @@
             // Asegurarnos que la pestaña de proyectos se muestre por defecto
             document.getElementById("explore-projects").style.display = "block";
         });
-        
+
         // --- FIN DE LA NUEVA LÓGICA DE BÚSQUEDA ---
     </script>
 </body>
