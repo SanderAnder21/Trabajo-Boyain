@@ -70,6 +70,48 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
+// app.js (Añadir debajo de la ruta /api/chat)
+
+// Ruta para registrar un nuevo usuario
+app.post('/api/register', async (req, res) => {
+    try {
+        const { nombre, email, password, tipoCuenta } = req.body;
+
+        // 1. Validación básica de datos
+        if (!nombre || !email || !password || !tipoCuenta) {
+            return res.status(400).json({ error: 'Faltan campos obligatorios.' });
+        }
+        
+        // 2. Mapear 'tipoCuenta' a booleano
+        const esArquitecto = tipoCuenta === 'arquitecto';
+
+        // 3. Registrar el usuario en la BD
+        const userId = await database.registerUser(nombre, email, password, esArquitecto);
+
+        console.log(`👤 Usuario registrado exitosamente con ID: ${userId}`);
+
+        // 4. Respuesta exitosa
+        res.status(201).json({ 
+            message: '¡Cuenta creada exitosamente!', 
+            userId: userId 
+        });
+
+    } catch (error) {
+        // 5. Manejo de errores (ej. email duplicado)
+        console.error("❌ Error al registrar usuario:", error.message);
+        
+        // El error personalizado que lanzamos desde database.js
+        if (error.message.includes('email ya está registrado')) {
+            return res.status(409).json({ error: error.message });
+        }
+
+        res.status(500).json({ 
+            error: "Error interno del servidor durante el registro.",
+            details: error.message 
+        });
+    }
+});
+
 // Ruta principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'INDEX.html'));
