@@ -1,5 +1,52 @@
+* {
+    box-sizing: border-box;
+}
+
+button, input, select, textarea {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ===== VISIBILIDAD POR DEFECTO (CLIENTE) ===== */
 .architect-only {
     display: none !important;
+    visibility: hidden !important;
+}
+
+.client-only {
+    display: block !important;
+    visibility: visible !important;
+}
+
+li.client-only {
+    display: list-item !important;
+}
+
+/* ===== CUANDO EL USUARIO ES ARQUITECTO ===== */
+body.arquitecto .architect-only {
+    display: block !important;
+    visibility: visible !important;
+}
+
+body.arquitecto .client-only {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+body.arquitecto li.architect-only {
+    display: list-item !important;
+}
+
+/* ===== CUANDO EL USUARIO ES CLIENTE ===== */
+body.cliente .architect-only {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+body.cliente .client-only {
+    display: block !important;
+    visibility: visible !important;
 }
 
 .admin-container {
@@ -1253,4 +1300,15 @@
 #cardPayment.active,
 #cashPayment.active {
     display: block !important;
+}
+/* ===== BOTONES FUNCIONALES ===== */
+.btn-guardar, .btn-submit-project, .btn-add-file, .btn-upload-picture {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    opacity: 1 !important;
+}
+
+.btn-guardar:hover, .btn-submit-project:hover, .btn-add-file:hover, .btn-upload-picture:hover {
+    background: #333 !important;
+    transform: translateY(-1px);
 }

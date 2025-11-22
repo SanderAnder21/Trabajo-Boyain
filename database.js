@@ -33,21 +33,21 @@ class Database {
 
     async connect() {
         try {
-            // PRIMERO conecta a MySQL general
+            // conecta a MySQL general
             this.connection = await mysql.createConnection({
                 host: 'localhost',
                 user: 'root',
-                // Asegúrate de que esta contraseña es correcta
-                password: 'parkerox@1010' 
+                // Contraseña de usuario local
+                password: 'popocho17' 
             });
             
             console.log('✅ Conectado a MySQL');
             
-            // CREA solo la base de datos
+            // CREA la base de datos si no existe 
             await this.connection.execute('CREATE DATABASE IF NOT EXISTS plataforma_arquitectos');
             console.log('✅ Base de datos creada/verificada: plataforma_arquitectos');
             
-            // Ahora sí usa la base de datos
+            // Usa la base de datos
             await this.connection.changeUser({ database: 'plataforma_arquitectos' });
             
             console.log('✅ Usando base de datos: plataforma_arquitectos');
@@ -216,17 +216,72 @@ class Database {
         return await bcrypt.hash(password, 10);
     }
 
-    // ⭐ MÉTODO DE LOGIN - BUSCAR USUARIO POR EMAIL
+    //BUSCAR USUARIO POR EMAIL
     async findUserByEmail(email) {
         const sql = `SELECT * FROM usuarios WHERE email = ?`;
         const [rows] = await this.query(sql, [email]);
         return rows[0]; 
     }
 
-    // ⭐ MÉTODO DE LOGIN - VERIFICAR CONTRASEÑA
+    //VERIFICAR CONTRASEÑA
     async verifyPassword(inputPassword, storedHash) {
         // Usa el 'bcrypt' importado al inicio del archivo
         return await bcrypt.compare(inputPassword, storedHash);
+    }
+
+    //BUSCA USUARIOS POR ID
+    async findUserById(userId) {
+        try {
+            const sql = `SELECT * FROM usuarios WHERE id = ?`;
+            const [rows] = await this.query(sql, [userId]);
+            return rows[0];
+        } catch (error) {
+            console.error('Error buscando usuario por ID:', error);
+            throw error;
+        }
+    }
+
+    //Actualizar datos personales 
+    async updateUserPersonalData(userId, data) {
+        try {
+            const sql = `
+                UPDATE usuarios 
+                SET nombre = ?, biografia = ?
+                WHERE id = ?
+            `;
+            
+            await this.query(sql, [data.nombre, data.bio, userId]);
+            
+            return { success: true, message: 'Datos personales actualizados' };
+        } catch (error) {
+            console.error('Error actualizando datos personales:', error);
+            throw error;
+        }
+    }
+    //Actualizar datos de contacto (solo arquitectos)
+    async updateUserContactData(userId, data) {
+        try {
+            const sql = `
+                UPDATE usuarios 
+                SET telefono = ?, ubicacion = ?
+                WHERE id = ? AND es_arquitecto = 1
+            `;
+            
+            const [result] = await this.query(sql, [
+                data.telefono, 
+                data.estado,
+                userId
+            ]);
+            
+            if (result.affectedRows === 0) {
+                throw new Error('Usuario no encontrado o no es arquitecto');
+            }
+            
+            return { success: true, message: 'Datos de contacto actualizados' };
+        } catch (error) {
+            console.error('Error actualizando datos de contacto:', error);
+            throw error;
+        }
     }
 }
 

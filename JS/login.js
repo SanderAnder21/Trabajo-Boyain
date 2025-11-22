@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = form.email.value;
         const password = form.password.value;
 
-        // Validación básica
         if (!email || !password) {
             alert('Por favor completa todos los campos');
             return;
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ email, password })
             });
 
-            // Verificar si la respuesta es OK
             if (!response.ok) {
                 throw new Error(`Error HTTP: ${response.status}`);
             }
@@ -36,17 +34,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (response.ok) {
-                const user = result; 
-                                     
-                const isArchitect = user.es_arquitecto === 1 || user.es_arquitecto === true;
-                const role = isArchitect ? 'arquitecto' : 'cliente';
+                const user = result.user; 
                 
-                // Guardar información del usuario
+                //DETECCIÓN CORRECTA DEL ROL
+                let role = 'cliente'; // Por defecto
+                
+                if (user.es_arquitecto !== undefined) {
+                    // Del servidor - convertir a booleano seguro
+                    const isArchitect = Boolean(user.es_arquitecto);
+                    role = isArchitect ? 'arquitecto' : 'cliente';
+                }
+                
+                // Guardar datos
+                localStorage.setItem('authToken', result.token);
                 localStorage.setItem('userRole', role);
                 localStorage.setItem('userName', user.nombre); 
-                localStorage.setItem('userId', user.id); 
-
-                // Mostrar éxito y redirigir
+                localStorage.setItem('userId', user.id);
+                localStorage.setItem('userData', JSON.stringify(user));
+                
                 let destinationUrl = '../INDEX.html';
                 if (role === 'arquitecto') {
                     destinationUrl = 'MisProyectos.html'; 
@@ -54,28 +59,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 alert(`¡Inicio de sesión exitoso! Bienvenido, ${user.nombre}. Rol: ${role}.`);
                 window.location.href = destinationUrl; 
-                
             }
 
         } catch (error) {
             console.error('Error en login:', error);
             
-            // ⭐⭐ SOLUCIÓN TEMPORAL: Datos de prueba cuando el backend no funciona
             if (error.message.includes('Failed to fetch') || error.message.includes('HTTP')) {
                 console.log('Backend no disponible, usando datos de prueba...');
                 
-                // Simulación de login exitoso
+                // MODO PRUEBA
+                let role = 'cliente';
+                let userNombre = email.split('@')[0] || 'Usuario';
+                
+                // SOLO es arquitecto si el email contiene EXACTAMENTE "arquitecto"
+                if (email.toLowerCase().includes('arquitecto')) {
+                    role = 'arquitecto';
+                }
+                
                 const user = {
                     id: Math.floor(Math.random() * 1000),
-                    nombre: email.split('@')[0] || 'Usuario',
-                    es_arquitecto: email.includes('arquitecto') || email.includes('arq')
+                    nombre: userNombre,
+                    es_arquitecto: role === 'arquitecto'
                 };
                 
-                const role = user.es_arquitecto ? 'arquitecto' : 'cliente';
-                
+                // Guardar datos
+                localStorage.setItem('authToken', 'token-simulado-' + Date.now());
                 localStorage.setItem('userRole', role);
                 localStorage.setItem('userName', user.nombre);
                 localStorage.setItem('userId', user.id);
+                localStorage.setItem('userData', JSON.stringify(user));
 
                 alert(`¡Login exitoso! (Modo prueba)\nBienvenido ${user.nombre}\nRol: ${role}`);
                 
@@ -84,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     destinationUrl = 'MisProyectos.html';
                 }
                 
-                // Limpiar URL después del login
                 setTimeout(() => {
                     window.location.href = destinationUrl;
                 }, 100);

@@ -11,6 +11,14 @@
 </head>
 
 <body>
+    <script>
+        // ✅ ESTE SCRIPT DEBE IR JUSTO DESPUÉS DE <body>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userRole = localStorage.getItem('userRole') || 'cliente';
+            document.body.className = userRole;
+            console.log('🎯 Rol aplicado al body:', userRole);
+        });
+    </script>
     <div class="contenedor-imagen">
         <img src="../IMG/arq4.jpg" alt="imagen inicio">
         <nav1>
@@ -32,9 +40,10 @@
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html">Iniciar Sesion</a>
-                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html" id="adminCuentaLink" style="display: none;">Mi Cuenta</a>
                         <a href="SubirProyecto.html">Administrar Proyectos</a>
+                        <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
                     </div>
                 </li>
                 </li>
@@ -50,44 +59,45 @@
             <div class="sidebar-header">
                 <h2>Mi Cuenta</h2>
             </div>
-            <ul class="sidebar-nav">
-                <li>
-                    <a href="#personal" class="nav-link active" data-section="personal">
-                        <span class="sidebar-icon">👤</span>
-                        Datos Personales
-                    </a>
-                </li>
-                <li>
-                    <a href="#contacto" class="nav-link" data-section="contacto">
-                        <span class="sidebar-icon">📧</span>
-                        Datos de Contacto
-                    </a>
-                </li>
-                <li class="architect-only">
-                    <a href="#profesional" class="nav-link" data-section="profesional">
-                        <span class="sidebar-icon">💼</span>
-                        Información Profesional
-                    </a>
-                </li>
-                <li class="architect-only">
-                    <a href="#proyectos" class="nav-link" data-section="proyectos">
-                        <span class="sidebar-icon">🏗️</span>
-                        Mis Proyectos
-                    </a>
-                </li>
-                <li class="architect-only">
-                    <a href="#suscripcion" class="nav-link" data-section="suscripcion">
-                        <span class="sidebar-icon">💶</span>
-                        Mi suscripción
-                    </a>
-                </li>
-                <li>
-                    <a href="#seguridad" class="nav-link" data-section="seguridad">
-                        <span class="sidebar-icon">🔒</span>
-                        Seguridad
-                    </a>
-                </li>
-            </ul>
+            <!-- SIDEBAR MODIFICADO -->
+        <ul class="sidebar-nav">
+            <li class="registered-only">
+                <a href="#personal" class="nav-link active" data-section="personal">
+                    <span class="sidebar-icon">👤</span>
+                    Datos Personales
+                </a>
+            </li>
+            <li class="architect-only">  <!-- CAMBIADO: solo arquitectos -->
+                <a href="#contacto" class="nav-link" data-section="contacto">
+                    <span class="sidebar-icon">📧</span>
+                    Datos de Contacto
+                </a>
+            </li>
+            <li class="architect-only">
+                <a href="#profesional" class="nav-link" data-section="profesional">
+                    <span class="sidebar-icon">💼</span>
+                    Información Profesional
+                </a>
+            </li>
+            <li class="architect-only">
+                <a href="#proyectos" class="nav-link" data-section="proyectos">
+                    <span class="sidebar-icon">🏗️</span>
+                    Mis Proyectos
+                </a>
+            </li>
+            <li class="architect-only">
+                <a href="#suscripcion" class="nav-link" data-section="suscripcion">
+                    <span class="sidebar-icon">💶</span>
+                    Mi suscripción
+                </a>
+            </li>
+            <li class="registered-only">
+                <a href="#seguridad" class="nav-link" data-section="seguridad">
+                    <span class="sidebar-icon">🔒</span>
+                    Seguridad
+                </a>
+            </li>
+        </ul>
         </div>
 
         <div class="admin-main">
@@ -410,70 +420,405 @@
     </footer>
 
     <script src="../JS/AdministrarCuentas.js"></script>
-    <script src="../JS/AdministrarProyectos.js"></script>
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
-    <script>
-        // ⭐ NUEVA LÓGICA: Menú desplegable (Icono de usuario) ⭐
-        document.addEventListener('DOMContentLoaded', function () {
-            const userIcon = document.getElementById('userIcon');
-            const dropdownMenu = document.getElementById('dropdownMenu');
 
-            if (userIcon && dropdownMenu) {
-                userIcon.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    dropdownMenu.classList.toggle('show');
-                });
 
-                window.addEventListener('click', function (e) {
-                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                        dropdownMenu.classList.remove('show');
-                    }
-                });
+    <script>document.addEventListener('DOMContentLoaded', function () {
+        // VERIFICACIÓN DE AUTENTICACIÓN 
+        const token = localStorage.getItem('authToken');
+        let userRole = localStorage.getItem('userRole');
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        
+        // DEBUG: Ver qué hay en localStorage
+        console.log('🔍 Debug - localStorage:', {
+            userRole: userRole,
+            userData: userData,
+            es_arquitecto: userData.es_arquitecto
+        });
+
+            // Si userRole no existe, intentar deducirlo de userData
+        if (!userRole && userData.es_arquitecto !== undefined) {
+            userRole = userData.es_arquitecto ? 'arquitecto' : 'cliente';
+            localStorage.setItem('userRole', userRole);
+            console.log('🔄 Rol deducido:', userRole);
+        }
+
+        
+        // Verificar si está autenticado
+        if (!token) {
+            alert('Debes iniciar sesión para acceder a esta página');
+            window.location.href = 'IniciarSesion.html';
+            return;
+        }
+
+        console.log('✅ Usuario autenticado. Rol:', userRole);
+    
+        // CONFIGURAR INTERFAZ SEGÚN ROL 
+        function configureInterfaceByRole() {
+            console.log('🎯 Configurando interfaz para:', userRole);
+            
+            // ✅ SOLO manejar navegación - EL CSS SE ENCARGA DE LA VISIBILIDAD
+            const activeSection = document.querySelector('.admin-section.active');
+            if (activeSection && activeSection.classList.contains('architect-only') && userRole !== 'arquitecto') {
+                console.log('🔄 Cambiando sección activa a "personal"');
+                switchToSection('personal');
             }
+        }
+        // === AGREGAR ESTA FUNCIÓN NUEVA ===
+        function verifyUserRole() {
+            const storedRole = localStorage.getItem('userRole');
+            const storedUserData = JSON.parse(localStorage.getItem('userData') || '{}');
+            
+            // Si no hay rol pero sí hay datos de usuario, deducirlo
+            if (!storedRole && storedUserData.es_arquitecto !== undefined) {
+                const deducedRole = storedUserData.es_arquitecto ? 'arquitecto' : 'cliente';
+                localStorage.setItem('userRole', deducedRole);
+                console.log('🔄 Rol corregido:', deducedRole);
+                return deducedRole;
+            }
+            
+            return storedRole;
+        }
 
-            // --- Código para el Menú Lateral (Existente) ---
-            const navLinks = document.querySelectorAll('.nav-link');
-            const sections = document.querySelectorAll('.admin-section');
+        // LLAMAR FUNCIONES 
+        userRole = verifyUserRole(); // Verificar y corregir rol si es necesario
+        configureInterfaceByRole();  // Configurar la interfaz según el rol
 
-            navLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
 
-                    // Remover active de todos
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    sections.forEach(s => s.classList.remove('active'));
 
-                    // Agregar active al clickeado
-                    this.classList.add('active');
-                    const targetSection = this.getAttribute('data-section');
-                    document.getElementById(targetSection).classList.add('active');
-                });
+
+
+                // DEBUG DETALLADO - Ver qué está pasando
+        console.log('=== DEBUG DETALLADO ===');
+        console.log('userRole:', userRole);
+        console.log('¿Es arquitecto?:', userRole === 'arquitecto');
+
+        // Ver todos los elementos architect-only
+        const architectElements = document.querySelectorAll('.architect-only');
+        console.log('Elementos architect-only encontrados:', architectElements.length);
+
+        architectElements.forEach((el, index) => {
+            const computedStyle = window.getComputedStyle(el);
+            console.log(`📦 Elemento ${index + 1}:`, {
+                id: el.id,
+                tag: el.tagName,
+                clase: el.className,
+                displayCSS: computedStyle.display,
+                displayStyle: el.style.display,
+                visible: computedStyle.display !== 'none'
             });
-            // --- Fin del código de Menú Lateral ---
+        });
 
-            // --- Lógica para Vista Previa de Foto de Perfil (Existente) ---
-            const profileInput = document.getElementById('profilePictureInput');
-            const profilePreview = document.getElementById('profilePicturePreview');
+        // Verificar también las secciones del sidebar
+        const sidebarLinks = document.querySelectorAll('.sidebar-nav li');
+        console.log('🔗 Enlaces del sidebar:', sidebarLinks.length);
+        sidebarLinks.forEach((li, index) => {
+            console.log(`Enlace ${index + 1}:`, {
+                texto: li.textContent.trim(),
+                clase: li.className,
+                display: window.getComputedStyle(li).display
+            });
+        });
+        console.log('=== FIN DEBUG ===');
 
-            if (profileInput && profilePreview) {
-                profileInput.addEventListener('change', function (event) {
-                    const file = event.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
 
-                        reader.onload = function (e) {
-                            profilePreview.src = e.target.result;
-                        }
 
-                        // Lee el archivo como una URL de datos
-                        reader.readAsDataURL(file);
+        // CARGAR DATOS DEL USUARIO EN FORMULARIOS 
+        loadUserData(userData);
+
+        // CÓDIGO EXISTENTE (dropdown, navegación, etc.) 
+        const userIcon = document.getElementById('userIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        if (userIcon && dropdownMenu) {
+            userIcon.addEventListener('click', function (e) {
+                e.preventDefault();
+                dropdownMenu.classList.toggle('show');
+            });
+
+            window.addEventListener('click', function (e) {
+                if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+        // Navegación entre secciones
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.admin-section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Remover active de todos
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+
+                // Agregar active al clickeado
+                this.classList.add('active');
+                const targetSection = this.getAttribute('data-section');
+                document.getElementById(targetSection).classList.add('active');
+            });
+        });
+
+        //  VISTA PREVIA FOTO DE PERFIL
+        const profileInput = document.getElementById('profilePictureInput');
+        const profilePreview = document.getElementById('profilePicturePreview');
+
+        if (profileInput && profilePreview) {
+            profileInput.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        profilePreview.src = e.target.result;
                     }
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        //MANEJAR ENVÍO DE FORMULARIOS
+        setupFormHandlers(token);
+
+        //  CÓDIGO EXISTENTE DE SUSCRIPCIÓN 
+        setupSubscriptionFunctionality();
+
+        //  🔄 FUNCIONES AUXILIARES 
+        
+        function switchToSection(sectionId) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            
+            const targetSection = document.getElementById(sectionId);
+            const targetLink = document.querySelector(`[data-section="${sectionId}"]`);
+            
+            if (targetSection && targetLink) {
+                targetSection.classList.add('active');
+                targetLink.classList.add('active');
+            }
+        }
+
+        function loadUserData(userData) {
+            // Datos Personales
+            if (document.getElementById('nombre')) {
+                document.getElementById('nombre').value = userData.nombre || '';
+            }
+            if (document.getElementById('email')) {
+                document.getElementById('email').value = userData.email || '';
+            }
+            if (document.getElementById('bio')) {
+                document.getElementById('bio').value = userData.biografia || '';
+            }
+
+            // Datos de Contacto (solo para arquitectos)
+            if (userRole === 'arquitecto') {
+                        if (document.getElementById('telefono')) {
+                            document.getElementById('telefono').value = userData.telefono || '';
+                        }
+                        if (document.getElementById('estado')) {
+                            document.getElementById('estado').value = userData.ubicacion || '';
+                        }
+                        
+                        // También cargar datos profesionales si existen
+                        if (document.getElementById('especialidad') && userData.especialidad) {
+                            document.getElementById('especialidad').value = userData.especialidad;
+                        }
+                        if (document.getElementById('experiencia') && userData.experiencia) {
+                            document.getElementById('experiencia').value = userData.experiencia;
+                        }
+                    } else {
+                        // Si es cliente, ocultar o deshabilitar campos de contacto
+                        const contactSection = document.getElementById('contacto');
+                    }
+                }
+
+
+        function loadArchitectData() {
+            // Cargar datos profesionales específicos de arquitectos
+            console.log('Cargando datos de arquitecto...');
+        }
+
+        function setupFormHandlers(token) {
+            // Formulario de Datos Personales (para todos)
+            const personalForm = document.querySelector('.personal-form');
+            if (personalForm) {
+                personalForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    await updatePersonalData(this, token);
                 });
             }
-            // --- Fin del código de Vista Previa ---
 
-            // --- Funcionalidad para la sección de suscripción (Existente) ---
+            // Formulario de Datos de Contacto (solo para arquitectos)
+            const contactForm = document.querySelector('.contact-form');
+            if (contactForm) {
+                if (userRole === 'arquitecto') {
+                    contactForm.addEventListener('submit', async function(e) {
+                        e.preventDefault();
+                        await updateContactData(this, token);
+                    });
+                } 
+            }
+
+            // Formulario de Seguridad
+            const securityForm = document.querySelector('.security-form');
+            if (securityForm) {
+                securityForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    await updateSecurityData(this, token);
+                });
+            }
+        }
+        if (userRole === 'arquitecto') {
+            // Formulario de Información Profesional
+            const professionalForm = document.querySelector('.professional-form');
+            if (professionalForm) {
+                professionalForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    await updateProfessionalData(this, token);
+                });
+            }
+        }
+        
+
+        async function updatePersonalData(form, token) {
+            try {
+                const formData = new FormData(form);
+                const data = {
+                    nombre: formData.get('nombre'),
+                    bio: formData.get('bio')
+                };
+
+                const response = await fetch('/api/user/personal', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Datos personales actualizados exitosamente');
+                    // Actualizar localStorage
+                    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+                    userData.nombre = data.nombre;
+                    userData.biografia = data.bio;
+                    localStorage.setItem('userData', JSON.stringify(userData));
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al actualizar datos personales');
+            }
+        }
+
+        async function updateContactData(form, token) {
+            try {
+                const formData = new FormData(form);
+                const data = {
+                    telefono: formData.get('telefono'),
+                    estado: formData.get('estado')
+                };
+
+                const response = await fetch('/api/user/contact', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Datos de contacto actualizados exitosamente');
+                } else if (response.status === 403) {
+                    alert('No tienes permisos para actualizar datos de contacto');
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al actualizar datos de contacto');
+            }
+        }
+
+        async function updateSecurityData(form, token) {
+            try {
+                const formData = new FormData(form);
+                const data = {
+                    currentPassword: formData.get('currentPassword'),
+                    newPassword: formData.get('newPassword'),
+                    confirmPassword: formData.get('confirmPassword')
+                };
+
+                // Validar que las contraseñas coincidan
+                if (data.newPassword !== data.confirmPassword) {
+                    alert('Las contraseñas no coinciden');
+                    return;
+                }
+
+                const response = await fetch('/api/user/security', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('Contraseña actualizada exitosamente');
+                    form.reset();
+                } else {
+                    const error = await response.json();
+                    alert('Error: ' + error.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al actualizar contraseña');
+            }
+        } 
+
+        async function updateProfessionalData(form, token) {
+        try {
+            const formData = new FormData(form);
+            const data = {
+                especialidad: formData.get('especialidad'),
+                experiencia: formData.get('experiencia'),
+                titulacion: formData.get('titulacion'),
+                habilidades: formData.get('habilidades')
+            };
+
+            // Aquí iría tu endpoint para actualizar datos profesionales
+            const response = await fetch('/api/user/professional', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert('Datos profesionales actualizados exitosamente');
+            } else {
+                const error = await response.json();
+                alert('Error: ' + error.error);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al actualizar datos profesionales');
+        }
+    }
+
+
+        function setupSubscriptionFunctionality() {
+            //  CÓDIGO DE SUSCRIPCIÓN 
             const paymentModal = document.getElementById('paymentModal');
             const closeModal = document.querySelector('.close-modal');
             const btnActualizarPago = document.getElementById('btn-actualizar-pago');
@@ -482,7 +827,6 @@
             const btnCopy = document.querySelector('.btn-copy');
             const planButtons = document.querySelectorAll('.btn-select-plan');
 
-            // Elementos de los formularios
             const cardPayment = document.getElementById('cardPayment');
             const cashPayment = document.getElementById('cashPayment');
 
@@ -510,7 +854,7 @@
                 btnActualizarPago.addEventListener('click', function () {
                     paymentModal.style.display = 'block';
                     document.body.style.overflow = 'hidden';
-                    switchTab('tarjeta'); // Mostrar tarjeta por defecto
+                    switchTab('tarjeta');
                 });
             }
 
@@ -545,7 +889,7 @@
                     alert(`Has seleccionado el plan ${plan}. Serás redirigido al pago.`);
                     paymentModal.style.display = 'block';
                     document.body.style.overflow = 'hidden';
-                    switchTab('tarjeta'); // Mostrar tarjeta por defecto
+                    switchTab('tarjeta');
                 });
             });
 
@@ -626,9 +970,41 @@
                     }, 2000);
                 });
             }
-            // --- Fin de la funcionalidad de suscripción ---
-        });
-    </script>
+        }
+    }); 
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const adminCuentaLink = document.getElementById('adminCuentaLink');
+        const loginLink = document.getElementById('loginLink');
+        const logoutLink = document.getElementById('logoutLink');
+        const token = localStorage.getItem('authToken');
+        
+        // Si está loggeado, mostrar "Mi Cuenta" y "Cerrar Sesión", ocultar "Iniciar Sesión"
+        if (token) {
+            if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+            if (loginLink) loginLink.style.display = 'none';
+            if (logoutLink) logoutLink.style.display = 'block';
+        } else {
+            // Si NO está loggeado, ocultar "Mi Cuenta" y "Cerrar Sesión", mostrar "Iniciar Sesión"
+            if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+            if (loginLink) loginLink.style.display = 'block';
+            if (logoutLink) logoutLink.style.display = 'none';
+        }
+
+        // Manejar cierre de sesión
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userRole');
+                localStorage.removeItem('userId');
+                window.location.href = '../INDEX.html';
+            });
+        }
+    });
+</script>
 </body>
 
 </html>

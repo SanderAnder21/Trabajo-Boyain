@@ -33,7 +33,7 @@
 
                     <div id="dropdownMenu" class="dropdown-content">
                         <a href="HTML/IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
-                        <a href="HTML/AdministrarCuenta.html" id="adminCuentaLink">Mi Cuenta</a>
+                        <a href="HTML/AdministrarCuenta.html" id="adminCuentaLink" style="display: none;">Mi Cuenta</a>
                         <a href="HTML/SubirProyecto.html" id="subirProyectoLink">Administrar Proyectos</a>
                         <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
                     </div>
@@ -91,11 +91,9 @@
     </footer>
 
     <!-- SCRIPTS CORREGIDOS -->
-    <script src="JS/AdministrarCuentas.js"></script>
     <script src="JS/chatbot.js"></script>
     <script src="JS/scrollDown.js"></script>
-    <!-- NUEVO: Usar rolChecker3.js en lugar del problemático -->
-    <script src="JS/rolChecker3.js"></script>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -117,6 +115,39 @@
 
             console.log('=== INDEX CARGADO ===');
             console.log('UserRole:', localStorage.getItem('userRole'));
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const adminCuentaLink = document.getElementById('adminCuentaLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const token = localStorage.getItem('authToken');
+            
+            // Si está loggeado, mostrar "Mi Cuenta" y "Cerrar Sesión", ocultar "Iniciar Sesión"
+            if (token) {
+                if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+                if (loginLink) loginLink.style.display = 'none';
+                if (logoutLink) logoutLink.style.display = 'block';
+            } else {
+                // Si NO está loggeado, ocultar "Mi Cuenta" y "Cerrar Sesión", mostrar "Iniciar Sesión"
+                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+                if (loginLink) loginLink.style.display = 'block';
+                if (logoutLink) logoutLink.style.display = 'none';
+            }
+
+            // Manejar cierre de sesión
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = 'INDEX.html';
+                });
+            }
         });
     </script>
 </body>

@@ -1,63 +1,98 @@
-// JS/registro.js
-
+// ESTE CÓDIGO NUEVO va en registro.js
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('registroForm');
     
-    // Verificar si el formulario existe antes de añadir el listener
-    if (!form) return; 
+    if (!form) {
+        console.error('❌ No se encontró el formulario de registro');
+        return;
+    }
+
+    console.log('✅ Formulario de registro encontrado');
 
     form.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Detiene el envío estándar del formulario
+        e.preventDefault();
         
-        // Obtener los valores de los campos
-        const nombre = form.nombre.value;
-        const email = form.email.value;
-        const tipoCuenta = form.tipoCuenta.value;
-        const password = form.password.value;
-        const confirmPassword = form.confirm_password.value;
+        // Obtener datos del formulario
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+        const tipoCuenta = document.getElementById('tipoCuenta').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
 
-        // 1. Validación de contraseñas en el frontend
-        if (password !== confirmPassword) {
-            alert('Las contraseñas no coinciden. Por favor, revísalas.');
+        console.log('📝 Datos del formulario:', { nombre, email, tipoCuenta });
+
+        // Validaciones
+        if (!nombre || !email || !password || !confirmPassword) {
+            alert('Por favor completa todos los campos');
             return;
         }
 
-        // 2. Crear el objeto de datos a enviar
-        const data = {
-            nombre,
-            email,
-            password,
-            tipoCuenta
-        };
+        if (password !== confirmPassword) {
+            alert('Las contraseñas no coinciden');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('La contraseña debe tener al menos 6 caracteres');
+            return;
+        }
 
         try {
-            // 3. Enviar la petición al backend
-            const response = await fetch('/api/register', {
+            const apiUrl = 'http://localhost:3000/api/register';
+            
+            console.log('🚀 Enviando datos al servidor...');
+
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({ 
+                    nombre, 
+                    email, 
+                    password, 
+                    tipoCuenta 
+                })
             });
 
             const result = await response.json();
 
             if (response.ok) {
-                // 4. Registro exitoso (código 201 Created)
-                alert(result.message + ' Serás redirigido para iniciar sesión.');
-                // Redirigir al usuario
-                window.location.href = 'IniciarSesion.html'; 
-
+                console.log('✅ Registro exitoso:', result);
+                alert('¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.');
+                window.location.href = 'IniciarSesion.html';
             } else {
-                // 5. Manejo de errores (ej. email duplicado - código 409, error del servidor - código 500)
-                alert(`Error al crear la cuenta: ${result.error || 'Inténtalo de nuevo.'}`);
-                console.error('Error del servidor:', result);
+                console.error('❌ Error del servidor:', result);
+                throw new Error(result.error || 'Error en el registro');
             }
 
         } catch (error) {
-            // 6. Manejo de errores de red
-            alert('Error de conexión con el servidor. Asegúrate de que Node.js esté ejecutándose.');
-            console.error('Error de red:', error);
+            console.error('💥 Error en registro:', error);
+            
+            if (error.message.includes('email ya está registrado')) {
+                alert('Este email ya está registrado. Por favor usa otro email.');
+            } else if (error.message.includes('Failed to fetch')) {
+                console.log('🌐 Backend no disponible, usando modo prueba...');
+                
+                // MODO PRUEBA (para desarrollo)
+                const user = {
+                    id: Math.floor(Math.random() * 1000),
+                    nombre: nombre,
+                    email: email,
+                    es_arquitecto: tipoCuenta === 'arquitecto'
+                };
+                
+                localStorage.setItem('userRole', tipoCuenta);
+                localStorage.setItem('userName', user.nombre);
+                localStorage.setItem('userId', user.id);
+                localStorage.setItem('userData', JSON.stringify(user));
+
+                alert(`¡Registro exitoso! (Modo prueba)\nBienvenido ${user.nombre}\nRol: ${tipoCuenta}`);
+                
+                window.location.href = 'IniciarSesion.html';
+            } else {
+                alert('Error al crear la cuenta: ' + error.message);
+            }
         }
     });
 });

@@ -210,6 +210,42 @@
             }
         });
     </script>
+    <script>
+        // ⭐ SCRIPT PARA CONTROLAR EL MENÚ EN MIS PROYECTOS
+        document.addEventListener('DOMContentLoaded', function() {
+            const adminCuentaLink = document.getElementById('adminCuentaLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const token = localStorage.getItem('authToken');
+            
+            console.log('🔍 Verificando menú en Mis Proyectos...');
+            console.log('- Token:', token ? '✅' : '❌');
+            console.log('- userRole:', localStorage.getItem('userRole'));
+            
+            if (token) {
+                // Usuario LOGGEADO
+                if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+                if (loginLink) loginLink.style.display = 'none';
+                if (logoutLink) logoutLink.style.display = 'block';
+                console.log('✅ Mostrando Mi Cuenta y Cerrar Sesión');
+            } else {
+                // Usuario NO loggeado
+                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+                if (loginLink) loginLink.style.display = 'block';
+                if (logoutLink) logoutLink.style.display = 'none';
+                console.log('✅ Mostrando Iniciar Sesión');
+            }
+
+            // Cerrar sesión
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.clear();
+                    window.location.href = '../INDEX.html';
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

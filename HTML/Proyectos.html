@@ -33,9 +33,10 @@
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html">Iniciar Sesion</a>
-                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html" id="adminCuentaLink" style="display: none;">Mi Cuenta</a>
                         <a href="SubirProyecto.html">Administrar Proyectos</a>
+                        <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
                     </div>
                 </li>
             </ul>
@@ -144,7 +145,7 @@
         </div>
     </footer>
 
-    <script src="../JS/AdministrarCuentas.js"></script>
+
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/projectGallery.js"></script>
     <script src="../JS/architects.js"></script>
@@ -267,6 +268,36 @@
         });
 
         // --- FIN DE LA NUEVA LÓGICA DE BÚSQUEDA ---
+    </script>
+    
+    <script>document.addEventListener('DOMContentLoaded', function() {
+        // Controla el menu de cuenta segun el estado de login
+            const adminCuentaLink = document.getElementById('adminCuentaLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const token = localStorage.getItem('authToken');
+            
+            if (token) {
+                if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+                if (loginLink) loginLink.style.display = 'none';
+                if (logoutLink) logoutLink.style.display = 'block';
+            } else {
+                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+                if (loginLink) loginLink.style.display = 'block';
+                if (logoutLink) logoutLink.style.display = 'none';
+            }
+
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = '../INDEX.html';
+                });
+            }
+        });
     </script>
 </body>
 
