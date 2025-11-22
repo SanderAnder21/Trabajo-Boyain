@@ -112,6 +112,51 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
+// app.js (Añadir la nueva ruta)
+
+// Ruta para el inicio de sesión
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Faltan credenciales (email y password).' });
+        }
+
+        // 1. Buscar usuario por email
+        const user = await database.findUserByEmail(email);
+
+        if (!user) {
+            // No se debe decir si falla el email o la contraseña, solo "Credenciales inválidas"
+            return res.status(401).json({ error: 'Credenciales inválidas.' });
+        }
+
+        // 2. Comparar contraseña (password) enviada con el hash de la BD
+        const match = await database.verifyPassword(password, user.password);
+
+        if (!match) {
+            return res.status(401).json({ error: 'Credenciales inválidas.' });
+        }
+
+        console.log(`🔑 Login exitoso para el usuario: ${user.email}`);
+
+        // 3. Respuesta exitosa (Se elimina la contraseña antes de enviar)
+        const { password: _, ...userData } = user; 
+        
+        res.status(200).json({ 
+            message: 'Inicio de sesión exitoso.', 
+            ...userData 
+        });
+
+    } catch (error) {
+        console.error("❌ Error en el inicio de sesión:", error.message);
+        res.status(500).json({ 
+            error: "Error interno del servidor.",
+            details: error.message 
+        });
+    }
+});
+
 // Ruta principal
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'INDEX.html'));

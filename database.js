@@ -8,28 +8,28 @@ class Database {
     }
 
     async registerUser(nombre, email, password, es_arquitecto) {
-    const hashedPassword = await this.hashPassword(password);
-    
-    // Convertir el booleano JavaScript a un valor MySQL (0 o 1)
-    const isArchitect = es_arquitecto ? 1 : 0; 
+        const hashedPassword = await this.hashPassword(password);
+        
+        // Convertir el booleano JavaScript a un valor MySQL (0 o 1)
+        const isArchitect = es_arquitecto ? 1 : 0; 
 
-    // 2. Consulta SQL para insertar
-    const sql = `
-        INSERT INTO usuarios (nombre, email, password, es_arquitecto) 
-        VALUES (?, ?, ?, ?)
-    `;
-    
-    try {
-        const [result] = await this.query(sql, [nombre, email, hashedPassword, isArchitect]);
-        return result.insertId; 
-    } catch (error) {
-        // Manejo de error si el email ya existe (UNIQUE constraint)
-        if (error.code === 'ER_DUP_ENTRY') {
-            throw new Error('El email ya está registrado.');
+        // 2. Consulta SQL para insertar
+        const sql = `
+            INSERT INTO usuarios (nombre, email, password, es_arquitecto) 
+            VALUES (?, ?, ?, ?)
+        `;
+        
+        try {
+            const [result] = await this.query(sql, [nombre, email, hashedPassword, isArchitect]);
+            return result.insertId; 
+        } catch (error) {
+            // Manejo de error si el email ya existe (UNIQUE constraint)
+            if (error.code === 'ER_DUP_ENTRY') {
+                throw new Error('El email ya está registrado.');
+            }
+            throw error;
         }
-        throw error;
     }
-}
 
     async connect() {
         try {
@@ -37,7 +37,8 @@ class Database {
             this.connection = await mysql.createConnection({
                 host: 'localhost',
                 user: 'root',
-                password: 'parkerox@1010'
+                // Asegúrate de que esta contraseña es correcta
+                password: 'parkerox@1010' 
             });
             
             console.log('✅ Conectado a MySQL');
@@ -215,7 +216,16 @@ class Database {
         return await bcrypt.hash(password, 10);
     }
 
+    // ⭐ MÉTODO DE LOGIN - BUSCAR USUARIO POR EMAIL
+    async findUserByEmail(email) {
+        const sql = `SELECT * FROM usuarios WHERE email = ?`;
+        const [rows] = await this.query(sql, [email]);
+        return rows[0]; 
+    }
+
+    // ⭐ MÉTODO DE LOGIN - VERIFICAR CONTRASEÑA
     async verifyPassword(inputPassword, storedHash) {
+        // Usa el 'bcrypt' importado al inicio del archivo
         return await bcrypt.compare(inputPassword, storedHash);
     }
 }
