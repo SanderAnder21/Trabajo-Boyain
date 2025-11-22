@@ -19,10 +19,12 @@
                 <li><a href="../INDEX.html" class="logo">PortArq</a></li>
             </ul>
         </nav1>
+        
         <nav>
             <ul>
                 <li><a href="Proyectos.html">Explorar Proyectos</a></li>
-                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li id="navMisProyectosLink"><a href="MisProyectos.html">Mis Proyectos</a></li>
+                
                 <li class="dropdown">
                     <a href="#" id="userIcon" class="icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -30,17 +32,19 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
+                        <span id="userIconText"></span>
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html">Iniciar Sesion</a>
-                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
-                        <a href="SubirProyecto.html">Administrar Proyectos</a>
+                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html" id="adminCuentaLink">Mi Cuenta</a>
+                        <a href="SubirProyecto.html" id="subirProyectoLink">Administrar Proyectos</a>
+                        <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
                     </div>
-                </li>
                 </li>
             </ul>
         </nav>
+        
         <a href="#contenidoPrincipal" class="btn-scroll-down">
             🢃
         </a>
@@ -50,8 +54,8 @@
         <h2>Mis Proyectos</h2>
 
         <div class="tabs-navigation">
-            <button class="tab-link active" onclick="openTab(event, 'publicados')">Publicados</button>
-            <button class="tab-link" onclick="openTab(event, 'guardados')">Guardados</button>
+            <button class="tab-link active" id="tabPublicadosButton" onclick="openTab(event, 'publicados')">Publicados</button>
+            <button class="tab-link" id="guardadosButton" onclick="openTab(event, 'guardados')">Guardados</button>
         </div>
 
         <div id="publicados" class="tab-content active">
@@ -143,6 +147,7 @@
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
+    <script src="../JS/rolChecker.js"></script> 
 
     <script>
         function openTab(evt, tabName) {
@@ -169,6 +174,7 @@
 
         // Mostrar la primera pestaña por defecto
         document.addEventListener("DOMContentLoaded", function () {
+            // La lógica de rolChecker.js se encargará de cambiar esto si es Cliente
             document.getElementById("publicados").style.display = "block";
         });
     </script>

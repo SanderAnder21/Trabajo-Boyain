@@ -21,7 +21,7 @@
         <nav>
             <ul>
                 <li><a href="Proyectos.html">Explorar Proyectos</a></li>
-                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li id="navMisProyectosLink"><a href="MisProyectos.html">Mis Proyectos</a></li>
                 <li class="dropdown">
                     <a href="#" id="userIcon" class="icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -29,14 +29,15 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
+                        <span id="userIconText"></span>
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html">Iniciar Sesion</a>
-                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
-                        <a href="SubirProyecto.html">Administrar Proyectos</a>
+                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html" id="adminCuentaLink">Mi Cuenta</a>
+                        <a href="SubirProyecto.html" id="subirProyectoLink">Administrar Proyectos</a>
+                        <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
                     </div>
-                </li>
                 </li>
             </ul>
         </nav>
@@ -189,7 +190,7 @@
                             <div class="tags-summary">
                                 <div class="tag-group">
                                     <h4>Estilos</h4>
-                                    <div class="tag-count" id="styleCount">0/3</div>
+                                    <div class="tag-count" id="styleTagCount">0/3</div> 
                                 </div>
                             </div>
                         </div>
@@ -274,6 +275,7 @@
     <script src="../JS/AdministrarProyectos.js"></script>
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
+    <script src="../JS/rolChecker.js"></script> 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const projectForm = document.getElementById('projectForm');
@@ -377,8 +379,12 @@
             }
 
             function resetTagCounters() {
-                document.getElementById('tagCount').textContent = '0';
-                document.getElementById('styleTagCount').textContent = '0/3';
+                // Asegúrate de que este ID exista en tu HTML si quieres usarlo
+                const tagCountElement = document.getElementById('tagCount');
+                if (tagCountElement) tagCountElement.textContent = '0';
+                
+                const styleTagCountElement = document.getElementById('styleTagCount');
+                if (styleTagCountElement) styleTagCountElement.textContent = '0/3';
             }
 
             // Cargar proyectos existentes al cargar la página
@@ -403,9 +409,10 @@
                 localStorage.setItem('userProjects', JSON.stringify(projects));
 
                 // Recargar la lista
-                document.getElementById('projectsList').innerHTML = '';
+                const projectsList = document.getElementById('projectsList');
+                projectsList.innerHTML = '';
                 if (projects.length === 0) {
-                    document.getElementById('projectsList').innerHTML = `
+                    projectsList.innerHTML = `
                 <div class="no-projects">
                     <p>No hay proyectos subidos aún.</p>
                 </div>
