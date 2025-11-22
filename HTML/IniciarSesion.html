@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+<link rel="stylesheet" href="../CSS/index.css">
+<link rel="stylesheet" href="../CSS/Estilos.css">
+<link rel="stylesheet" href="../CSS/IniciarSesion.css">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - PortArq</title> 
-    <link rel="stylesheet" href="../CSS/index.css">
-    <link rel="stylesheet" href="../CSS/Estilos.css">
-    <link rel="stylesheet" href="../CSS/Formulario.css"> 
+    <title>Iniciar Sesión - PortArq</title>
 </head>
 
 <body>
@@ -18,11 +18,10 @@
                 <li><a href="../INDEX.html" class="logo">PortArq</a></li>
             </ul>
         </nav1>
-        
         <nav>
             <ul>
                 <li><a href="Proyectos.html">Explorar Proyectos</a></li>
-                <li id="navMisProyectosLink"><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
                 <li class="dropdown">
                     <a href="#" id="userIcon" class="icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -30,14 +29,12 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
-                        <span id="userIconText"></span>
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
-                        <a href="AdministrarCuenta.html" id="adminCuentaLink">Mi Cuenta</a>
-                        <a href="SubirProyecto.html" id="subirProyectoLink">Administrar Proyectos</a>
-                        <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a> 
+                        <a href="IniciarSesion.html">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="SubirProyecto.html">Administrar Proyectos</a>
                     </div>
                 </li>
             </ul>
@@ -60,7 +57,7 @@
             </div>
             <div class="form-group">
                 <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required><br>
+                <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="btn-submit">Iniciar Sesión</button>
             <p>¿No tienes una cuenta? <a href="CrearCuenta.html">Crea una aquí</a></p>
@@ -73,7 +70,7 @@
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     </div>
-    
+
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
@@ -82,6 +79,7 @@
                     Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
                 </p>
             </div>
+
             <div class="footer-section links">
                 <h3>Enlaces Rápidos</h3>
                 <ul>
@@ -91,6 +89,7 @@
                     <li><a href="Contactanos.html">Contáctanos</a></li>
                 </ul>
             </div>
+
             <div class="footer-section social">
                 <h3>Síguenos</h3>
                 <a href="#">Instagram</a>
@@ -98,38 +97,18 @@
                 <a href="#">X</a>
             </div>
         </div>
+
         <div class="footer-bottom">
             <p>&copy; 2025 PortArq. Todos los derechos reservados.</p>
             <p>Diseñado y desarrollado por DevPME</p>
         </div>
     </footer>
 
+    <!-- SCRIPTS - AGREGAR login.js -->
     <script src="../JS/AdministrarCuentas.js"></script>
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
-    <script src="../JS/login.js"></script>
-    <script src="../JS/rolChecker2.js"></script> 
+    <script src="../JS/login.js"></script> <!-- ⬅️ ESTE ES EL IMPORTANTE -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const userIcon = document.getElementById('userIcon');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-
-            if (userIcon && dropdownMenu) {
-                userIcon.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    // Alterna la clase 'show' que debe estar definida en tu CSS para mostrar el menú.
-                    dropdownMenu.classList.toggle('show');
-                });
-
-                // Cierra el menú si se hace clic fuera
-                window.addEventListener('click', function (e) {
-                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                        dropdownMenu.classList.remove('show');
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>

@@ -4,7 +4,10 @@
     overflow: hidden;
     width: 98.78vw;
     height: 100vh;
+    /* NUEVO: Permitir que los clics pasen a través del contenedor */
+    pointer-events: none;
 }
+
 .contenedor-imagen::after{
     content:'';
     position: absolute;
@@ -12,13 +15,13 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.3); /* Opacidad base para mejor legibilidad */
-    opacity: 1; /* La opacidad ahora está en el color de fondo */
-    transition: background-color 0.3s ease; /* Transición en el color */
+    background-color: rgba(0, 0, 0, 0.3);
+    opacity: 1;
+    transition: background-color 0.3s ease;
 }
 
 .contenedor-imagen:hover::after{
-    background-color: rgba(0, 0, 0, 0.6); /* Se oscurece más al pasar el mouse */
+    background-color: rgba(0, 0, 0, 0.6);
     opacity:1;
 }
 
@@ -27,7 +30,6 @@
     top: 10%;
     left: 10%;
     transform: translate(10%, -10%);
-
     background-color: rgba(0, 0, 0, 0);
     color: #1c1919;
     padding: 15px 24px;
@@ -36,36 +38,52 @@
     border-radius: 5px;
     font-size: 20px;
 }
+
 .contenedor-imagen:hover button{
     background-color: rgba(0, 0, 0, 0.3);
     border-color: rgb(44, 39, 39);
 }
+
 .contenedor-imagen img{
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
+
+/* NUEVO: Los elementos dentro del contenedor SÍ deben ser clickeables */
+.contenedor-imagen nav,
+.contenedor-imagen nav1,
+.contenedor-imagen .btn-scroll-down {
+    pointer-events: auto !important;
+}
+
+/* NUEVO: Asegurar que el nav esté por encima y sea clickeable */
+nav, nav1 {
+    position: relative;
+    z-index: 1000;
+}
+
 .Introduccion-pag{
     position: absolute;
     opacity: 1;
     top: 50%;
     left: 5%;
-    transform: translateY(-50%); /* Centrado verticalmente un poco mejor */
+    transform: translateY(-50%);
     z-index: 10;
     color: white;
-    text-align: left; /* El texto alineado a la izquierda suele verse mejor aquí */
-    max-width: 600px; /* Evita que el texto sea demasiado ancho */
+    text-align: left;
+    max-width: 600px;
 }
+
 .Introduccion-pag h1{
     font-size: 40px;
     margin-bottom: 20px;
-    /* Sombra de texto para legibilidad sobre cualquier imagen */
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6); 
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
+
 .Introduccion-pag p{
     font-size: 20px;
     margin-bottom: 20px;
-    /* Sombra de texto para legibilidad */
     text-shadow: 0 2px 4px rgba(0,0,0,0.6);
 }
