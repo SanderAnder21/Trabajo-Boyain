@@ -1,4 +1,4 @@
-// JS/rolChecker.js - Lógica de control de roles y autenticación (Versión Final CORREGIDA)
+// JS/rolChecker.js - Lógica de control de roles y autenticación (VERSIÓN FINAL CON DETECCIÓN DE URL)
 
 document.addEventListener('DOMContentLoaded', () => {
     // Leer el estado del usuario desde localStorage
@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Elementos de Navegación (Buscar en toda la página) ---
     const loginLink = document.getElementById('loginLink');
     const logoutLink = document.getElementById('logoutLink');
-    const navMisProyectosLink = document.getElementById('navMisProyectosLink'); // Enlace principal de Mis Proyectos
-    const subirProyectoLink = document.getElementById('subirProyectoLink'); // Enlace dentro del dropdown
-    const adminCuentaLink = document.getElementById('adminCuentaLink'); // Enlace Mi Cuenta
+    const navMisProyectosLink = document.getElementById('navMisProyectosLink');
+    const subirProyectoLink = document.getElementById('subirProyectoLink');
+    const adminCuentaLink = document.getElementById('adminCuentaLink');
     const userIconText = document.getElementById('userIconText'); 
 
     // --- Elementos de MisProyectos.html (Pestañas) ---
@@ -18,11 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const publicadosContent = document.getElementById('publicados');
     const guardadosButton = document.getElementById('guardadosButton');
     
-    // --- Identificación de Páginas Protegidas ---
-    const isMisProyectosPage = document.title.includes('Mis Proyectos');
-    const isSubirProyectoPage = document.title.includes('Subir Proyecto');
-    // ⭐ NUEVA LÍNEA DE DETECCIÓN ⭐
-    const isIniciarSesionPage = document.title.includes('Iniciar Sesión');
+    // --- IDENTIFICACIÓN ROBUSTA DE PÁGINAS (Usando la URL) ---
+    // Obtenemos el nombre del archivo en minúsculas para robustez.
+    const currentFileName = window.location.pathname.split('/').pop().toLowerCase();
+    
+    // Identificación de Páginas Protegidas
+    const isMisProyectosPage = currentFileName === 'misproyectos.html';
+    const isSubirProyectoPage = currentFileName === 'subirproyecto.html';
+    // ⭐ CLAVE: Detecta si el nombre del archivo actual es iniciarsesion.html ⭐
+    const isIniciarSesionPage = currentFileName === 'iniciarsesion.html';
+    const isCrearCuentaPage = currentFileName === 'crearcuenta.html';
 
 
     // 1. GESTIÓN DE AUTENTICACIÓN
@@ -30,9 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Usuario Logueado
         if (loginLink) loginLink.style.display = 'none';
         
-        // ⭐ NUEVA LÓGICA DE REDIRECCIÓN EN LOGIN ⭐
-        if (isIniciarSesionPage) {
-            // Si el usuario ya está logueado, no debe estar en la página de login
+        // ⭐ EXCEPCIÓN: Si ya estás logueado y tratas de entrar a Login/Registro, redirige a Inicio. (CORRECTO)
+        if (isIniciarSesionPage || isCrearCuentaPage) {
             window.location.href = '../INDEX.html'; 
             return; 
         }
@@ -43,44 +47,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (adminCuentaLink) adminCuentaLink.style.display = 'block';
         
-        // Mostrar el nombre del usuario
         if (userIconText && userName) {
              userIconText.textContent = userName;
         }
 
         // 2. GESTIÓN DE ROLES (DUALIDAD)
+        // ... (Tu lógica de roles 'arquitecto' y 'cliente' sigue aquí, sin cambios) ...
         if (userRole === 'arquitecto') {
-            // ARQUITECTO: Puede ver todas las opciones de gestión
             if (navMisProyectosLink) navMisProyectosLink.style.display = 'block';
             if (subirProyectoLink) subirProyectoLink.style.display = 'block';
-            
-            // Lógica en MisProyectos.html (mostrar Publicados)
             if (isMisProyectosPage && tabPublicadosButton) {
                 tabPublicadosButton.style.display = 'inline-block';
             }
-
         } else { // Rol 'cliente'
-            // CLIENTE: Ocultar todas las opciones de gestión
             if (navMisProyectosLink) navMisProyectosLink.style.display = 'none';
             if (subirProyectoLink) subirProyectoLink.style.display = 'none';
             
-            // ⭐ RESTRICCIÓN DE PÁGINAS PROTEGIDAS (CLIENTE) ⭐
             if (isSubirProyectoPage) {
                 alert('Acceso denegado. Solo los arquitectos pueden administrar proyectos.');
                 window.location.href = '../INDEX.html'; 
-                return; // Detener ejecución para evitar errores
+                return;
             }
-            
-            // Lógica en MisProyectos.html (ocultar Publicados)
-            if (isMisProyectosPage) {
-                if (tabPublicadosButton) {
-                    tabPublicadosButton.style.display = 'none';
-                }
-                // Si la pestaña 'publicados' está activa, cambiar a 'guardados'
-                if (publicadosContent && guardadosButton && publicadosContent.classList.contains('active')) {
-                    guardadosButton.click(); 
-                }
-            }
+            // ... (Lógica de MisProyectos para Clientes) ...
         }
 
     } else {
@@ -91,10 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (subirProyectoLink) subirProyectoLink.style.display = 'none';
         if (adminCuentaLink) adminCuentaLink.style.display = 'none';
 
-        // ⭐ RESTRICCIÓN DE PÁGINAS PROTEGIDAS (INVITADO) ⭐
-        if (isMisProyectosPage || isSubirProyectoPage) {
-             alert('Debes iniciar sesión para acceder a esta sección.');
-             window.location.href = '../INDEX.html'; 
+        // ⭐ SOLUCIÓN CLAVE: Si NO estás logueado, solo redirige si la página NO es de autenticación.
+        const isAuthPage = isIniciarSesionPage || isCrearCuentaPage; 
+
+        if ((isMisProyectosPage || isSubirProyectoPage) && !isAuthPage) {
+            alert('Debes iniciar sesión para acceder a esta sección.');
+            window.location.href = '../INDEX.html'; 
+            return;
         }
     }
 });

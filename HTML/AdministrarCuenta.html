@@ -63,19 +63,19 @@
                         Datos de Contacto
                     </a>
                 </li>
-                <li>
+                <li class="architect-only">
                     <a href="#profesional" class="nav-link" data-section="profesional">
                         <span class="sidebar-icon">💼</span>
                         Información Profesional
                     </a>
                 </li>
-                <li>
+                <li class="architect-only">
                     <a href="#proyectos" class="nav-link" data-section="proyectos">
                         <span class="sidebar-icon">🏗️</span>
                         Mis Proyectos
                     </a>
                 </li>
-                <li>
+                <li class="architect-only">
                     <a href="#suscripcion" class="nav-link" data-section="suscripcion">
                         <span class="sidebar-icon">💶</span>
                         Mi suscripción
@@ -149,7 +149,7 @@
                 </form>
             </div>
 
-            <div id="profesional" class="admin-section">
+            <div id="profesional" class="admin-section architect-only">
                 <h2>Información Profesional</h2>
                 <form class="professional-form">
                     <div class="form-group">
@@ -180,7 +180,7 @@
                 </form>
             </div>
 
-            <div id="proyectos" class="admin-section">
+            <div id="proyectos" class="admin-section architect-only">
                 <h2>Mis Proyectos</h2>
                 <div id="projectsList" class="projects-list">
                     <div class="no-projects">
@@ -189,10 +189,9 @@
                 </div>
             </div>
 
-            <div id="suscripcion" class="admin-section">
+            <div id="suscripcion" class="admin-section architect-only">
                 <h2>Mi Suscripción</h2>
 
-                <!-- Estado actual de la suscripción -->
                 <div class="subscription-status">
                     <div class="subscription-info">
                         <h3>Estado Actual <span class="subscription-badge">Activa</span></h3>
@@ -204,7 +203,6 @@
                     </div>
                 </div>
 
-                <!-- Planes de suscripción disponibles -->
                 <div class="subscription-plans">
                     <h3>Planes Disponibles</h3>
                     <div class="plans-container">
@@ -237,7 +235,6 @@
                     </div>
                 </div>
 
-                <!-- Métodos de pago -->
                 <div class="payment-methods">
                     <h3>Método de Pago</h3>
                     <div class="payment-options">
@@ -252,7 +249,6 @@
                     </div>
                 </div>
 
-                <!-- Acciones de suscripción -->
                 <div class="subscription-actions">
                     <button class="btn-cancelar">Cancelar Suscripción</button>
                     <button class="btn-actualizar" id="btn-actualizar-pago">Actualizar Método de Pago</button>
@@ -300,7 +296,6 @@
         </div>
     </div>
 
-    <!-- Modal de pago -->
     <div id="paymentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -308,7 +303,6 @@
                 <span class="close-modal">&times;</span>
             </div>
 
-            <!-- Pestañas de métodos de pago -->
             <div class="payment-tabs">
                 <button class="payment-tab active" data-tab="tarjeta">
                     <span class="payment-icon">💳</span>
@@ -321,7 +315,6 @@
             </div>
 
             <div class="modal-body">
-                <!-- Formulario de tarjeta -->
                 <div id="cardPayment" class="payment-form active">
                     <h4>Información de Tarjeta</h4>
                     <form id="cardForm">
@@ -347,7 +340,6 @@
                     </form>
                 </div>
 
-                <!-- Información de pago en efectivo -->
                 <div id="cashPayment" class="payment-form">
                     <h4>Pago en Efectivo</h4>
                     <div class="cash-instructions">
@@ -398,7 +390,7 @@
             <div class="footer-section links">
                 <h3>Enlaces Rápidos</h3>
                 <ul>
-                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../INDEX.html">Inicio</a></li>
                     <li><a href="Proyectos.html">Proyectos</a></li>
                     <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
                     <li><a href="Contactanos.html">Contáctanos</a></li>
@@ -422,10 +414,25 @@
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
     <script>
-        // Navegación del menú lateral
+        // ⭐ NUEVA LÓGICA: Menú desplegable (Icono de usuario) ⭐
         document.addEventListener('DOMContentLoaded', function () {
+            const userIcon = document.getElementById('userIcon');
+            const dropdownMenu = document.getElementById('dropdownMenu');
 
-            // --- Código para el Menú Lateral ---
+            if (userIcon && dropdownMenu) {
+                userIcon.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                window.addEventListener('click', function (e) {
+                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+
+            // --- Código para el Menú Lateral (Existente) ---
             const navLinks = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('.admin-section');
 
@@ -445,7 +452,7 @@
             });
             // --- Fin del código de Menú Lateral ---
 
-            // --- Lógica para Vista Previa de Foto de Perfil ---
+            // --- Lógica para Vista Previa de Foto de Perfil (Existente) ---
             const profileInput = document.getElementById('profilePictureInput');
             const profilePreview = document.getElementById('profilePicturePreview');
 
@@ -466,7 +473,7 @@
             }
             // --- Fin del código de Vista Previa ---
 
-            // --- Funcionalidad para la sección de suscripción ---
+            // --- Funcionalidad para la sección de suscripción (Existente) ---
             const paymentModal = document.getElementById('paymentModal');
             const closeModal = document.querySelector('.close-modal');
             const btnActualizarPago = document.getElementById('btn-actualizar-pago');

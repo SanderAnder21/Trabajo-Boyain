@@ -1,4 +1,3 @@
-// JS/login.js - CÓDIGO CORREGIDO Y FUNCIONAL
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     
@@ -11,11 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = form.password.value;
 
         try {
-            // ⭐⭐⭐ CAMBIO CLAVE: USAR LA URL COMPLETA DEL BACKEND ⭐⭐⭐
-            // Tu app.js corre en el puerto 3000
             const apiUrl = 'http://localhost:3000/api/login'; 
             
-            const response = await fetch(apiUrl, { // Usar la URL completa aquí
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -26,13 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (response.ok) {
-                // ... (Lógica de roles, guardar en localStorage) ...
-                const user = result; // Aquí no es result.user, sino result completo.
-                                     // Ver el punto 2 para corregir esto.
-                
+                const user = result; 
+                                     
                 const isArchitect = user.es_arquitecto === 1 || user.es_arquitecto === true;
                 const role = isArchitect ? 'arquitecto' : 'cliente';
                 
+                // Guardar información del usuario (INCLUYENDO el rol clave)
                 localStorage.setItem('userRole', role);
                 localStorage.setItem('userName', user.nombre); 
                 localStorage.setItem('userId', user.id); 

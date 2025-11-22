@@ -150,10 +150,30 @@
     <script src="../JS/rolChecker.js"></script> 
 
     <script>
+        // ⭐ NUEVA LÓGICA: Para el menú desplegable (icono de usuario) ⭐
+        document.addEventListener('DOMContentLoaded', function () {
+            const userIcon = document.getElementById('userIcon');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (userIcon && dropdownMenu) {
+                userIcon.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                window.addEventListener('click', function (e) {
+                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+
+        // Lógica para el manejo de pestañas Publicados/Guardados
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
 
-            // Ocultar todo el contenido de las pestañas
+            // Ocultar todo el contenido de las pestañas (usando display y removiendo active)
             tabcontent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
@@ -168,14 +188,26 @@
 
             // Mostrar la pestaña actual y agregar la clase "active" al botón
             document.getElementById(tabName).style.display = "block";
-            document.getElementById(tabName).classList.add("active");
+            // Se mantiene la adición de clase 'active' para mejor control CSS/JS
+            document.getElementById(tabName).classList.add("active"); 
             evt.currentTarget.classList.add("active");
         }
 
         // Mostrar la primera pestaña por defecto
         document.addEventListener("DOMContentLoaded", function () {
-            // La lógica de rolChecker.js se encargará de cambiar esto si es Cliente
-            document.getElementById("publicados").style.display = "block";
+            // Asegura que solo se muestre la pestaña con la clase 'active'
+            const activeTab = document.querySelector('.tab-content.active');
+            const allTabs = document.querySelectorAll('.tab-content:not(.active)');
+
+            // Ocultar todas las pestañas que no son activas al cargar la página
+            allTabs.forEach(tab => {
+                tab.style.display = "none";
+            });
+            
+            // Asegurar que la activa se muestre (aunque ya tiene la clase y debería)
+            if (activeTab) {
+                activeTab.style.display = "block";
+            }
         });
     </script>
 </body>

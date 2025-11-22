@@ -70,8 +70,6 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-// app.js (Añadir debajo de la ruta /api/chat)
-
 // Ruta para registrar un nuevo usuario
 app.post('/api/register', async (req, res) => {
     try {
@@ -111,8 +109,6 @@ app.post('/api/register', async (req, res) => {
         });
     }
 });
-
-// app.js (Añadir la nueva ruta)
 
 // Ruta para el inicio de sesión
 app.post('/api/login', async (req, res) => {

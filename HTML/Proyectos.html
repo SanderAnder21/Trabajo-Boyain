@@ -38,7 +38,6 @@
                         <a href="SubirProyecto.html">Administrar Proyectos</a>
                     </div>
                 </li>
-                </li>
             </ul>
         </nav>
         <a href="#contenidoPrincipal" class="btn-scroll-down">
@@ -108,11 +107,7 @@
             </div>
         </div>
 
-        <div class="projects-grid" id="architectsGrid">
         </div>
-
-    </div>
-    </div>
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -155,6 +150,26 @@
     <script src="../JS/architects.js"></script>
     <script src="../JS/scrollDown.js"></script>
     <script>
+        // ⭐ LÓGICA AGREGADA: Menú desplegable (Icono de usuario) ⭐
+        document.addEventListener('DOMContentLoaded', function () {
+            const userIcon = document.getElementById('userIcon');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (userIcon && dropdownMenu) {
+                userIcon.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                window.addEventListener('click', function (e) {
+                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+        // ⭐ FIN LÓGICA AGREGADA ⭐
+
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
 
@@ -208,7 +223,8 @@
 
         // Función para CARGAR la lista inicial de arquitectos
         function loadArchitects() {
-            const architectDB = new ArchitectManager();
+            // Nota: Se asume que ArchitectManager() está definida en architects.js
+            const architectDB = new ArchitectManager(); 
             allArchitects = architectDB.architects; // Guardar en la variable global
             renderArchitects(allArchitects); // Renderizar la lista completa
         }
@@ -232,7 +248,12 @@
         // Cargar los arquitectos y configurar los listeners
         document.addEventListener('DOMContentLoaded', () => {
             // Cargar la lista inicial de arquitectos
-            loadArchitects();
+            // Nota: Solo se carga si estamos en la pestaña de arquitectos, pero el script de pestañas se ejecuta más abajo
+            // Por ahora, se mantiene aquí, asumiendo que se carga al inicio.
+            if (typeof ArchitectManager !== 'undefined') {
+                loadArchitects();
+            }
+
 
             // Configurar el listener para la NUEVA barra de búsqueda
             const architectSearchInput = document.getElementById('architectSearch');
