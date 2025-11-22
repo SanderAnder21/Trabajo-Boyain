@@ -1,4 +1,4 @@
-// JS/rolChecker.js - Lógica de control de roles y autenticación (Versión Final)
+// JS/rolChecker.js - Lógica de control de roles y autenticación (Versión Final CORREGIDA)
 
 document.addEventListener('DOMContentLoaded', () => {
     // Leer el estado del usuario desde localStorage
@@ -21,12 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Identificación de Páginas Protegidas ---
     const isMisProyectosPage = document.title.includes('Mis Proyectos');
     const isSubirProyectoPage = document.title.includes('Subir Proyecto');
+    // ⭐ NUEVA LÍNEA DE DETECCIÓN ⭐
+    const isIniciarSesionPage = document.title.includes('Iniciar Sesión');
 
 
     // 1. GESTIÓN DE AUTENTICACIÓN
     if (userRole) {
         // Usuario Logueado
         if (loginLink) loginLink.style.display = 'none';
+        
+        // ⭐ NUEVA LÓGICA DE REDIRECCIÓN EN LOGIN ⭐
+        if (isIniciarSesionPage) {
+            // Si el usuario ya está logueado, no debe estar en la página de login
+            window.location.href = '../INDEX.html'; 
+            return; 
+        }
+
         if (logoutLink) {
             logoutLink.style.display = 'block';
             logoutLink.addEventListener('click', handleLogout); 

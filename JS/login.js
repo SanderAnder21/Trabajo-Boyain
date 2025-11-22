@@ -1,5 +1,4 @@
-// JS/login.js - CÓDIGO CORREGIDO PARA INICIO DE SESIÓN DUAL
-
+// JS/login.js - CÓDIGO CORREGIDO Y FUNCIONAL
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     
@@ -12,7 +11,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = form.password.value;
 
         try {
-            const response = await fetch('/api/login', {
+            // ⭐⭐⭐ CAMBIO CLAVE: USAR LA URL COMPLETA DEL BACKEND ⭐⭐⭐
+            // Tu app.js corre en el puerto 3000
+            const apiUrl = 'http://localhost:3000/api/login'; 
+            
+            const response = await fetch(apiUrl, { // Usar la URL completa aquí
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -23,29 +26,33 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (response.ok) {
-                // ⭐ INICIO DE LA LÓGICA DUAL ⭐
-                const user = result.user; // Asumimos que el backend devuelve { message: ..., user: {...} }
+                // ... (Lógica de roles, guardar en localStorage) ...
+                const user = result; // Aquí no es result.user, sino result completo.
+                                     // Ver el punto 2 para corregir esto.
                 
-                // Determinar el rol: El valor es 1 (true) o 0 (false) de la BD
                 const isArchitect = user.es_arquitecto === 1 || user.es_arquitecto === true;
                 const role = isArchitect ? 'arquitecto' : 'cliente';
                 
-                // Guardar datos cruciales en localStorage para persistencia
                 localStorage.setItem('userRole', role);
                 localStorage.setItem('userName', user.nombre); 
                 localStorage.setItem('userId', user.id); 
 
-                alert(`¡Inicio de sesión exitoso! Bienvenido, ${user.nombre}. Rol: ${role}.`);
-                // ⭐ FIN DE LA LÓGICA DUAL ⭐
+                // Mostrar éxito y redirigir
+                let destinationUrl = '../INDEX.html';
+                if (role === 'arquitecto') {
+                    destinationUrl = 'MisProyectos.html'; 
+                }
                 
-                window.location.href = '../INDEX.html'; 
+                alert(`¡Inicio de sesión exitoso! Bienvenido, ${user.nombre}. Rol: ${role}.`);
+                window.location.href = destinationUrl; 
+                
             } else {
                 alert(`Error al iniciar sesión: ${result.error || 'Credenciales incorrectas.'}`);
                 console.error('Error de login:', result.details || result.error);
             }
 
         } catch (error) {
-            alert('Error de conexión con el servidor.');
+            alert('Error de conexión con el servidor.'); 
             console.error('Error de red:', error);
         }
     });
