@@ -1,38 +1,41 @@
 // JS/AdministrarCuentas.js
 
+// JS/AdministrarCuentas.js - VERSIÓN CORREGIDA
+
 document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('authToken');
-    const userRole = localStorage.getItem('userRole');
+    let userRole = localStorage.getItem('userRole') || 'cliente';
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     const userId = localStorage.getItem('userId');
     
+    // 1. Aplicar clase al body PRIMERO
+    document.body.className = userRole;
+    console.log('🎯 Rol aplicado al body:', userRole);
+    
+    // 2. Verificar autenticación
     if (!token || !userId) {
         alert('Debes iniciar sesión para acceder a esta página');
         window.location.href = 'IniciarSesion.html';
         return;
     }
 
-    if (userRole === 'arquitecto') {
-        const architectElements = document.querySelectorAll('.architect-only');
-        architectElements.forEach(el => {
-            el.style.display = 'block';
-        });
-    } else {
-        handleClientAccess();
+    // 3. Configurar navegación inicial (SOLO navegación, no visibilidad)
+    if (userRole !== 'arquitecto') {
+        handleClientNavigation(); // Solo maneja navegación, no visibilidad
     }
 
+    // 4. Configurar resto de funcionalidades
     loadUserData(userData, userRole);
     setupFormHandlers(token, userRole);
+    setupNavigation(); // ← AGREGAR esta función
+    setupDropdown();   // ← AGREGAR esta función
 
     console.log('✅ AdministrarCuentas.js cargado correctamente');
 });
 
-function handleClientAccess() {
-    const architectElements = document.querySelectorAll('.architect-only');
-    architectElements.forEach(el => {
-        el.style.display = 'none';
-    });
 
+function handleClientNavigation() {
+    // SOLO manejar navegación, NO visibilidad (el CSS lo hace)
     const activeSection = document.querySelector('.admin-section.active');
     
     if (activeSection && activeSection.classList.contains('architect-only')) {
@@ -45,6 +48,44 @@ function handleClientAccess() {
         if (section && document.getElementById(section).classList.contains('architect-only')) {
             switchToSection('personal');
         }
+    }
+}
+
+function setupNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.admin-section');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Remover active de todos
+            navLinks.forEach(l => l.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+
+            // Agregar active al clickeado
+            this.classList.add('active');
+            const targetSection = this.getAttribute('data-section');
+            document.getElementById(targetSection).classList.add('active');
+        });
+    });
+}
+
+function setupDropdown() {
+    const userIcon = document.getElementById('userIcon');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    if (userIcon && dropdownMenu) {
+        userIcon.addEventListener('click', function (e) {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        window.addEventListener('click', function (e) {
+            if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
     }
 }
 
@@ -113,15 +154,29 @@ function setupFormHandlers(token, userRole) {
 
     const profileInput = document.getElementById('profilePictureInput');
     const profilePreview = document.getElementById('profilePicturePreview');
-    
+
     if (profileInput && profilePreview) {
         profileInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
+                // Validar tipo y tamaño
+                if (!file.type.startsWith('image/')) {
+                    alert('Por favor selecciona una imagen válida');
+                    return;
+                }
+                
+                if (file.size > 5 * 1024 * 1024) { // 5MB
+                    alert('La imagen no debe superar los 5MB');
+                    return;
+                }
+                
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     profilePreview.src = e.target.result;
-                }
+                };
+                reader.onerror = function() {
+                    alert('Error al leer la imagen');
+                };
                 reader.readAsDataURL(file);
             }
         });
