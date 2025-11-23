@@ -1,4 +1,5 @@
 // JS/projects.js
+//Backend de "Eplorar proyectos"
 class ProjectManager {
     constructor() {
         this.projects = this.getAllProjects();

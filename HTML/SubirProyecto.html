@@ -29,14 +29,13 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
-                        <span id="userIconText"></span>
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
+                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesión</a>
                         <a href="AdministrarCuenta.html" id="adminCuentaLink">Mi Cuenta</a>
                         <a href="SubirProyecto.html" id="subirProyectoLink">Administrar Proyectos</a>
-                        <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
+                        <a href="#" id="logoutLink">Cerrar Sesión</a>
                     </div>
                 </li>
             </ul>
@@ -276,8 +275,81 @@
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
     <script src="../JS/rolChecker.js"></script> 
+
     <script>
+        // ⭐ LÓGICA CORREGIDA PARA EL MENÚ DESPLEGABLE EN SUBIR PROYECTO ⭐
         document.addEventListener('DOMContentLoaded', function () {
+            const userIcon = document.getElementById('userIcon');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            // Función para manejar el clic en el icono de usuario
+            if (userIcon && dropdownMenu) {
+                userIcon.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                // Cerrar el menú al hacer clic fuera
+                window.addEventListener('click', function (e) {
+                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+
+            // ⭐ LÓGICA PARA MOSTRAR/OCULTAR ENLACES SEGÚN AUTENTICACIÓN ⭐
+            const adminCuentaLink = document.getElementById('adminCuentaLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const subirProyectoLink = document.getElementById('subirProyectoLink');
+            const token = localStorage.getItem('authToken');
+            
+            console.log('🔍 Estado de autenticación en Subir Proyecto:');
+            console.log('- Token:', token ? '✅ PRESENTE' : '❌ AUSENTE');
+            console.log('- userRole:', localStorage.getItem('userRole'));
+
+            if (token) {
+                // ✅ USUARIO LOGGEADO
+                if (adminCuentaLink) {
+                    adminCuentaLink.style.display = 'block';
+                    adminCuentaLink.textContent = 'Mi Cuenta';
+                }
+                if (loginLink) loginLink.style.display = 'none';
+                if (logoutLink) logoutLink.style.display = 'block';
+                if (subirProyectoLink) {
+                    subirProyectoLink.style.display = 'block';
+                    subirProyectoLink.textContent = 'Administrar Proyectos';
+                }
+                console.log('✅ Mostrando: Mi Cuenta, Administrar Proyectos, Cerrar Sesión');
+            } else {
+                // ❌ USUARIO NO LOGGEADO
+                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+                if (loginLink) {
+                    loginLink.style.display = 'block';
+                    loginLink.textContent = 'Iniciar Sesión';
+                }
+                if (logoutLink) logoutLink.style.display = 'none';
+                if (subirProyectoLink) {
+                    subirProyectoLink.style.display = 'block';
+                    subirProyectoLink.textContent = 'Administrar Proyectos';
+                }
+                console.log('✅ Mostrando: Iniciar Sesión, Administrar Proyectos');
+            }
+
+            // Manejar cierre de sesión
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = '../INDEX.html';
+                });
+            }
+
+            // ⭐ LÓGICA DEL FORMULARIO DE PROYECTOS (se mantiene igual) ⭐
             const projectForm = document.getElementById('projectForm');
             const projectsList = document.getElementById('projectsList');
 
@@ -379,7 +451,6 @@
             }
 
             function resetTagCounters() {
-                // Asegúrate de que este ID exista en tu HTML si quieres usarlo
                 const tagCountElement = document.getElementById('tagCount');
                 if (tagCountElement) tagCountElement.textContent = '0';
                 
@@ -424,5 +495,4 @@
         }
     </script>
 </body>
-
 </html>

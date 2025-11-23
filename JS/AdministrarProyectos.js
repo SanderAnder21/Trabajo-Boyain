@@ -1,3 +1,4 @@
+//Backend de subir proyectos
 document.addEventListener('DOMContentLoaded', function() {
     const projectForm = document.getElementById('projectForm');
     const fileUploads = document.getElementById('fileUploads');

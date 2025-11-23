@@ -1,25 +1,35 @@
 /* Estilos para la página "Mis Proyectos" */
 
+:root {
+    --primary-color: #333;
+    --secondary-color: #666;
+    --light-color: #888;
+    --border-color: #eee;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
 .mis-proyectos-container {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 2rem;
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
 }
 
 .mis-proyectos-container h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: #333;
+    color: var(--primary-color);
 }
 
 /* Estilos de las pestañas */
 .tabs-navigation {
     overflow: hidden;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid var(--border-color);
     margin-bottom: 2rem;
     display: flex;
     justify-content: center;
@@ -32,20 +42,26 @@
     outline: none;
     cursor: pointer;
     padding: 14px 16px;
-    transition: 0.3s;
+    transition: var(--transition);
     font-size: 1.2rem;
     font-weight: 600;
-    color: #888;
+    color: var(--light-color);
     border-bottom: 3px solid transparent;
+    position: relative;
 }
 
 .tab-link:hover {
-    color: #555;
+    color: var(--secondary-color);
+}
+
+.tab-link:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 .tab-link.active {
-    color: #333;
-    border-bottom: 3px solid #333;
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
 }
 
 /* Contenido de las pestañas */
@@ -56,28 +72,87 @@
 
 .tab-content.active {
     display: block;
-    animation: fadeIn 0.5s;
 }
 
 .tab-content h3 {
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
+    color: var(--primary-color);
 }
 
 .tab-content p {
     font-size: 1.1rem;
-    color: #666;
+    color: var(--secondary-color);
     margin-bottom: 2rem;
+    line-height: 1.6;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Grid de proyectos específico para esta página */
+.mis-proyectos-container .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
 }
 
-/* Asegurarse que el grid de proyectos se vea bien */
-.projects-grid {
-    /* Ya tienes estilos para .projects-grid en Proyectos.css, 
-       así que debería funcionar bien. 
-       Puedes agregar más estilos específicos aquí si es necesario. */
+/* Estados vacíos */
+.no-projects {
+    text-align: center;
+    padding: 3rem;
+    color: var(--secondary-color);
+}
+
+.no-projects p {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mis-proyectos-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .mis-proyectos-container h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .tabs-navigation {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .tab-link {
+        padding: 12px 14px;
+        font-size: 1.1rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .mis-proyectos-container .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .tab-content h3 {
+        font-size: 1.5rem;
+    }
+    
+    .tab-content p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mis-proyectos-container {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    .mis-proyectos-container h2 {
+        font-size: 1.75rem;
+    }
 }
