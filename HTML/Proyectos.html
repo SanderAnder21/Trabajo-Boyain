@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,7 +21,7 @@
         <nav>
             <ul>
                 <li><a href="Proyectos.html">Explorar Proyectos</a></li>
-                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li id="navMisProyectosLink" style="display:none;"><a href="MisProyectos.html">Mis Proyectos</a></li>
                 <li class="dropdown">
                     <a href="#" id="userIcon" class="icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -33,17 +32,15 @@
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
+                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesión</a>
                         <a href="AdministrarCuenta.html" id="adminCuentaLink" style="display: none;">Mi Cuenta</a>
-                        <a href="SubirProyecto.html">Administrar Proyectos</a>
+                        <a href="SubirProyecto.html" id="subirProyectoLink" style="display: none;">Administrar Proyectos</a>
                         <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
                     </div>
                 </li>
             </ul>
         </nav>
-        <a href="#contenidoPrincipal" class="btn-scroll-down">
-            🢃
-        </a>
+        <a href="#contenidoPrincipal" class="btn-scroll-down">🢃</a>
     </div>
 
     <div class="Proyectos" id="contenidoPrincipal">
@@ -56,7 +53,6 @@
         </div>
 
         <div id="explore-projects" class="tab-content active">
-
             <div class="projects-filters">
                 <div class="search-box">
                     <input type="text" id="projectSearch" placeholder="Buscar proyectos, arquitectos...">
@@ -92,43 +88,41 @@
             </div>
 
             <div class="projects-grid" id="projectsGrid">
+                <!-- Los proyectos se cargarán dinámicamente aquí -->
             </div>
-
         </div>
-        <div id="explore-architects" class="tab-content">
 
+        <div id="explore-architects" class="tab-content">
             <div class="projects-filters">
                 <div class="search-box">
-                    <input type="text" id="architectSearch"
-                        placeholder="Buscar arquitectos por nombre o especialidad...">
+                    <input type="text" id="architectSearch" placeholder="Buscar arquitectos por nombre o especialidad...">
                     <span class="search-icon">🔍</span>
                 </div>
             </div>
             <div class="projects-grid" id="architectsGrid">
+                <!-- Los arquitectos se cargarán dinámicamente aquí -->
             </div>
         </div>
+    </div>
 
-        </div>
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     </div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
                 <h3 class="logo-text">PortArq</h3>
-                <p>
-                    Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
-                </p>
+                <p>Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.</p>
             </div>
             <div class="footer-section links">
                 <h3>Enlaces Rápidos</h3>
                 <ul>
                     <li><a href="../INDEX.html">Inicio</a></li>
                     <li><a href="Proyectos.html">Proyectos</a></li>
-                    <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
                     <li><a href="Contactanos.html">Contáctanos</a></li>
                 </ul>
             </div>
@@ -145,8 +139,27 @@
         </div>
     </footer>
 
-
-<script type="module" src="../JS/main.js"></script>
+    <!-- ÚNICO SCRIPT NECESARIO -->
+    <script type="module" src="../JS/main.js"></script>
+    
+    <!-- Script auxiliar para las pestañas (temporal) -->
+    <script>
+        function openTab(evt, tabName) {
+            const tabcontent = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+                tabcontent[i].classList.remove("active");
+            }
+            
+            const tablinks = document.getElementsByClassName("tab-link");
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).style.display = "block";
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
 </body>
-
 </html>

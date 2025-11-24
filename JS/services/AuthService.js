@@ -1,129 +1,221 @@
+import { Config } from '../config/Config.js';
+import { User } from '../models/User.js';
+import { ValidationUtils } from '../utils/ValidationUtils.js';
+
 /**
  * Servicio de Autenticación
- * Aplica Encapsulamiento: Maneja toda la lógica de conexión con el servidor,
- * tokens y almacenamiento de sesión (localStorage) en un solo lugar.
  */
 export class AuthService {
-    #apiBaseUrl; // Url base privada
-
     constructor() {
-        // Ajusta esto si tu servidor backend corre en otro puerto
-        this.#apiBaseUrl = 'http://localhost:3000'; 
+        this.apiUrl = Config.API_BASE_URL;
+        this.currentUser = this.loadUserFromStorage();
     }
 
-    /**
-     * Inicia sesión contra el servidor
-     * @param {string} email 
-     * @param {string} password 
-     * @returns {Promise<boolean>} true si fue exitoso
-     */
     async login(email, password) {
         try {
-            const response = await fetch(`${this.#apiBaseUrl}/login`, {
+            if (!ValidationUtils.isValidEmail(email)) {
+                throw new Error('Email inválido');
+            }
+
+            if (!ValidationUtils.isValidPassword(password)) {
+                throw new Error('Contraseña debe tener al menos 6 caracteres');
+            }
+
+            const response = await fetch(`${this.apiUrl}/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await response.json();
-
-            if (response.ok && data.user) {
-                this.#saveSession(data.user);
-                return true;
-            } else {
-                throw new Error(data.message || 'Credenciales incorrectas');
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error al iniciar sesión');
             }
+
+            const data = await response.json();
+            this.saveUserSession(data);
+            
+            return {
+                success: true,
+                user: new User(data.user)
+            };
+
         } catch (error) {
             console.error('Error en login:', error);
-            alert(error.message); // Feedback simple al usuario
-            return false;
+            
+            // Modo offline/prueba
+            if (error.message.includes('Failed to fetch')) {
+                return this.handleOfflineLogin(email);
+            }
+            
+            return {
+                success: false,
+                error: error.message
+            };
         }
     }
 
-    /**
-     * Registra un nuevo usuario
-     * @param {Object} userData Objeto con nombre, email, password, rol
-     */
     async register(userData) {
         try {
-            const response = await fetch(`${this.#apiBaseUrl}/register`, {
+            const { nombre, email, password, confirmPassword, tipoCuenta } = userData;
+
+            // Validaciones
+            if (!ValidationUtils.isNotEmpty(nombre)) {
+                throw new Error('El nombre es obligatorio');
+            }
+
+            if (!ValidationUtils.isValidEmail(email)) {
+                throw new Error('Email inválido');
+            }
+
+            if (!ValidationUtils.isValidPassword(password)) {
+                throw new Error('La contraseña debe tener al menos 6 caracteres');
+            }
+
+            if (!ValidationUtils.passwordsMatch(password, confirmPassword)) {
+                throw new Error('Las contraseñas no coinciden');
+            }
+
+            const response = await fetch(`${this.apiUrl}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(userData)
+                body: JSON.stringify({ nombre, email, password, tipoCuenta })
             });
 
-            if (response.ok) {
-                alert('Cuenta creada con éxito. Por favor inicia sesión.');
-                window.location.href = 'IniciarSesion.html';
-                return true;
-            } else {
-                const data = await response.json();
-                throw new Error(data.message || 'Error al registrar');
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || 'Error al registrar');
             }
+
+            return {
+                success: true,
+                message: 'Cuenta creada exitosamente'
+            };
+
         } catch (error) {
             console.error('Error en registro:', error);
-            alert(error.message);
-            return false;
+            
+            // Modo offline/prueba
+            if (error.message.includes('Failed to fetch')) {
+                return this.handleOfflineRegister(userData);
+            }
+            
+            return {
+                success: false,
+                error: error.message
+            };
         }
     }
 
-    /**
-     * Cierra la sesión y limpia datos
-     */
     logout() {
-        localStorage.removeItem('user_session');
-        // Opcional: Llamar al backend para invalidar sesión si fuera necesario
-        window.location.href = 'IniciarSesion.html';
+        this.clearSession();
+        window.location.href = Config.ROUTES.HOME;
     }
 
-    /**
-     * Obtiene el usuario actual desde el almacenamiento local
-     * @returns {Object|null}
-     */
+    isAuthenticated() {
+        return !!this.currentUser && !!this.getToken();
+    }
+
     getCurrentUser() {
-        const session = localStorage.getItem('user_session');
-        return session ? JSON.parse(session) : null;
+        return this.currentUser;
     }
 
-    /**
-     * Verifica si el usuario tiene un rol específico
-     * @param {string} role 'admin', 'arquitecto', 'cliente'
-     * @returns {boolean}
-     */
-    hasRole(role) {
-        const user = this.getCurrentUser();
-        return user && user.rol === role;
+    getToken() {
+        return localStorage.getItem(Config.STORAGE_KEYS.AUTH_TOKEN);
     }
 
-    /**
-     * Método de protección de rutas.
-     * Úsalo al inicio de páginas que requieren login.
-     */
-    requireAuth(requiredRole = null) {
-        const user = this.getCurrentUser();
+    getUserRole() {
+        return localStorage.getItem(Config.STORAGE_KEYS.USER_ROLE);
+    }
 
-        if (!user) {
-            window.location.href = 'IniciarSesion.html';
+    isArchitect() {
+        return this.getUserRole() === Config.USER_ROLES.ARCHITECT;
+    }
+
+    isClient() {
+        return this.getUserRole() === Config.USER_ROLES.CLIENT;
+    }
+
+    requireAuth(redirectUrl = Config.ROUTES.LOGIN) {
+        if (!this.isAuthenticated()) {
+            window.location.href = redirectUrl;
             return false;
         }
-
-        if (requiredRole && user.rol !== requiredRole) {
-            alert('No tienes permisos para acceder a esta página.');
-            window.location.href = 'INDEX.html'; // Redirigir a home o 403
-            return false;
-        }
-
         return true;
     }
 
-    // --- Métodos Privados (Helpers) ---
+    requireArchitect() {
+        if (!this.isAuthenticated() || !this.isArchitect()) {
+            alert('Acceso denegado. Se requiere cuenta de arquitecto.');
+            window.location.href = Config.ROUTES.HOME;
+            return false;
+        }
+        return true;
+    }
 
-    #saveSession(user) {
-        // Guardamos el usuario en localStorage.
-        // IMPORTANTE: En un entorno real, nunca guardes contraseñas aquí.
-        // El backend debería devolver un token y datos básicos del usuario.
-        localStorage.setItem('user_session', JSON.stringify(user));
+    // Métodos privados
+    saveUserSession(data) {
+        const user = new User(data.user);
+        
+        localStorage.setItem(Config.STORAGE_KEYS.AUTH_TOKEN, data.token);
+        localStorage.setItem(Config.STORAGE_KEYS.USER_ROLE, user.rol);
+        localStorage.setItem(Config.STORAGE_KEYS.USER_NAME, user.nombre);
+        localStorage.setItem(Config.STORAGE_KEYS.USER_ID, user.id);
+        localStorage.setItem(Config.STORAGE_KEYS.USER_DATA, JSON.stringify(user.toJSON()));
+        
+        this.currentUser = user;
+    }
+
+    loadUserFromStorage() {
+        try {
+            const userData = localStorage.getItem(Config.STORAGE_KEYS.USER_DATA);
+            return userData ? User.fromJSON(userData) : null;
+        } catch (error) {
+            console.error('Error loading user:', error);
+            return null;
+        }
+    }
+
+    clearSession() {
+        Object.values(Config.STORAGE_KEYS).forEach(key => {
+            localStorage.removeItem(key);
+        });
+        this.currentUser = null;
+    }
+
+    handleOfflineLogin(email) {
+        console.log('🌐 Modo offline - Simulando login');
+        
+        const isArchitect = email.toLowerCase().includes('arquitecto');
+        const mockUser = {
+            id: Math.floor(Math.random() * 1000),
+            nombre: email.split('@')[0],
+            email: email,
+            rol: isArchitect ? 'arquitecto' : 'cliente',
+            es_arquitecto: isArchitect
+        };
+
+        const mockData = {
+            token: 'offline-token-' + Date.now(),
+            user: mockUser
+        };
+
+        this.saveUserSession(mockData);
+
+        return {
+            success: true,
+            user: new User(mockUser),
+            isOffline: true
+        };
+    }
+
+    handleOfflineRegister(userData) {
+        console.log('🌐 Modo offline - Simulando registro');
+        
+        return {
+            success: true,
+            message: 'Cuenta creada (modo offline)',
+            isOffline: true
+        };
     }
 }
