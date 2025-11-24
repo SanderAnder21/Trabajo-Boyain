@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,7 +31,6 @@
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
-                        <span id="userIconText"></span>
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
@@ -45,23 +43,21 @@
             </ul>
         </nav>
         
-        <a href="#contenidoPrincipal" class="btn-scroll-down">
-            🢃
-        </a>
+        <a href="#contenidoPrincipal" class="btn-scroll-down">🢃</a>
     </div>
 
     <div class="mis-proyectos-container" id="contenidoPrincipal">
         <h2>Mis Proyectos</h2>
 
         <div class="tabs-navigation">
-            <button class="tab-link active" id="tabPublicadosButton" onclick="openTab(event, 'publicados')">Publicados</button>
-            <button class="tab-link" id="guardadosButton" onclick="openTab(event, 'guardados')">Guardados</button>
+            <button class="tab-link active" onclick="openTab(event, 'publicados')">Publicados</button>
+            <button class="tab-link" onclick="openTab(event, 'guardados')">Guardados</button>
         </div>
 
         <div id="publicados" class="tab-content active">
             <h3>Mis Proyectos Publicados</h3>
             <p>Estos son los proyectos que has compartido con la comunidad.</p>
-            <div class="projects-grid" id="proyectosPublicadosGrid">
+            <div class="projects-grid">
                 <div class="project-card">
                     <img src="../IMG/project1.jpg" alt="Proyecto Publicado 1">
                     <div class="project-info">
@@ -79,7 +75,7 @@
         <div id="guardados" class="tab-content">
             <h3>Mis Proyectos Guardados</h3>
             <p>Aquí encontrarás los proyectos de otros arquitectos que has guardado.</p>
-            <div class="projects-grid" id="proyectosGuardadosGrid">
+            <div class="projects-grid">
                 <div class="project-card">
                     <img src="../IMG/arq2.jpg" alt="Proyecto Guardado 1">
                     <div class="project-info">
@@ -105,7 +101,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -143,109 +138,9 @@
             <p>Diseñado y desarrollado por DevPME</p>
         </div>
     </footer>
-
-    <script src="../JS/AdministrarCuentas.js"></script>
+    <!-- SOLO ESTOS SCRIPTS -->
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
-    <script src="../JS/rolChecker.js"></script> 
-
-    <script>
-        // ⭐ NUEVA LÓGICA: Para el menú desplegable (icono de usuario) ⭐
-        document.addEventListener('DOMContentLoaded', function () {
-            const userIcon = document.getElementById('userIcon');
-            const dropdownMenu = document.getElementById('dropdownMenu');
-
-            if (userIcon && dropdownMenu) {
-                userIcon.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    dropdownMenu.classList.toggle('show');
-                });
-
-                window.addEventListener('click', function (e) {
-                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                        dropdownMenu.classList.remove('show');
-                    }
-                });
-            }
-        });
-
-        // Lógica para el manejo de pestañas Publicados/Guardados
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-
-            // Ocultar todo el contenido de las pestañas (usando display y removiendo active)
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-                tabcontent[i].classList.remove("active");
-            }
-
-            // Quitar la clase "active" de todos los botones
-            tablinks = document.getElementsByClassName("tab-link");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].classList.remove("active");
-            }
-
-            // Mostrar la pestaña actual y agregar la clase "active" al botón
-            document.getElementById(tabName).style.display = "block";
-            // Se mantiene la adición de clase 'active' para mejor control CSS/JS
-            document.getElementById(tabName).classList.add("active"); 
-            evt.currentTarget.classList.add("active");
-        }
-
-        // Mostrar la primera pestaña por defecto
-        document.addEventListener("DOMContentLoaded", function () {
-            // Asegura que solo se muestre la pestaña con la clase 'active'
-            const activeTab = document.querySelector('.tab-content.active');
-            const allTabs = document.querySelectorAll('.tab-content:not(.active)');
-
-            // Ocultar todas las pestañas que no son activas al cargar la página
-            allTabs.forEach(tab => {
-                tab.style.display = "none";
-            });
-            
-            // Asegurar que la activa se muestre (aunque ya tiene la clase y debería)
-            if (activeTab) {
-                activeTab.style.display = "block";
-            }
-        });
-    </script>
-    <script>
-        // ⭐ SCRIPT PARA CONTROLAR EL MENÚ EN MIS PROYECTOS
-        document.addEventListener('DOMContentLoaded', function() {
-            const adminCuentaLink = document.getElementById('adminCuentaLink');
-            const loginLink = document.getElementById('loginLink');
-            const logoutLink = document.getElementById('logoutLink');
-            const token = localStorage.getItem('authToken');
-            
-            console.log('🔍 Verificando menú en Mis Proyectos...');
-            console.log('- Token:', token ? '✅' : '❌');
-            console.log('- userRole:', localStorage.getItem('userRole'));
-            
-            if (token) {
-                // Usuario LOGGEADO
-                if (adminCuentaLink) adminCuentaLink.style.display = 'block';
-                if (loginLink) loginLink.style.display = 'none';
-                if (logoutLink) logoutLink.style.display = 'block';
-                console.log('✅ Mostrando Mi Cuenta y Cerrar Sesión');
-            } else {
-                // Usuario NO loggeado
-                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
-                if (loginLink) loginLink.style.display = 'block';
-                if (logoutLink) logoutLink.style.display = 'none';
-                console.log('✅ Mostrando Iniciar Sesión');
-            }
-
-            // Cerrar sesión
-            if (logoutLink) {
-                logoutLink.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    localStorage.clear();
-                    window.location.href = '../INDEX.html';
-                });
-            }
-        });
-    </script>
+    <script src="../JS/rolChecker.js"></script>
 </body>
-
 </html>
