@@ -11,6 +11,17 @@
 </head>
 
 <body>
+    <!-- Script de verificación de autenticación -->
+    <script>
+        // Verificar si el usuario está autenticado
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            // Redirigir al login si no está autenticado
+            alert('Debe iniciar sesión para acceder a Mis Proyectos');
+            window.location.href = 'IniciarSesion.html';
+        }
+    </script>
+
     <div class="contenedor-imagen">
         <img src="../IMG/arq4.jpg" alt="imagen mis proyectos">
         <nav1>
@@ -138,6 +149,56 @@
             <p>Diseñado y desarrollado por DevPME</p>
         </div>
     </footer>
+
+    <!-- Script para manejar la navegación y cierre de sesión -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const adminCuentaLink = document.getElementById('adminCuentaLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const token = localStorage.getItem('authToken');
+            
+            // Si está loggeado, mostrar "Mi Cuenta" y "Cerrar Sesión", ocultar "Iniciar Sesión"
+            if (token) {
+                if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+                if (loginLink) loginLink.style.display = 'none';
+                if (logoutLink) logoutLink.style.display = 'block';
+            } else {
+                // Si NO está loggeado, ocultar "Mi Cuenta" y "Cerrar Sesión", mostrar "Iniciar Sesión"
+                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+                if (loginLink) loginLink.style.display = 'block';
+                if (logoutLink) logoutLink.style.display = 'none';
+            }
+
+            // Manejar cierre de sesión
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = '../INDEX.html';
+                });
+            }
+        });
+
+        // Función para las pestañas
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+    
     <!-- SOLO ESTOS SCRIPTS -->
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
