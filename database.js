@@ -38,7 +38,7 @@ class Database {
                 host: 'localhost',
                 user: 'root',
                 // Contraseña de usuario local
-                password: 'popocho17' 
+                password: 'qwerty' 
             });
             
             console.log('✅ Conectado a MySQL');
