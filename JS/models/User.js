@@ -1,35 +1,47 @@
+// JS/models/User.js
+
+/**
+ * Clase que representa a un Usuario (Cliente o Arquitecto).
+ * Encapsula la información personal y de autenticación.
+ */
 export class User {
-    constructor({ id, nombre, email, rol, password }) {
-        this.id = id || Date.now(); // ID temporal si es nuevo
-        this.name = nombre;
-        this.email = email;
-        this.role = rol || 'cliente'; // 'admin', 'arquitecto', 'cliente'
-        this.password = password; // En un backend real, esto no se guarda en el cliente así
+    /**
+     * @param {Object} data - Objeto de datos del usuario, típicamente del backend o localStorage.
+     */
+    constructor(data) {
+        // Datos básicos de la cuenta
+        this.id = data.id || null;
+        this.nombre = data.nombre || 'Usuario Anónimo';
+        this.email = data.email || '';
+        this.role = data.es_arquitecto ? 'arquitecto' : 'cliente'; // Define el rol basado en el campo del backend
+        this.isAuthenticated = !!data.token || (data.id !== null);
+        
+        // Datos de perfil (pueden ser nulos para clientes)
+        this.avatar = data.avatar || 'https://placehold.co/150x150/f0f0f0/666?text=U';
+        this.biografia = data.biografia || 'Sin biografía.';
+        
+        // Datos específicos del arquitecto
+        this.especialidad = data.especialidad || null;
+        this.titulacion = data.titulacion || null;
+        this.telefono = data.telefono || null;
+        this.experiencia = data.experiencia || null;
+        this.ubicacion = data.ubicacion || null;
     }
 
-    get isAdmin() {
-        return this.role === 'admin';
-    }
-
-    get isArchitect() {
+    /**
+     * Verifica si el usuario es un arquitecto.
+     * @returns {boolean}
+     */
+    isArchitect() {
         return this.role === 'arquitecto';
     }
 
     /**
-     * Genera una fila HTML para la tabla de administración
+     * Crea una instancia de User desde un objeto simple de datos.
+     * @param {Object} data - Objeto plano con datos de usuario.
+     * @returns {User}
      */
-    toHTMLTableRow() {
-        return `
-            <tr data-id="${this.id}">
-                <td>${this.name}</td>
-                <td>${this.email}</td>
-                <td><span class="badge ${this.role}">${this.role}</span></td>
-                <td>
-                    <button class="btn-delete" onclick="window.dispatchEvent(new CustomEvent('delete-user', { detail: ${this.id} }))">
-                        Eliminar
-                    </button>
-                </td>
-            </tr>
-        `;
+    static fromData(data) {
+        return new User(data);
     }
 }

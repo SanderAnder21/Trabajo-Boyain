@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+<link rel="stylesheet" href="../CSS/index.css">
+<link rel="stylesheet" href="../CSS/Estilos.css">
+<link rel="stylesheet" href="../CSS/IniciarSesion.css">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - PortArq</title>
-    <link rel="stylesheet" href="../CSS/index.css">
-    <link rel="stylesheet" href="../CSS/Estilos.css">
-    <link rel="stylesheet" href="../CSS/IniciarSesion.css">
 </head>
 
 <body>
@@ -20,7 +21,7 @@
         <nav>
             <ul>
                 <li><a href="Proyectos.html">Explorar Proyectos</a></li>
-                <li id="navMisProyectosLink" style="display:none;"><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
                 <li class="dropdown">
                     <a href="#" id="userIcon" class="icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -31,15 +32,16 @@
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesión</a>
-                        <a href="AdministrarCuenta.html" id="adminCuentaLink" style="display: none;">Mi Cuenta</a>
-                        <a href="SubirProyecto.html" id="subirProyectoLink" style="display: none;">Administrar Proyectos</a>
-                        <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
+                        <a href="IniciarSesion.html">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="SubirProyecto.html">Administrar Proyectos</a>
                     </div>
                 </li>
             </ul>
         </nav>
-        <a href="#contenidoPrincipal" class="btn-scroll-down">🢃</a>
+        <a href="#contenidoPrincipal" class="btn-scroll-down">
+            🢃
+        </a>
     </div>
 
     <div class="IniciarSesion" id="contenidoPrincipal">
@@ -48,14 +50,13 @@
     </div>
 
     <div class="iniciar-sesion-form">
-        <form id="loginForm" class="login-form">
-            <h3>Accede a tu cuenta</h3>
+        <form id="loginForm">
             <div class="form-group">
                 <label for="email">Correo electrónico</label>
                 <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
-                <label for="password">Contraseña</label>
+                <label for="password">Contraseña:</label>
                 <input type="password" id="password" name="password" required>
             </div>
             <button type="submit" class="btn-submit">Iniciar Sesión</button>
@@ -74,16 +75,21 @@
         <div class="footer-content">
             <div class="footer-section about">
                 <h3 class="logo-text">PortArq</h3>
-                <p>Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.</p>
+                <p>
+                    Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
+                </p>
             </div>
+
             <div class="footer-section links">
                 <h3>Enlaces Rápidos</h3>
                 <ul>
                     <li><a href="../INDEX.html">Inicio</a></li>
                     <li><a href="Proyectos.html">Proyectos</a></li>
+                    <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
                     <li><a href="Contactanos.html">Contáctanos</a></li>
                 </ul>
             </div>
+
             <div class="footer-section social">
                 <h3>Síguenos</h3>
                 <a href="#">Instagram</a>
@@ -91,13 +97,18 @@
                 <a href="#">X</a>
             </div>
         </div>
+
         <div class="footer-bottom">
             <p>&copy; 2025 PortArq. Todos los derechos reservados.</p>
             <p>Diseñado y desarrollado por DevPME</p>
         </div>
     </footer>
 
-    <!-- ÚNICO SCRIPT NECESARIO -->
-    <script type="module" src="../JS/main.js"></script>
+    <!-- SCRIPTS - AGREGAR login.js -->
+    
+    <script src="../JS/chatbot.js"></script>
+    <script src="../JS/scrollDown.js"></script>
+    <script src="../JS/login.js"></script> <!-- ⬅️ ESTE ES EL IMPORTANTE -->
+
 </body>
 </html>

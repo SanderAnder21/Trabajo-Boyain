@@ -1,51 +1,57 @@
+// JS/models/Project.js
+
 /**
- * Clase Modelo para un Proyecto Arquitectónico.
- * Representa la entidad de datos.
+ * Clase que representa un Proyecto Arquitectónico.
+ * Encapsula los detalles, archivos y metadatos de un proyecto.
  */
 export class Project {
+    /**
+     * @param {Object} data - Objeto de datos del proyecto.
+     */
     constructor(data) {
         this.id = data.id;
-        this.title = data.nombre || data.title; // Adaptable a tu API
-        this.description = data.descripcion || "Sin descripción";
-        this.image = data.imagen || 'img/default-project.jpg';
-        this.category = data.tipo || 'General'; // Residencial, Comercial, etc.
-        this.architectId = data.arquitecto_id;
-        this.date = new Date(data.fecha);
-        this.status = data.estado || 'En progreso';
-        this.location = data.ubicacion;
+        this.title = data.titulo || 'Proyecto sin título';
+        this.description = data.descripcion || 'Sin descripción breve.';
+        this.fullDescription = data.descripcion_completa || 'Sin descripción completa.';
+        
+        // Archivos y metadata
+        this.image = data.imagen_principal || 'https://placehold.co/400x250/000/fff?text=Proyecto';
+        this.images = data.images || []; // URLs de la galería
+        this.pdfs = data.pdfs || [];     // URLs de los planos
+        this.model3d = data.model3d || null; // Objeto { file, format, hasModel }
+        
+        // Detalles técnicos
+        this.type = data.tipo || 'residencial';
+        this.location = data.ubicacion || 'Desconocida';
+        this.area = data.area_construida || 'N/A';
+        this.budget = data.presupuesto || 'N/A';
+        this.duration = data.duracion || 'N/A';
+        
+        // Metadatos de la plataforma
+        this.rating = data.rating_promedio || 0;
+        this.views = data.total_vistas || 0;
+        this.date = data.fecha_publicacion || new Date().toISOString().split('T')[0];
+        this.tags = data.tags || []; // Etiquetas de estilo y técnicas
+        
+        // Referencia al arquitecto (debe ser una instancia de Architect o un objeto simple)
+        this.architect = data.architect || {}; 
     }
 
     /**
-     * Getter para obtener la fecha formateada
+     * Devuelve una etiqueta formateada para la UI (ej. para ProjectDetail.js).
+     * @returns {string}
      */
-    get formattedDate() {
-        return this.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long' });
+    getFormattedDate() {
+        try {
+            const date = new Date(this.date);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('es-ES', options);
+        } catch (e) {
+            return this.date;
+        }
     }
 
-    /**
-     * Método para generar su propia tarjeta HTML
-     * (Esto es útil para mantener la lógica de visualización cerca del dato)
-     */
-    toHTMLCard() {
-        return `
-            <div class="project-card" data-category="${this.category}">
-                <div class="card-image">
-                    <img src="${this.image}" alt="${this.title}" loading="lazy">
-                    <span class="card-badge ${this.status === 'Finalizado' ? 'completed' : 'progress'}">
-                        ${this.status}
-                    </span>
-                </div>
-                <div class="card-content">
-                    <span class="card-category">${this.category}</span>
-                    <h3>${this.title}</h3>
-                    <p class="card-location">📍 ${this.location}</p>
-                    <p class="card-desc">${this.description.substring(0, 100)}...</p>
-                    <div class="card-footer">
-                        <span class="card-date">📅 ${this.formattedDate}</span>
-                        <a href="ProyectoDetalle.html?id=${this.id}" class="btn-detail">Ver Detalles</a>
-                    </div>
-                </div>
-            </div>
-        `;
+    static fromData(data) {
+        return new Project(data);
     }
 }

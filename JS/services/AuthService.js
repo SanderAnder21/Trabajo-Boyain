@@ -1,221 +1,115 @@
-import { Config } from '../config/Config.js';
-import { User } from '../models/User.js';
-import { ValidationUtils } from '../utils/ValidationUtils.js';
+// JS/services/AuthService.js
 
 /**
- * Servicio de Autenticación
+ * Servicio de Autenticación (AuthService).
+ * Maneja el Login, Registro, Logout y la persistencia de la sesión (Tokens y Rol) en localStorage.
+ * Se comunica directamente con el backend de Node.js/Express.
  */
 export class AuthService {
     constructor() {
-        this.apiUrl = Config.API_BASE_URL;
-        this.currentUser = this.loadUserFromStorage();
+        // La URL base del backend se define aquí (basada en tu app.js)
+        this.API_URL = 'http://localhost:3000/api'; 
     }
 
-    async login(email, password) {
-        try {
-            if (!ValidationUtils.isValidEmail(email)) {
-                throw new Error('Email inválido');
-            }
-
-            if (!ValidationUtils.isValidPassword(password)) {
-                throw new Error('Contraseña debe tener al menos 6 caracteres');
-            }
-
-            const response = await fetch(`${this.apiUrl}/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error al iniciar sesión');
-            }
-
-            const data = await response.json();
-            this.saveUserSession(data);
-            
-            return {
-                success: true,
-                user: new User(data.user)
-            };
-
-        } catch (error) {
-            console.error('Error en login:', error);
-            
-            // Modo offline/prueba
-            if (error.message.includes('Failed to fetch')) {
-                return this.handleOfflineLogin(email);
-            }
-            
-            return {
-                success: false,
-                error: error.message
-            };
-        }
+    /**
+     * Verifica si existe un token de autenticación.
+     * @returns {boolean}
+     */
+    checkAuthStatus() {
+        return !!localStorage.getItem('authToken');
     }
 
-    async register(userData) {
-        try {
-            const { nombre, email, password, confirmPassword, tipoCuenta } = userData;
-
-            // Validaciones
-            if (!ValidationUtils.isNotEmpty(nombre)) {
-                throw new Error('El nombre es obligatorio');
-            }
-
-            if (!ValidationUtils.isValidEmail(email)) {
-                throw new Error('Email inválido');
-            }
-
-            if (!ValidationUtils.isValidPassword(password)) {
-                throw new Error('La contraseña debe tener al menos 6 caracteres');
-            }
-
-            if (!ValidationUtils.passwordsMatch(password, confirmPassword)) {
-                throw new Error('Las contraseñas no coinciden');
-            }
-
-            const response = await fetch(`${this.apiUrl}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nombre, email, password, tipoCuenta })
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Error al registrar');
-            }
-
-            return {
-                success: true,
-                message: 'Cuenta creada exitosamente'
-            };
-
-        } catch (error) {
-            console.error('Error en registro:', error);
-            
-            // Modo offline/prueba
-            if (error.message.includes('Failed to fetch')) {
-                return this.handleOfflineRegister(userData);
-            }
-            
-            return {
-                success: false,
-                error: error.message
-            };
-        }
-    }
-
-    logout() {
-        this.clearSession();
-        window.location.href = Config.ROUTES.HOME;
-    }
-
-    isAuthenticated() {
-        return !!this.currentUser && !!this.getToken();
-    }
-
-    getCurrentUser() {
-        return this.currentUser;
-    }
-
-    getToken() {
-        return localStorage.getItem(Config.STORAGE_KEYS.AUTH_TOKEN);
-    }
-
+    /**
+     * Obtiene el rol del usuario actual.
+     * @returns {'arquitecto' | 'cliente' | null}
+     */
     getUserRole() {
-        return localStorage.getItem(Config.STORAGE_KEYS.USER_ROLE);
+        return localStorage.getItem('userRole');
+    }
+    
+    /**
+     * Obtiene los datos completos del usuario desde localStorage.
+     * @returns {Object | null}
+     */
+    getUserData() {
+        const data = localStorage.getItem('userData');
+        return data ? JSON.parse(data) : null;
     }
 
-    isArchitect() {
-        return this.getUserRole() === Config.USER_ROLES.ARCHITECT;
-    }
-
-    isClient() {
-        return this.getUserRole() === Config.USER_ROLES.CLIENT;
-    }
-
-    requireAuth(redirectUrl = Config.ROUTES.LOGIN) {
-        if (!this.isAuthenticated()) {
-            window.location.href = redirectUrl;
-            return false;
-        }
-        return true;
-    }
-
-    requireArchitect() {
-        if (!this.isAuthenticated() || !this.isArchitect()) {
-            alert('Acceso denegado. Se requiere cuenta de arquitecto.');
-            window.location.href = Config.ROUTES.HOME;
-            return false;
-        }
-        return true;
-    }
-
-    // Métodos privados
-    saveUserSession(data) {
-        const user = new User(data.user);
+    /**
+     * Intenta iniciar sesión contra la ruta /api/login del backend.
+     * @param {string} email 
+     * @param {string} password 
+     * @returns {Promise<{token: string, user: Object, role: string}>}
+     * @throws {Error} Si las credenciales son inválidas o hay error de conexión.
+     */
+    async login(email, password) {
+        console.log(`[AuthService] Intentando login para: ${email}`);
         
-        localStorage.setItem(Config.STORAGE_KEYS.AUTH_TOKEN, data.token);
-        localStorage.setItem(Config.STORAGE_KEYS.USER_ROLE, user.rol);
-        localStorage.setItem(Config.STORAGE_KEYS.USER_NAME, user.nombre);
-        localStorage.setItem(Config.STORAGE_KEYS.USER_ID, user.id);
-        localStorage.setItem(Config.STORAGE_KEYS.USER_DATA, JSON.stringify(user.toJSON()));
-        
-        this.currentUser = user;
-    }
-
-    loadUserFromStorage() {
-        try {
-            const userData = localStorage.getItem(Config.STORAGE_KEYS.USER_DATA);
-            return userData ? User.fromJSON(userData) : null;
-        } catch (error) {
-            console.error('Error loading user:', error);
-            return null;
-        }
-    }
-
-    clearSession() {
-        Object.values(Config.STORAGE_KEYS).forEach(key => {
-            localStorage.removeItem(key);
+        const response = await fetch(`${this.API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
         });
-        this.currentUser = null;
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            // Lanza el error del backend (Credenciales inválidas, etc.)
+            throw new Error(result.error || `Error HTTP ${response.status}: Fallo en el inicio de sesión.`);
+        }
+
+        const user = result.user;
+        
+        // Determinar el rol (usa el campo 'es_arquitecto' que devuelve el backend)
+        const isArchitect = Boolean(user.es_arquitecto);
+        const role = isArchitect ? 'arquitecto' : 'cliente';
+        
+        this.saveSession(result.token, role, user);
+        return { token: result.token, user, role };
     }
 
-    handleOfflineLogin(email) {
-        console.log('🌐 Modo offline - Simulando login');
+    /**
+     * Registra un nuevo usuario contra la ruta /api/register del backend.
+     * @param {Object} data - { nombre, email, password, tipoCuenta }
+     * @returns {Promise<{userId: number, message: string}>}
+     * @throws {Error} Si el email ya está registrado o hay error de conexión.
+     */
+    async register(data) {
+        console.log(`[AuthService] Intentando registro para: ${data.email}`);
         
-        const isArchitect = email.toLowerCase().includes('arquitecto');
-        const mockUser = {
-            id: Math.floor(Math.random() * 1000),
-            nombre: email.split('@')[0],
-            email: email,
-            rol: isArchitect ? 'arquitecto' : 'cliente',
-            es_arquitecto: isArchitect
-        };
+        const response = await fetch(`${this.API_URL}/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
 
-        const mockData = {
-            token: 'offline-token-' + Date.now(),
-            user: mockUser
-        };
+        const result = await response.json();
 
-        this.saveUserSession(mockData);
+        if (!response.ok) {
+            // Lanza el error del backend (Email ya registrado, etc.)
+            throw new Error(result.error || `Error HTTP ${response.status}: Fallo en el registro.`);
+        }
 
-        return {
-            success: true,
-            user: new User(mockUser),
-            isOffline: true
-        };
+        return result;
     }
 
-    handleOfflineRegister(userData) {
-        console.log('🌐 Modo offline - Simulando registro');
-        
-        return {
-            success: true,
-            message: 'Cuenta creada (modo offline)',
-            isOffline: true
-        };
+    /**
+     * Guarda la información de la sesión en localStorage.
+     */
+    saveSession(token, role, user) {
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('userRole', role);
+        localStorage.setItem('userName', user.nombre);
+        localStorage.setItem('userId', user.id);
+        localStorage.setItem('userData', JSON.stringify(user));
+    }
+
+    /**
+     * Cierra la sesión y limpia localStorage.
+     */
+    logout() {
+        console.log('[AuthService] Sesión cerrada. Limpiando localStorage.');
+        localStorage.clear();
     }
 }

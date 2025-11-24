@@ -1,71 +1,142 @@
+// JS/services/DataService.js
+
 /**
- * Servicio de Datos
- * Centraliza el acceso a la información de proyectos y arquitectos.
+ * Servicio de Datos (DataService).
+ * Encapsula todas las peticiones HTTP (GET, POST, PUT) relacionadas con 
+ * Proyectos y Perfiles de Usuario (excluyendo Auth).
  */
 export class DataService {
+    /**
+     * @param {string} baseURL - La URL base de la API.
+     */
     constructor() {
-        // Simulamos una base de datos local
-        this.projectsData = [
-            {
-                id: 1,
-                nombre: "Residencia Moderna",
-                descripcion: "Diseño minimalista con espacios abiertos y luz natural.",
-                imagen: "IMG/project1.jpg",
-                tipo: "Residencial",
-                estado: "Finalizado",
-                ubicacion: "Zacatecas, Centro",
-                fecha: "2023-05-15",
-                arquitecto_id: 101
-            },
-            {
-                id: 2,
-                nombre: "Torre Corporativa A",
-                descripcion: "Edificio de oficinas sustentable con certificación LEED.",
-                imagen: "IMG/project2.jpg", // Asegúrate de tener imágenes reales o placeholders
-                tipo: "Comercial",
-                estado: "En Construcción",
-                ubicacion: "Guadalupe, ZAC",
-                fecha: "2024-01-10",
-                arquitecto_id: 102
-            },
-            {
-                id: 3,
-                nombre: "Parque Urbano Central",
-                descripcion: "Rehabilitación de espacio público con áreas verdes.",
-                imagen: "IMG/project3.jpg",
-                tipo: "Urbano",
-                estado: "Planeación",
-                ubicacion: "Fresnillo, ZAC",
-                fecha: "2024-08-20",
-                arquitecto_id: 101
-            }
-            // Agrega aquí más proyectos copiados de tu antiguo projects.js
+        this.API_URL = 'http://localhost:3000/api'; 
+        // Generar token para uso interno. En un entorno real, usaría un Auth service.
+        this.token = localStorage.getItem('authToken');
+    }
+
+    /**
+     * Crea los headers con el token de autorización si está disponible.
+     * @param {boolean} isJson - Indica si el Content-Type debe ser 'application/json'.
+     * @returns {Object}
+     */
+    getAuthHeaders(isJson = true) {
+        const headers = {};
+        if (this.token) {
+            headers['Authorization'] = `Bearer ${this.token}`;
+        }
+        if (isJson) {
+            headers['Content-Type'] = 'application/json';
+        }
+        return headers;
+    }
+
+    /**
+     * Función genérica para manejar respuestas HTTP.
+     * @param {Response} response 
+     * @returns {Promise<Object>}
+     * @throws {Error}
+     */
+    async handleResponse(response) {
+        const result = await response.json();
+        if (!response.ok) {
+            throw new Error(result.error || `Error HTTP ${response.status}: Fallo en la operación.`);
+        }
+        return result;
+    }
+
+    // --- MÉTODOS DE PROYECTOS ---
+
+    /**
+     * Obtiene una lista de proyectos.
+     * @returns {Promise<Array<Object>>}
+     */
+    async getProjects(filters = {}) {
+        // Simulación: en el backend real, esta ruta manejaría los filtros
+        console.log('[DataService] Obteniendo proyectos con filtros:', filters);
+        
+        // Simulación temporal de datos mientras se implementa la ruta GET /api/projects
+        // Reemplaza esto con una llamada real al backend cuando esté lista.
+        return [
+            { id: 1, title: "Casa Moderna", architect: { id: 1, name: "María González", avatar: "https://..."}, description: "...", image: "https://...", rating: 4.8, views: 124, date: "2024-01-15", styles: ['moderno'], type: 'residencial', fileType: 'images' },
+            { id: 2, title: "Edificio Corporativo", architect: { id: 2, name: "Carlos Rodríguez", avatar: "https://..."}, description: "...", image: "https://...", rating: 4.6, views: 89, date: "2024-01-10", styles: ['industrial'], type: 'comercial', fileType: 'pdf' }
+            // ... más proyectos
         ];
     }
+    
+    /**
+     * Obtiene los proyectos de un usuario (para MisProyectos.html).
+     * @param {number} userId 
+     * @returns {Promise<Array<Object>>}
+     */
+    async getUserProjects(userId) {
+        console.log(`[DataService] Obteniendo proyectos para usuario ID: ${userId}`);
+        // Implementación real:
+        // const response = await fetch(`${this.API_URL}/user/${userId}/projects`, { headers: this.getAuthHeaders() });
+        // return this.handleResponse(response);
+        
+        // Retorna simulación por ahora
+        return this.getProjects();
+    }
 
     /**
-     * Obtiene todos los proyectos (Simula una promesa asíncrona)
-     * @returns {Promise<Array>}
+     * Sube un nuevo proyecto.
+     * @param {FormData} formData 
+     * @returns {Promise<Object>}
      */
-    async getAllProjects() {
-        // Simulamos un pequeño delay de red
-        return new Promise(resolve => {
-            setTimeout(() => resolve(this.projectsData), 300);
+    async uploadProject(formData) {
+        if (!this.token) throw new Error('Se requiere autenticación para subir proyectos.');
+        
+        // Nota: No se pasa Content-Type: application/json con FormData
+        const response = await fetch(`${this.API_URL}/projects`, {
+            method: 'POST',
+            headers: this.getAuthHeaders(false), // Importante: isJson = false
+            body: formData
         });
+        
+        return this.handleResponse(response);
     }
-
+    
+    // --- MÉTODOS DE PERFIL DE USUARIO ---
+    
     /**
-     * Obtiene un proyecto por ID
+     * Actualiza la información personal del usuario.
+     * @param {Object} data - { nombre, bio, fechaNacimiento }
+     * @returns {Promise<Object>}
      */
-    async getProjectById(id) {
-        return this.projectsData.find(p => p.id == id);
+    async updatePersonalData(data) {
+        if (!this.token) throw new Error('Se requiere autenticación.');
+        
+        const response = await fetch(`${this.API_URL}/user/personal`, {
+            method: 'PUT',
+            headers: this.getAuthHeaders(),
+            body: JSON.stringify(data)
+        });
+        
+        const result = await this.handleResponse(response);
+        
+        // Actualizar localStorage tras la actualización exitosa
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        localStorage.setItem('userData', JSON.stringify({ ...userData, ...data }));
+        
+        return result;
     }
-
+    
     /**
-     * Obtiene proyectos filtrados por categoría
+     * Actualiza la información de contacto del arquitecto.
+     * @param {Object} data - { telefono, estado, direccion }
+     * @returns {Promise<Object>}
      */
-    async getProjectsByCategory(category) {
-        if (category === 'Todos') return this.getAllProjects();
-        return this.projectsData.filter(p => p.tipo === category);
+    async updateContactData(data) {
+        if (!this.token) throw new Error('Se requiere autenticación.');
+        
+        // Usamos la ruta protegida de tu app.js
+        const response = await fetch(`${this.API_URL}/user/contact`, {
+            method: 'PUT',
+            headers: this.getAuthHeaders(),
+            body: JSON.stringify(data)
+        });
+        
+        return this.handleResponse(response);
     }
 }

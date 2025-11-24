@@ -1,245 +1,178 @@
+// JS/components/Chatbot.js
+
+/**
+ * Componente Chatbot (Clase Encapsulada).
+ * Maneja la UI, la interacción de mensajes y la comunicación con el endpoint /api/chat.
+ */
 export class Chatbot {
-    #apiEndpoint;
-    #isOpen;
-    #messageHistory;
-    #isProcessing;
-
-    constructor(containerId, options = {}) {
-        this.containerId = containerId;
-        this.#apiEndpoint = options.apiEndpoint || 'http://localhost:3000/api/chat';
-        this.#isOpen = false;
-        this.#messageHistory = [];
-        this.#isProcessing = false;
+    constructor() {
+        this.chatContainer = null;
+        this.messagesContainer = null;
+        this.inputElement = null;
+        this.sendButton = null;
         
-        // Configuración que se adapta a tu CSS
-        this.config = {
-            welcomeMessage: options.welcomeMessage || 'Hola, soy tu asistente virtual. ¿En qué puedo ayudarte con tus proyectos arquitectónicos hoy?',
-            ...options
-        };
-
-        this.#init();
+        // El chatbot debe inicializarse al cargarse el DOM, independientemente del router
+        document.addEventListener('DOMContentLoaded', this.init.bind(this));
     }
 
-    #init() {
-        // Verificar si ya existe el chatbot para no duplicar
-        if (!document.getElementById('chatbot-container')) {
-            this.#render();
+    /**
+     * Inicializa la estructura del DOM y los event listeners.
+     */
+    init() {
+        const bubble = document.querySelector('.burbuja-flotante');
+        if (!bubble) {
+            console.error('❌ Chatbot: No se encontró la burbuja flotante. Saltando inicialización.');
+            return;
         }
-        
-        this.#cacheDOM();
-        this.#attachEvents();
+
+        this.renderChatStructure();
+        this.setupDOMReferences();
+        this.setupEventListeners(bubble);
+
+        this.addMessage('¡Hola! Soy PortArq Assistant. ¿En qué puedo ayudarte con tu proyecto o cuenta?', 'bot');
+        console.log('✅ Chatbot inicializado.');
     }
 
-    #cacheDOM() {
-        this.chatContainer = document.getElementById('chatbot-container');
-        this.toggleBtn = document.getElementById('chatbot-toggle-btn');
-        this.closeBtn = document.getElementById('chatbot-close-btn');
-        this.messagesArea = document.getElementById('chatbot-messages');
-        this.inputField = document.getElementById('chatbot-input');
-        this.sendBtn = document.getElementById('chatbot-send-btn');
-    }
-
-    #render() {
-        const html = `
-            <div id="chatbot-container" class="chatbot-container">
+    /**
+     * Inserta la estructura HTML del chatbot en el body.
+     */
+    renderChatStructure() {
+        const chatHTML = `
+            <div class="chatbot-container">
                 <div class="chatbot-header">
-                    <h3>Asistente PortArq</h3>
-                    <button id="chatbot-close-btn" class="close-chat">✖</button>
+                    <h3>PortArq Assistant</h3>
+                    <button class="close-chat">×</button>
                 </div>
-                <div id="chatbot-messages" class="chatbot-messages">
-                    <div class="message bot-message">
-                        ${this.config.welcomeMessage}
-                    </div>
-                </div>
+                <div class="chatbot-messages"></div>
                 <div class="chatbot-input">
-                    <input type="text" id="chatbot-input" class="message-input" placeholder="Escribe tu consulta..." />
-                    <button id="chatbot-send-btn" class="send-btn">➤</button>
+                    <input type="text" placeholder="Escribe tu mensaje..." class="message-input">
+                    <button class="send-btn">Enviar</button>
                 </div>
             </div>
-            <button id="chatbot-toggle-btn" class="burbuja-flotante">
-                <svg viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
-                </svg>
-            </button>
         `;
-
-        const wrapper = document.getElementById(this.containerId) || document.body;
-        wrapper.insertAdjacentHTML('beforeend', html);
+        document.body.insertAdjacentHTML('beforeend', chatHTML);
     }
 
-    #attachEvents() {
-        // Abrir/Cerrar chatbot
-        this.toggleBtn.addEventListener('click', () => this.toggle());
-        this.closeBtn.addEventListener('click', () => this.toggle());
+    /**
+     * Obtiene referencias a los elementos clave del DOM.
+     */
+    setupDOMReferences() {
+        this.chatContainer = document.querySelector('.chatbot-container');
+        this.messagesContainer = this.chatContainer.querySelector('.chatbot-messages');
+        this.inputElement = this.chatContainer.querySelector('.message-input');
+        this.sendButton = this.chatContainer.querySelector('.send-btn');
+    }
 
-        // Enviar mensajes
-        this.sendBtn.addEventListener('click', () => this.#handleUserMessage());
-        this.inputField.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !this.#isProcessing) {
-                this.#handleUserMessage();
-            }
+    /**
+     * Configura los manejadores de eventos para la burbuja, el cierre y el envío de mensajes.
+     * @param {HTMLElement} bubble - La burbuja flotante.
+     */
+    setupEventListeners(bubble) {
+        // Abrir/Cerrar Chat con la burbuja
+        bubble.addEventListener('click', () => this.toggleChat());
+
+        // Cerrar con el botón 'X'
+        this.chatContainer.querySelector('.close-chat').addEventListener('click', () => this.toggleChat(false));
+
+        // Enviar mensaje
+        this.sendButton.addEventListener('click', () => this.sendMessage());
+        this.inputElement.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.sendMessage();
         });
-
-        // Validar input en tiempo real
-        this.inputField.addEventListener('input', () => this.#validateInput());
     }
+    
+    /**
+     * Muestra u oculta el contenedor del chat.
+     * @param {boolean} [forceState] - Si se proporciona, fuerza a abrir (true) o cerrar (false).
+     */
+    toggleChat(forceState) {
+        const isOpen = this.chatContainer.classList.contains('active');
+        const newState = forceState !== undefined ? forceState : !isOpen;
 
-    #validateInput() {
-        const hasText = this.inputField.value.trim().length > 0;
-        this.sendBtn.disabled = !hasText || this.#isProcessing;
-        
-        // Cambiar estilo visual del botón
-        if (this.sendBtn.disabled) {
-            this.sendBtn.style.background = '#666';
-            this.sendBtn.style.cursor = 'not-allowed';
-        } else {
-            this.sendBtn.style.background = '#000';
-            this.sendBtn.style.cursor = 'pointer';
+        this.chatContainer.classList.toggle('active', newState);
+
+        if (newState) {
+            this.inputElement.focus();
+            this.scrollToBottom();
         }
     }
 
-    async #handleUserMessage() {
-        const text = this.inputField.value.trim();
-        if (!text || this.#isProcessing) return;
+    /**
+     * Procesa y envía el mensaje del usuario al backend.
+     */
+    async sendMessage() {
+        const message = this.inputElement.value.trim();
+        if (!message) return;
 
-        this.#isProcessing = true;
-        this.#validateInput();
+        this.addMessage(message, 'user');
+        this.inputElement.value = '';
+        this.sendButton.disabled = true; // Deshabilitar el botón
+        this.inputElement.disabled = true;
 
-        // Guardar en historial
-        this.#messageHistory.push({ 
-            role: 'user', 
-            content: text, 
-            timestamp: new Date() 
-        });
+        this.addTypingIndicator();
         
-        // Mostrar mensaje del usuario
-        this.addMessage(text, 'user');
-        this.inputField.value = '';
-        this.#validateInput();
-
-        // Mostrar indicador de escritura
-        this.#showTypingIndicator();
-
         try {
-            const response = await this.#fetchBotResponse(text);
-            this.#messageHistory.push({ 
-                role: 'bot', 
-                content: response, 
-                timestamp: new Date() 
-            });
-            
-            this.#removeTypingIndicator();
-            this.addMessage(response, 'bot');
-        } catch (error) {
-            console.error('Error chatbot:', error);
-            this.#removeTypingIndicator();
-            this.addMessage("Lo siento, tuve un problema de conexión. Intenta más tarde.", 'bot');
-        } finally {
-            this.#isProcessing = false;
-            this.#validateInput();
-        }
-    }
-
-    async #fetchBotResponse(message) {
-        // Simulación de respuesta (reemplaza con tu API real)
-        return new Promise(resolve => {
-            setTimeout(() => {
-                const responses = [
-                    `He recibido tu consulta sobre: "${message}". Como asistente arquitectónico, puedo ayudarte con diseño, planos, materiales de construcción y más.`,
-                    `Entiendo tu interés en "${message}". ¿Te gustaría que profundice en algún aspecto específico del proyecto?`,
-                    `Consulta sobre "${message}" registrada. Puedo asistirte con conceptos de diseño, cálculos estructurales o referencias de proyectos similares.`
-                ];
-                resolve(responses[Math.floor(Math.random() * responses.length)]);
-            }, 1500);
-        });
-
-        /* 
-        // Código para API real:
-        try {
-            const response = await fetch(this.#apiEndpoint, {
+            const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    message,
-                    history: this.#messageHistory.slice(-6)
-                })
+                body: JSON.stringify({ message })
             });
-            
-            if (!response.ok) throw new Error('Error en API');
+
             const data = await response.json();
-            return data.reply;
+            this.removeTypingIndicator();
+            this.addMessage(data.response, 'bot');
+
         } catch (error) {
-            return "Lo siento, el servicio no está disponible en este momento.";
-        }
-        */
-    }
-
-    // Métodos públicos
-    toggle() {
-        this.#isOpen = !this.#isOpen;
-        
-        if (this.#isOpen) {
-            this.chatContainer.classList.add('active');
-            this.toggleBtn.style.display = 'none';
-            this.inputField.focus();
-        } else {
-            this.chatContainer.classList.remove('active');
-            this.toggleBtn.style.display = 'block';
+            this.removeTypingIndicator();
+            this.addMessage('Error al conectar con el asistente. Intenta más tarde.', 'bot');
+            console.error('❌ Error en el chat:', error);
+        } finally {
+            this.sendButton.disabled = false;
+            this.inputElement.disabled = false;
+            this.inputElement.focus();
         }
     }
 
-    addMessage(text, sender = 'bot') {
-        const msgDiv = document.createElement('div');
-        msgDiv.classList.add('message', `${sender}-message`);
-        msgDiv.textContent = text;
-        
-        this.messagesArea.appendChild(msgDiv);
-        this.#scrollToBottom();
+    /**
+     * Añade una burbuja de mensaje al contenedor.
+     * @param {string} text 
+     * @param {'user' | 'bot'} sender 
+     */
+    addMessage(text, sender) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        messageDiv.textContent = text;
+
+        this.messagesContainer.appendChild(messageDiv);
+        this.scrollToBottom();
     }
 
-    clearChat() {
-        this.messagesArea.innerHTML = `
-            <div class="message bot-message">
-                ${this.config.welcomeMessage}
-            </div>
-        `;
-        this.#messageHistory = [];
-    }
-
-    // Método para obtener estadísticas del chat
-    getChatStats() {
-        return {
-            totalMessages: this.#messageHistory.length,
-            userMessages: this.#messageHistory.filter(m => m.role === 'user').length,
-            botMessages: this.#messageHistory.filter(m => m.role === 'bot').length
-        };
-    }
-
-    #showTypingIndicator() {
+    /**
+     * Añade el indicador de que el bot está escribiendo.
+     */
+    addTypingIndicator() {
         const typingDiv = document.createElement('div');
-        typingDiv.id = 'chat-typing';
-        typingDiv.classList.add('message', 'bot-message', 'typing');
+        typingDiv.className = 'message bot-message typing';
+        typingDiv.id = 'typingIndicator';
         typingDiv.textContent = 'Escribiendo...';
-        this.messagesArea.appendChild(typingDiv);
-        this.#scrollToBottom();
+        this.messagesContainer.appendChild(typingDiv);
+        this.scrollToBottom();
     }
 
-    #removeTypingIndicator() {
-        const typing = document.getElementById('chat-typing');
-        if (typing) typing.remove();
-    }
-
-    #scrollToBottom() {
-        this.messagesArea.scrollTop = this.messagesArea.scrollHeight;
-    }
-
-    // Método para destruir el chatbot y limpiar
-    destroy() {
-        if (this.chatContainer) {
-            this.chatContainer.remove();
+    /**
+     * Elimina el indicador de que el bot está escribiendo.
+     */
+    removeTypingIndicator() {
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) {
+            this.messagesContainer.removeChild(indicator);
         }
-        if (this.toggleBtn) {
-            this.toggleBtn.remove();
-        }
+    }
+
+    /**
+     * Desplaza el contenedor de mensajes hacia abajo.
+     */
+    scrollToBottom() {
+        this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight;
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +22,7 @@
         <nav>
             <ul>
                 <li><a href="Proyectos.html">Explorar Proyectos</a></li>
-                <li id="navMisProyectosLink" style="display:none;"><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
                 <li class="dropdown">
                     <a href="#" id="userIcon" class="icon-link">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -32,15 +33,17 @@
                     </a>
 
                     <div id="dropdownMenu" class="dropdown-content">
-                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesión</a>
+                        <a href="IniciarSesion.html" id="loginLink">Iniciar Sesion</a>
                         <a href="AdministrarCuenta.html" id="adminCuentaLink" style="display: none;">Mi Cuenta</a>
-                        <a href="SubirProyecto.html" id="subirProyectoLink" style="display: none;">Administrar Proyectos</a>
+                        <a href="SubirProyecto.html">Administrar Proyectos</a>
                         <a href="#" id="logoutLink" style="display:none;">Cerrar Sesión</a>
                     </div>
                 </li>
             </ul>
         </nav>
-        <a href="#contenidoPrincipal" class="btn-scroll-down">🢃</a>
+        <a href="#contenidoPrincipal" class="btn-scroll-down">
+            🢃
+        </a>
     </div>
 
     <div class="Proyectos" id="contenidoPrincipal">
@@ -53,6 +56,7 @@
         </div>
 
         <div id="explore-projects" class="tab-content active">
+
             <div class="projects-filters">
                 <div class="search-box">
                     <input type="text" id="projectSearch" placeholder="Buscar proyectos, arquitectos...">
@@ -88,41 +92,43 @@
             </div>
 
             <div class="projects-grid" id="projectsGrid">
-                <!-- Los proyectos se cargarán dinámicamente aquí -->
             </div>
-        </div>
 
+        </div>
         <div id="explore-architects" class="tab-content">
+
             <div class="projects-filters">
                 <div class="search-box">
-                    <input type="text" id="architectSearch" placeholder="Buscar arquitectos por nombre o especialidad...">
+                    <input type="text" id="architectSearch"
+                        placeholder="Buscar arquitectos por nombre o especialidad...">
                     <span class="search-icon">🔍</span>
                 </div>
             </div>
             <div class="projects-grid" id="architectsGrid">
-                <!-- Los arquitectos se cargarán dinámicamente aquí -->
             </div>
         </div>
-    </div>
 
+        </div>
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
         </svg>
     </div>
-
     <footer>
         <div class="footer-content">
             <div class="footer-section about">
                 <h3 class="logo-text">PortArq</h3>
-                <p>Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.</p>
+                <p>
+                    Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
+                </p>
             </div>
             <div class="footer-section links">
                 <h3>Enlaces Rápidos</h3>
                 <ul>
                     <li><a href="../INDEX.html">Inicio</a></li>
                     <li><a href="Proyectos.html">Proyectos</a></li>
+                    <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
                     <li><a href="Contactanos.html">Contáctanos</a></li>
                 </ul>
             </div>
@@ -139,27 +145,160 @@
         </div>
     </footer>
 
-    <!-- ÚNICO SCRIPT NECESARIO -->
-    <script type="module" src="../JS/main.js"></script>
-    
-    <!-- Script auxiliar para las pestañas (temporal) -->
+
+    <script src="../JS/chatbot.js"></script>
+    <script src="../JS/projectGallery.js"></script>
+    <script src="../JS/architects.js"></script>
+    <script src="../JS/scrollDown.js"></script>
     <script>
+        // ⭐ LÓGICA AGREGADA: Menú desplegable (Icono de usuario) ⭐
+        document.addEventListener('DOMContentLoaded', function () {
+            const userIcon = document.getElementById('userIcon');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            if (userIcon && dropdownMenu) {
+                userIcon.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('show');
+                });
+
+                window.addEventListener('click', function (e) {
+                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+        // ⭐ FIN LÓGICA AGREGADA ⭐
+
         function openTab(evt, tabName) {
-            const tabcontent = document.getElementsByClassName("tab-content");
-            for (let i = 0; i < tabcontent.length; i++) {
+            var i, tabcontent, tablinks;
+
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
                 tabcontent[i].classList.remove("active");
             }
-            
-            const tablinks = document.getElementsByClassName("tab-link");
-            for (let i = 0; i < tablinks.length; i++) {
+
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
                 tablinks[i].classList.remove("active");
             }
-            
+
             document.getElementById(tabName).style.display = "block";
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
+
+        // --- INICIO DE LA NUEVA LÓGICA DE BÚSQUEDA ---
+
+        // Variable para guardar la lista completa de arquitectos
+        let allArchitects = [];
+
+        // Función para RENDERIZAR la lista de arquitectos
+        function renderArchitects(architectList) {
+            const container = document.getElementById('architectsGrid');
+            if (!container) return;
+
+            container.innerHTML = ''; // Limpiar
+
+            // Mensaje si no hay resultados
+            if (architectList.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; width: 100%;">No se encontraron arquitectos.</p>';
+                return;
+            }
+
+            // Crear y añadir las tarjetas de arquitecto
+            architectList.forEach(architect => {
+                const architectCard = document.createElement('a');
+                architectCard.href = `PerfilArquitecto.html?id=${architect.id}`;
+                architectCard.className = 'architect-card';
+                architectCard.innerHTML = `
+                    <img src="${architect.avatar}" alt="${architect.name}" class="architect-avatar" onerror="this.src='../IMG/default-avatar.jpg'">
+                    <h3 class="architect-name">${architect.name}</h3>
+                    <p class="architect-specialty">${architect.specialty}</p>
+                `;
+                container.appendChild(architectCard);
+            });
+        }
+
+        // Función para CARGAR la lista inicial de arquitectos
+        function loadArchitects() {
+            // Nota: Se asume que ArchitectManager() está definida en architects.js
+            const architectDB = new ArchitectManager(); 
+            allArchitects = architectDB.architects; // Guardar en la variable global
+            renderArchitects(allArchitects); // Renderizar la lista completa
+        }
+
+        // Función para FILTRAR la lista de arquitectos
+        function filterArchitects() {
+            // Obtener el término de búsqueda de la NUEVA barra
+            const searchTerm = document.getElementById('architectSearch').value.toLowerCase();
+
+            // Filtrar la lista guardada
+            const filteredList = allArchitects.filter(architect => {
+                const matchesName = architect.name.toLowerCase().includes(searchTerm);
+                const matchesSpecialty = architect.specialty.toLowerCase().includes(searchTerm);
+                return matchesName || matchesSpecialty;
+            });
+
+            // Volver a renderizar la cuadrícula con la lista filtrada
+            renderArchitects(filteredList);
+        }
+
+        // Cargar los arquitectos y configurar los listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar la lista inicial de arquitectos
+            // Nota: Solo se carga si estamos en la pestaña de arquitectos, pero el script de pestañas se ejecuta más abajo
+            // Por ahora, se mantiene aquí, asumiendo que se carga al inicio.
+            if (typeof ArchitectManager !== 'undefined') {
+                loadArchitects();
+            }
+
+
+            // Configurar el listener para la NUEVA barra de búsqueda
+            const architectSearchInput = document.getElementById('architectSearch');
+            if (architectSearchInput) {
+                // Cada vez que el usuario teclea, llama a filterArchitects
+                architectSearchInput.addEventListener('input', filterArchitects);
+            }
+
+            // Asegurarnos que la pestaña de proyectos se muestre por defecto
+            document.getElementById("explore-projects").style.display = "block";
+        });
+
+        // --- FIN DE LA NUEVA LÓGICA DE BÚSQUEDA ---
+    </script>
+    
+    <script>document.addEventListener('DOMContentLoaded', function() {
+        // Controla el menu de cuenta segun el estado de login
+            const adminCuentaLink = document.getElementById('adminCuentaLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const token = localStorage.getItem('authToken');
+            
+            if (token) {
+                if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+                if (loginLink) loginLink.style.display = 'none';
+                if (logoutLink) logoutLink.style.display = 'block';
+            } else {
+                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+                if (loginLink) loginLink.style.display = 'block';
+                if (logoutLink) logoutLink.style.display = 'none';
+            }
+
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = '../INDEX.html';
+                });
+            }
+        });
     </script>
 </body>
+
 </html>

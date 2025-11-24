@@ -1,33 +1,35 @@
+// JS/models/Architect.js
+
+/**
+ * Clase que representa a un Arquitecto (Perfil público).
+ * Extiende la información básica del User para propósitos de visualización.
+ */
 export class Architect {
+    /**
+     * @param {Object} data - Objeto de datos del arquitecto.
+     */
     constructor(data) {
         this.id = data.id;
-        this.name = data.nombre;
-        this.bio = data.biografia || "Arquitecto profesional con experiencia en diseño innovador.";
-        this.specialty = data.especialidad || "General";
-        this.email = data.email;
-        this.phone = data.telefono || "No disponible";
-        this.photo = data.foto || 'IMG/avatar1.jpg';
-        this.yearsExperience = data.experiencia || 0;
+        this.name = data.nombre || 'Arquitecto';
+        this.avatar = data.avatar || 'https://placehold.co/150x150/333/fff?text=A';
+        this.specialty = data.especialidad || 'Arquitectura General';
+        this.experience = data.experiencia || 'No especificado';
+        this.bio = data.biografia || 'Especialista en diseño y gestión de proyectos.';
+        
+        // Contacto y redes (públicos)
+        this.contact = data.email || null; // Usamos el email como contacto principal
+        this.social = data.social || { linkedin: null, instagram: null, behance: null }; 
     }
 
     /**
-     * Genera el HTML para la tarjeta de perfil
+     * Crea una URL para el perfil público.
+     * @returns {string}
      */
-    toHTMLProfile() {
-        return `
-            <div class="profile-header">
-                <img src="${this.photo}" alt="${this.name}" class="profile-pic">
-                <div class="profile-info">
-                    <h1>${this.name}</h1>
-                    <p class="specialty">${this.specialty}</p>
-                    <p class="experience">${this.yearsExperience} años de experiencia</p>
-                    <p class="bio">${this.bio}</p>
-                    <div class="contact-info">
-                        <span>📧 ${this.email}</span>
-                        <span>📞 ${this.phone}</span>
-                    </div>
-                </div>
-            </div>
-        `;
+    getProfileUrl() {
+        return `PerfilArquitecto.html?id=${this.id}`;
+    }
+
+    static fromData(data) {
+        return new Architect(data);
     }
 }
