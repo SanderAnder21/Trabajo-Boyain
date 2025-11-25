@@ -8,7 +8,7 @@
 export class AuthService {
     constructor() {
         // La URL base del backend se define aquí (basada en tu app.js)
-        this.API_URL = 'http://localhost:3000/api'; 
+        this.API_URL = 'http://localhost:3000/api';
     }
 
     /**
@@ -26,7 +26,7 @@ export class AuthService {
     getUserRole() {
         return localStorage.getItem('userRole');
     }
-    
+
     /**
      * Obtiene los datos completos del usuario desde localStorage.
      * @returns {Object | null}
@@ -34,6 +34,22 @@ export class AuthService {
     getUserData() {
         const data = localStorage.getItem('userData');
         return data ? JSON.parse(data) : null;
+    }
+
+    /**
+ * Verifica si el usuario está autenticado.
+ * @returns {boolean}
+ */
+    isAuthenticated() {
+        return this.checkAuthStatus();
+    }
+
+    /**
+     * Obtiene el token de autenticación.
+     * @returns {string | null}
+     */
+    getToken() {
+        return localStorage.getItem('authToken');
     }
 
     /**
@@ -45,7 +61,7 @@ export class AuthService {
      */
     async login(email, password) {
         console.log(`[AuthService] Intentando login para: ${email}`);
-        
+
         const response = await fetch(`${this.API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -60,11 +76,11 @@ export class AuthService {
         }
 
         const user = result.user;
-        
+
         // Determinar el rol (usa el campo 'es_arquitecto' que devuelve el backend)
         const isArchitect = Boolean(user.es_arquitecto);
         const role = isArchitect ? 'arquitecto' : 'cliente';
-        
+
         this.saveSession(result.token, role, user);
         return { token: result.token, user, role };
     }
@@ -77,7 +93,7 @@ export class AuthService {
      */
     async register(data) {
         console.log(`[AuthService] Intentando registro para: ${data.email}`);
-        
+
         const response = await fetch(`${this.API_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

@@ -108,7 +108,7 @@
             </div>
         </div>
 
-        </div>
+    </div>
     <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -146,10 +146,12 @@
     </footer>
 
 
-    <script src="../JS/chatbot.js"></script>
+
+    <script type="module" src="../JS/controllers/ChatbotController.js"></script>
+    <script type="module" src="../JS/controllers/ProjectsGalleryController.js"></script>
     <script src="../JS/projectGallery.js"></script>
     <script src="../JS/architects.js"></script>
-    <script src="../JS/scrollDown.js"></script>
+    <script type="module" src="../JS/controllers/ScrollController.js"></script>
     <script>
         // ⭐ LÓGICA AGREGADA: Menú desplegable (Icono de usuario) ⭐
         document.addEventListener('DOMContentLoaded', function () {
@@ -225,7 +227,7 @@
         // Función para CARGAR la lista inicial de arquitectos
         function loadArchitects() {
             // Nota: Se asume que ArchitectManager() está definida en architects.js
-            const architectDB = new ArchitectManager(); 
+            const architectDB = new ArchitectManager();
             allArchitects = architectDB.architects; // Guardar en la variable global
             renderArchitects(allArchitects); // Renderizar la lista completa
         }
@@ -269,14 +271,14 @@
 
         // --- FIN DE LA NUEVA LÓGICA DE BÚSQUEDA ---
     </script>
-    
-    <script>document.addEventListener('DOMContentLoaded', function() {
-        // Controla el menu de cuenta segun el estado de login
+
+    <script>document.addEventListener('DOMContentLoaded', function () {
+            // Controla el menu de cuenta segun el estado de login
             const adminCuentaLink = document.getElementById('adminCuentaLink');
             const loginLink = document.getElementById('loginLink');
             const logoutLink = document.getElementById('logoutLink');
             const token = localStorage.getItem('authToken');
-            
+
             if (token) {
                 if (adminCuentaLink) adminCuentaLink.style.display = 'block';
                 if (loginLink) loginLink.style.display = 'none';
@@ -288,7 +290,7 @@
             }
 
             if (logoutLink) {
-                logoutLink.addEventListener('click', function(e) {
+                logoutLink.addEventListener('click', function (e) {
                     e.preventDefault();
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('userData');

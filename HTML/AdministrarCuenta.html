@@ -10,7 +10,15 @@
     <link rel="stylesheet" href="../CSS/AdministrarCuenta.css">
 </head>
 
+
 <body>
+    <script>
+        // Agregar clase al body según el rol del usuario
+        const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+        const userRole = localStorage.getItem('userRole');
+        const isArchitect = userData.es_arquitecto === 1 || userData.es_arquitecto === true || userRole === 'arquitecto';
+        document.body.classList.add(isArchitect ? 'arquitecto' : 'cliente');
+    </script>
     <div class="contenedor-imagen">
         <img src="../IMG/arq4.jpg" alt="imagen inicio">
         <nav1>
@@ -52,44 +60,44 @@
                 <h2>Mi Cuenta</h2>
             </div>
             <!-- SIDEBAR MODIFICADO -->
-        <ul class="sidebar-nav">
-            <li class="registered-only">
-                <a href="#personal" class="nav-link active" data-section="personal">
-                    <span class="sidebar-icon">👤</span>
-                    Datos Personales
-                </a>
-            </li>
-            <li class="architect-only">  <!-- CAMBIADO: solo arquitectos -->
-                <a href="#contacto" class="nav-link" data-section="contacto">
-                    <span class="sidebar-icon">📧</span>
-                    Datos de Contacto
-                </a>
-            </li>
-            <li class="architect-only">
-                <a href="#profesional" class="nav-link" data-section="profesional">
-                    <span class="sidebar-icon">💼</span>
-                    Información Profesional
-                </a>
-            </li>
-            <li class="architect-only">
-                <a href="#proyectos" class="nav-link" data-section="proyectos">
-                    <span class="sidebar-icon">🏗️</span>
-                    Mis Proyectos
-                </a>
-            </li>
-            <li class="architect-only">
-                <a href="#suscripcion" class="nav-link" data-section="suscripcion">
-                    <span class="sidebar-icon">💶</span>
-                    Mi suscripción
-                </a>
-            </li>
-            <li class="registered-only">
-                <a href="#seguridad" class="nav-link" data-section="seguridad">
-                    <span class="sidebar-icon">🔒</span>
-                    Seguridad
-                </a>
-            </li>
-        </ul>
+            <ul class="sidebar-nav">
+                <li class="registered-only">
+                    <a href="#personal" class="nav-link active" data-section="personal">
+                        <span class="sidebar-icon">👤</span>
+                        Datos Personales
+                    </a>
+                </li>
+                <li class="architect-only"> <!-- CAMBIADO: solo arquitectos -->
+                    <a href="#contacto" class="nav-link" data-section="contacto">
+                        <span class="sidebar-icon">📧</span>
+                        Datos de Contacto
+                    </a>
+                </li>
+                <li class="architect-only">
+                    <a href="#profesional" class="nav-link" data-section="profesional">
+                        <span class="sidebar-icon">💼</span>
+                        Información Profesional
+                    </a>
+                </li>
+                <li class="architect-only">
+                    <a href="#proyectos" class="nav-link" data-section="proyectos">
+                        <span class="sidebar-icon">🏗️</span>
+                        Mis Proyectos
+                    </a>
+                </li>
+                <li class="architect-only">
+                    <a href="#suscripcion" class="nav-link" data-section="suscripcion">
+                        <span class="sidebar-icon">💶</span>
+                        Mi suscripción
+                    </a>
+                </li>
+                <li class="registered-only">
+                    <a href="#seguridad" class="nav-link" data-section="seguridad">
+                        <span class="sidebar-icon">🔒</span>
+                        Seguridad
+                    </a>
+                </li>
+            </ul>
         </div>
 
         <div class="admin-main">
@@ -346,7 +354,8 @@
                     <h4>Pago en Efectivo</h4>
                     <div class="cash-instructions">
                         <div class="reference-info">
-                            <p>Para completar tu pago, realiza un depósito en cualquier tienda OXXO con los siguientes
+                            <p>Para completar tu pago, realiza un depósito en cualquier tienda OXXO con los
+                                siguientes
                                 datos:</p>
                             <div class="reference-number">
                                 <strong>Número de Referencia:</strong>
@@ -386,7 +395,8 @@
             <div class="footer-section about">
                 <h3 class="logo-text">PortArq</h3>
                 <p>
-                    Una plataforma especializada para exposición, organización y gestión de proyectos para arquitectos.
+                    Una plataforma especializada para exposición, organización y gestión de proyectos para
+                    arquitectos.
                 </p>
             </div>
             <div class="footer-section links">
@@ -411,42 +421,42 @@
         </div>
     </footer>
 
-    <script src="../JS/AdministrarCuentas.js"></script>
-    <script src="../JS/chatbot.js"></script>
-    <script src="../JS/scrollDown.js"></script>
-    
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const adminCuentaLink = document.getElementById('adminCuentaLink');
-        const loginLink = document.getElementById('loginLink');
-        const logoutLink = document.getElementById('logoutLink');
-        const token = localStorage.getItem('authToken');
-        
-        // Si está loggeado, mostrar "Mi Cuenta" y "Cerrar Sesión", ocultar "Iniciar Sesión"
-        if (token) {
-            if (adminCuentaLink) adminCuentaLink.style.display = 'block';
-            if (loginLink) loginLink.style.display = 'none';
-            if (logoutLink) logoutLink.style.display = 'block';
-        } else {
-            // Si NO está loggeado, ocultar "Mi Cuenta" y "Cerrar Sesión", mostrar "Iniciar Sesión"
-            if (adminCuentaLink) adminCuentaLink.style.display = 'none';
-            if (loginLink) loginLink.style.display = 'block';
-            if (logoutLink) logoutLink.style.display = 'none';
-        }
+    <script type="module" src="../JS/administrarCuenta.js"></script>
+    <script type="module" src="../JS/controllers/ChatbotController.js"></script>
+    <script type="module" src="../JS/controllers/ScrollController.js"></script>
 
-        // Manejar cierre de sesión
-        if (logoutLink) {
-            logoutLink.addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('userData');
-                localStorage.removeItem('userRole');
-                localStorage.removeItem('userId');
-                window.location.href = '../INDEX.html';
-            });
-        }
-    });
-</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const adminCuentaLink = document.getElementById('adminCuentaLink');
+            const loginLink = document.getElementById('loginLink');
+            const logoutLink = document.getElementById('logoutLink');
+            const token = localStorage.getItem('authToken');
+
+            // Si está loggeado, mostrar "Mi Cuenta" y "Cerrar Sesión", ocultar "Iniciar Sesión"
+            if (token) {
+                if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+                if (loginLink) loginLink.style.display = 'none';
+                if (logoutLink) logoutLink.style.display = 'block';
+            } else {
+                // Si NO está loggeado, ocultar "Mi Cuenta" y "Cerrar Sesión", mostrar "Iniciar Sesión"
+                if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+                if (loginLink) loginLink.style.display = 'block';
+                if (logoutLink) logoutLink.style.display = 'none';
+            }
+
+            // Manejar cierre de sesión
+            if (logoutLink) {
+                logoutLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userId');
+                    window.location.href = '../INDEX.html';
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

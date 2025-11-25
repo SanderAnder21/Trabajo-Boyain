@@ -1,8 +1,8 @@
 // JS/controllers/ProjectDetailController.js
 
 import { BasePage } from './BasePage.js';
-import { Project } from '../models/Project.js';
-import { Architect } from '../models/Architect.js';
+import FavoritesController from './FavoritesController.js';
+import RatingController from './RatingController.js';
 
 /**
  * Controlador para la página de Detalle de Proyecto (ProyectoDetalle.html).
@@ -20,15 +20,16 @@ export class ProjectDetailController extends BasePage {
         this.dataService = dataService;
         this.projectId = this.getProjectIdFromURL();
         this.project = null;
+        this.favoritesController = new FavoritesController();
+        this.ratingController = new RatingController();
     }
 
     getProjectIdFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
-        // Retorna el ID del URL o null/undefined si no está.
         return urlParams.get('id');
     }
 
-    init() {
+    async init() {
         console.log(`✨ ProjectDetailController: Inicializando para ID: ${this.projectId}`);
 
         if (!this.projectId) {
@@ -37,26 +38,30 @@ export class ProjectDetailController extends BasePage {
             return;
         }
 
-        this.loadProjectDetails();
-        this.setupFileTabs(); // Maneja las pestañas de Imágenes, PDF, 3D
+        await this.loadProjectDetails();
+        this.setupFileTabs();
         this.setupEventListeners();
+
+        // Inicializar controladores de favoritos y calificaciones
+        if (this.projectId) {
+            this.favoritesController.initDetail(this.projectId);
+            this.ratingController.init(this.projectId);
+        }
     }
 
     async loadProjectDetails() {
         try {
-            // Llama al DataService para obtener el proyecto (Se asume la existencia de getProjectById)
-            // Ya que DataService solo tiene getProjects(), lo simulamos buscando en la lista completa:
-            const allProjects = await this.dataService.getProjects();
-            const rawData = allProjects.find(p => p.id === parseInt(this.projectId));
+            // Cargar proyecto desde la API
+            const response = await fetch(`/api/projects/${this.projectId}`);
+            const data = await response.json();
 
-            if (!rawData) {
+            if (!response.ok) {
                 this.uiService.showAlert('El proyecto solicitado no existe.', true);
                 this.uiService.redirect('Proyectos.html');
                 return;
             }
-            
-            // Creación del Modelo Project
-            this.project = Project.fromData(rawData);
+
+            this.project = data.project;
             this.renderProject();
 
         } catch (error) {
@@ -67,70 +72,52 @@ export class ProjectDetailController extends BasePage {
 
     renderProject() {
         if (!this.project) return;
-        
-        document.title = `${this.project.title} - PortArq`;
-        
+
+        document.title = `${this.project.titulo} - PortArq`;
+
         // --- Header e Info Principal ---
-        document.getElementById('projectTitle').textContent = this.project.title;
-        document.getElementById('projectMainImage').src = this.project.image;
-        document.getElementById('projectFullDescription').innerHTML = this.formatDescription(this.project.fullDescription || this.project.description);
+        document.getElementById('projectTitle').textContent = this.project.titulo;
+        document.getElementById('projectMainImage').src = this.project.imagen_principal || '../IMG/project-placeholder.jpg';
+        document.getElementById('projectFullDescription').innerHTML = this.formatDescription(this.project.descripcion_completa || this.project.descripcion);
 
-        // Renderizar etiquetas
-        this.renderTags();
-
-        // Renderizar detalles técnicos (Ubicación, Área, etc.)
+        // Renderizar detalles técnicos
         this.renderProjectDetails();
-        
+
         // Renderizar archivos y media
-        this.renderFiles(); 
-        
+        this.renderFiles();
+
         // --- Arquitecto ---
-        const architect = Architect.fromData(this.project.architect); 
-        this.renderArchitectInfo(architect);
-        
-        // --- Estadísticas y Rating ---
-        document.getElementById('projectRating').textContent = this.project.rating.toFixed(1);
-        document.getElementById('projectDate').textContent = this.project.getFormattedDate();
-        this.setupRating();
+        this.renderArchitectInfo();
+
+        // --- Estadísticas ---
+        document.getElementById('projectDate').textContent = new Date(this.project.fecha_publicacion).toLocaleDateString();
     }
 
-    renderArchitectInfo(architect) {
-        const architectLink = `PerfilArquitecto.html?id=${architect.id}`;
-        
-        // Actualiza el HTML del bloque de arquitecto
+    renderArchitectInfo() {
+        const architectLink = `PerfilArquitecto.html?id=${this.project.usuario_id}`;
+
         const architectInfo = document.querySelector('.architect-info');
         if (architectInfo) {
-             architectInfo.innerHTML = `
+            architectInfo.innerHTML = `
                 <a href="${architectLink}">
-                    <img id="architectAvatar" src="${architect.avatar}" alt="${architect.name}" class="architect-avatar-large">
+                    <img id="architectAvatar" src="${this.project.arquitecto_avatar || '../IMG/default-avatar.png'}" alt="${this.project.arquitecto_nombre}" class="architect-avatar-large">
                 </a>
                 <div class="architect-details">
                     <a href="${architectLink}" style="text-decoration: none; color: inherit;">
-                        <h3 id="architectName">${architect.name}</h3>
+                        <h3 id="architectName">${this.project.arquitecto_nombre}</h3>
                     </a>
-                    <p id="architectSpecialty" class="architect-specialty">${architect.specialty}</p>
+                    <p id="architectSpecialty" class="architect-specialty">${this.project.arquitecto_especialidad || 'Arquitecto'}</p>
                     <button class="contact-architect">Contactar Arquitecto</button>
                 </div>
             `;
-            // Re-adjuntar listener de contacto al nuevo botón
+
             architectInfo.querySelector('.contact-architect')?.addEventListener('click', () => {
-                this.contactArchitect(architect);
+                this.contactArchitect();
             });
         }
     }
 
-    renderTags() {
-        const tagsContainer = document.getElementById('projectTagsFull');
-        if (!tagsContainer) return;
-
-        const allTags = this.project.tags; // Usar el array de tags del modelo
-        tagsContainer.innerHTML = allTags.map(tag =>
-            `<span class="project-tag-large">${tag}</span>`
-        ).join('');
-    }
-
     renderProjectDetails() {
-        // Renderiza el grid de detalles técnicos bajo la descripción
         const descriptionElement = document.getElementById('projectFullDescription');
         if (!descriptionElement || descriptionElement.nextElementSibling?.classList.contains('project-details-grid')) return;
 
@@ -138,23 +125,21 @@ export class ProjectDetailController extends BasePage {
         detailsContainer.className = 'project-details-grid';
         detailsContainer.innerHTML = `
             <div class="detail-item">
-                <strong>Ubicación:</strong> ${this.project.location}
+                <strong>Ubicación:</strong> ${this.project.ubicacion || 'No especificada'}
             </div>
             <div class="detail-item">
-                <strong>Área Construida:</strong> ${this.project.area}
+                <strong>Área Construida:</strong> ${this.project.area_construida || 'No especificada'}
             </div>
             <div class="detail-item">
-                <strong>Presupuesto:</strong> ${this.project.budget}
+                <strong>Presupuesto:</strong> ${this.project.presupuesto || 'No especificado'}
             </div>
             <div class="detail-item">
-                <strong>Duración:</strong> ${this.project.duration}
+                <strong>Duración:</strong> ${this.project.duracion || 'No especificada'}
             </div>
         `;
 
         descriptionElement.parentNode.insertBefore(detailsContainer, descriptionElement.nextSibling);
     }
-    
-    // --- Gestión de Archivos y Pestañas ---
 
     setupFileTabs() {
         const tabs = document.querySelectorAll('.files-tabs .file-tab');
@@ -173,236 +158,119 @@ export class ProjectDetailController extends BasePage {
     }
 
     renderFiles() {
-        // Llama a las funciones de renderizado de media
         this.renderImages();
         this.renderPDFs();
         this.render3DModels();
-
-        // Ocultar pestañas que no tienen contenido
         this.hideEmptyTabs();
     }
-    
+
     renderImages() {
         const imagesGrid = document.getElementById('imagesGrid');
-        const images = this.project.images;
-        
+        const images = this.project.imagenes_galeria || [];
+
         if (!imagesGrid) return;
-        
-        if (images && images.length > 0) {
-            imagesGrid.innerHTML = images.map((image, index) => `
-                <div class="image-item" data-src="${image}" data-alt="Imagen ${index + 1}">
-                    <img src="${image}" alt="Imagen ${index + 1} del proyecto" loading="lazy">
+
+        if (images.length > 0) {
+            imagesGrid.innerHTML = images.map((img, index) => `
+                <div class="image-item" data-src="${img.url_imagen}" data-alt="Imagen ${index + 1}">
+                    <img src="${img.url_imagen}" alt="Imagen ${index + 1}" loading="lazy">
                     <div class="image-overlay">
                         <span class="zoom-icon">🔍</span>
                     </div>
                 </div>
             `).join('');
 
-            // Adjuntar listener de modal (delegación de eventos si fuera un grid grande)
             document.querySelectorAll('.image-item').forEach(item => {
                 item.addEventListener('click', () => {
                     const src = item.dataset.src;
                     const alt = item.dataset.alt;
-                    this.openImageModal(src, alt); // Implementación simplificada
+                    this.openImageModal(src, alt);
                 });
             });
 
         } else {
-            imagesGrid.innerHTML = `<div class="no-files-message"><p>No hay imágenes disponibles para este proyecto.</p></div>`;
+            imagesGrid.innerHTML = `<div class="no-files-message"><p>No hay imágenes adicionales.</p></div>`;
         }
     }
 
     renderPDFs() {
         const pdfPane = document.getElementById('pdfs-pane');
-        const pdfs = this.project.pdfs;
-        
+        const pdfFiles = (this.project.archivos || []).filter(f => f.tipo_archivo === 'pdf');
+
         if (!pdfPane) return;
 
-        if (pdfs && pdfs.length > 0) {
-            pdfPane.innerHTML = ''; // Limpiar mensaje de no-files si existe
-
-            // 1. Crear el selector si hay múltiples PDFs
-            if (pdfs.length > 1) {
-                const pdfSelector = document.createElement('div');
-                pdfSelector.className = 'pdf-selector';
-                pdfSelector.innerHTML = `
-                    <label for="pdfSelect">Seleccionar documento:</label>
-                    <select id="pdfSelect">
-                        ${pdfs.map((pdf, index) =>
-                    `<option value="${pdf}">Documento ${index + 1}</option>`
-                ).join('')}
-                    </select>
-                `;
-                pdfPane.appendChild(pdfSelector);
-
-                pdfSelector.querySelector('#pdfSelect').addEventListener('change', (e) => {
-                    document.getElementById('pdfFrame').src = e.target.value;
-                });
-            }
-
-            // 2. Crear el visor
-            const pdfViewer = document.createElement('div');
-            pdfViewer.className = 'pdf-viewer';
-            pdfViewer.innerHTML = `<iframe id="pdfFrame" src="${pdfs[0]}"></iframe>`;
-            pdfPane.appendChild(pdfViewer);
-
+        if (pdfFiles.length > 0) {
+            pdfPane.innerHTML = `
+                <div class="pdf-list" style="display: grid; gap: 10px;">
+                    ${pdfFiles.map(pdf => `
+                        <div class="pdf-item" style="padding: 10px; background: #f5f5f5; border-radius: 5px; display: flex; align-items: center;">
+                            <span style="font-size: 1.5rem; margin-right: 10px;">📄</span>
+                            <a href="${pdf.url_archivo}" target="_blank" class="pdf-link" style="text-decoration: none; color: #333; font-weight: 500;">
+                                ${pdf.nombre_archivo}
+                            </a>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         } else {
-            pdfPane.innerHTML = `<div class="no-files-message"><p>No hay documentos PDF disponibles para este proyecto.</p></div>`;
+            pdfPane.innerHTML = `<div class="no-files-message"><p>No hay planos disponibles.</p></div>`;
         }
     }
-    
+
     render3DModels() {
-        const pane3d = document.getElementById('3d-pane');
-        const model3d = this.project.model3d;
+        const modelPane = document.getElementById('3d-pane');
+        const modelFiles = (this.project.archivos || []).filter(f => f.tipo_archivo === 'modelo3d');
 
-        if (!pane3d) return;
+        if (!modelPane) return;
 
-        if (model3d && model3d.hasModel) {
-            // El HTML de ProyectoDetalle.html ya tiene el tag <model-viewer>
-            // Aseguramos que la fuente sea correcta si se usa un script 3D específico
-            const modelViewer = pane3d.querySelector('model-viewer');
-            if (modelViewer) {
-                 modelViewer.setAttribute('src', model3d.file);
-            }
+        if (modelFiles.length > 0) {
+            // Tomamos el primero por ahora
+            const modelUrl = modelFiles[0].url_archivo;
+            modelPane.innerHTML = `
+                <model-viewer 
+                    src="${modelUrl}" 
+                    alt="Modelo 3D del proyecto" 
+                    auto-rotate 
+                    camera-controls 
+                    shadow-intensity="1"
+                    style="width: 100%; height: 500px; background-color: #f0f0f0; border-radius: 8px;">
+                </model-viewer>
+                <p style="text-align: center; margin-top: 10px; color: #666;">${modelFiles[0].nombre_archivo}</p>
+            `;
         } else {
-            pane3d.innerHTML = `<div class="no-files-message"><p>No hay modelos 3D disponibles para este proyecto.</p></div>`;
+            modelPane.innerHTML = `<div class="no-files-message"><p>No hay modelo 3D disponible.</p></div>`;
         }
     }
 
     hideEmptyTabs() {
-        const tabs = document.querySelectorAll('.files-tabs .file-tab');
+        const pdfFiles = (this.project.archivos || []).filter(f => f.tipo_archivo === 'pdf');
+        const modelFiles = (this.project.archivos || []).filter(f => f.tipo_archivo === 'modelo3d');
+        const images = this.project.imagenes_galeria || [];
 
-        tabs.forEach(tab => {
-            const tabName = tab.getAttribute('data-tab');
-            const pane = document.getElementById(`${tabName}-pane`);
-            
-            // Un panel se considera vacío si solo contiene el mensaje de no-files
-            const isEmpty = pane?.querySelector('.no-files-message'); 
+        if (images.length === 0) {
+            document.querySelector('.file-tab[data-tab="images"]')?.style.display = 'none';
+        }
+        if (pdfFiles.length === 0) {
+            document.querySelector('.file-tab[data-tab="pdfs"]')?.style.display = 'none';
+        }
+        if (modelFiles.length === 0) {
+            document.querySelector('.file-tab[data-tab="3d"]')?.style.display = 'none';
+        }
 
-            if (isEmpty) {
-                tab.style.display = 'none';
-            }
-        });
-        
-        // Si la pestaña activa por defecto fue ocultada, activa la siguiente disponible
         const activeTab = document.querySelector('.files-tabs .file-tab.active');
         if (activeTab && activeTab.style.display === 'none') {
             const firstVisibleTab = document.querySelector('.files-tabs .file-tab:not([style*="display: none"])');
             if (firstVisibleTab) {
-                firstVisibleTab.click(); // Simular clic en la primera pestaña visible
+                firstVisibleTab.click();
             }
         }
     }
-    
-    // --- Calificaciones y Comentarios ---
 
-    setupRating() {
-        const stars = document.querySelectorAll('.star-rating .star');
-
-        stars.forEach(star => {
-            star.addEventListener('click', () => {
-                const rating = star.dataset.value;
-                this.sendRating(rating);
-                // Bloquea el rating visualmente después del voto
-                document.querySelector('.star-rating').classList.add('disabled');
-            });
-        });
-
-        // Manejar envío de comentarios
-        const commentForm = document.getElementById('commentForm');
-        commentForm?.addEventListener('submit', this.handleCommentSubmit.bind(this));
-    }
-    
-    async sendRating(rating) {
-        const userId = this.authService.getUserData()?.id;
-        if (!userId) {
-            this.uiService.showAlert('Debes iniciar sesión para calificar.', true);
-            document.querySelector('.star-rating').classList.remove('disabled'); // Desbloquear
-            return;
-        }
-        
-        // Lógica de envío al backend (DataService debe tener este método)
-        try {
-            // Suponiendo un método en DataService para enviar la calificación
-            // const result = await this.dataService.sendRating(this.projectId, rating);
-            
-            // Simulación
-            console.log(`Enviando calificación ${rating} para proyecto ${this.projectId}`);
-            const result = { newAverageRating: 4.85, totalVotes: 16 };
-            
-            // Actualizar la UI
-            document.getElementById('projectRating').textContent = result.newAverageRating.toFixed(1);
-            document.getElementById('projectRatingLabel').textContent = `(${result.totalVotes} Votos)`;
-            this.uiService.showAlert('¡Gracias por tu calificación!');
-
-        } catch (error) {
-            console.error('Error al enviar la calificación:', error);
-            this.uiService.showAlert(error.message, true);
-            document.querySelector('.star-rating').classList.remove('disabled');
-        }
-    }
-    
-    handleCommentSubmit(e) {
-        e.preventDefault();
-        const commentText = document.getElementById('commentText').value.trim();
-        
-        if (!commentText) {
-             this.uiService.showAlert('El comentario no puede estar vacío.', true);
-             return;
-        }
-        
-        const userData = this.authService.getUserData();
-        if (!userData) {
-            this.uiService.showAlert('Debes iniciar sesión para dejar un comentario.', true);
-            return;
-        }
-
-        // Lógica de envío al backend (DataService debe tener este método)
-        try {
-            // Simulación
-            console.log(`Comentario de ${userData.nombre} para proyecto ${this.projectId}: ${commentText}`);
-            this.addCommentToUI(userData.nombre, commentText);
-            document.getElementById('commentForm').reset();
-            this.uiService.showAlert('Comentario enviado y pendiente de moderación.', false);
-
-        } catch (error) {
-            console.error('Error al enviar el comentario:', error);
-            this.uiService.showAlert(error.message, true);
-        }
-    }
-    
-    addCommentToUI(authorName, text) {
-        const list = document.getElementById('commentsList');
-        if (!list) return;
-
-        const newComment = document.createElement('div');
-        newComment.className = 'comment-item';
-        newComment.innerHTML = `
-            <div class="comment-header">
-                <span class="comment-avatar">${authorName.charAt(0).toUpperCase()}</span>
-                <span class="comment-author">${authorName}</span>
-                <span class="comment-date">Justo ahora</span>
-            </div>
-            <p class="comment-text">${text}</p>
-        `;
-        list.prepend(newComment); // Añadir al inicio de la lista
-    }
-
-
-    // --- Utilidades ---
-    
     formatDescription(text) {
-        // Convierte el markdown simple (como el que se usa en el projectDetail.js original) a HTML
         if (!text) return '';
-        
-        // Reemplazar encabezados de Markdown (##) con <h4>
         let html = text.replace(/## (.*?)\n/g, '\n<h4>$1</h4>\n');
-        
-        // Reemplazar saltos de línea con etiquetas de párrafo
         html = html.replace(/\n\n/g, '</p><p>');
         html = html.replace(/\n/g, '<br>');
-
-        // Envolver en párrafo inicial si no es un encabezado
         if (!html.startsWith('<p>')) {
             html = `<p>${html}</p>`;
         }
@@ -410,35 +278,35 @@ export class ProjectDetailController extends BasePage {
     }
 
     setupEventListeners() {
-        // Configurar modal de contacto
         const contactBtn = document.querySelector('.contact-architect');
         const contactModal = document.getElementById('contactModal');
         const closeModalBtn = contactModal?.querySelector('.close-contact-modal');
-        
-        contactBtn?.addEventListener('click', () => {
-            const architect = Architect.fromData(this.project.architect);
-            this.contactArchitect(architect);
-        });
 
+        contactBtn?.addEventListener('click', () => this.contactArchitect());
         closeModalBtn?.addEventListener('click', () => this.closeContactModal());
         contactModal?.addEventListener('click', (e) => {
             if (e.target === contactModal) this.closeContactModal();
         });
-        
-        // Nota: La lógica del modal de imagen se dejará como una función simple auxiliar
     }
 
-    contactArchitect(architect) {
+    contactArchitect() {
         const modal = document.getElementById('contactModal');
-        if (!modal) return; 
+        if (!modal) return;
 
-        // Rellenar datos del modal
-        document.getElementById('modalArchitectAvatar').src = architect.avatar;
-        document.getElementById('modalArchitectName').textContent = architect.name;
-        document.getElementById('modalArchitectSpecialty').textContent = architect.specialty;
-        document.getElementById('modalArchitectEmail').textContent = architect.contact;
-        document.getElementById('modalArchitectEmail').href = `mailto:${architect.contact}`;
-        document.getElementById('modalArchitectBio').textContent = architect.bio || 'No hay biografía disponible.';
+        document.getElementById('modalArchitectAvatar').src = this.project.arquitecto_avatar || '../IMG/default-avatar.png';
+        document.getElementById('modalArchitectName').textContent = this.project.arquitecto_nombre;
+        document.getElementById('modalArchitectSpecialty').textContent = this.project.arquitecto_especialidad || 'Arquitecto';
+
+        const emailLink = document.getElementById('modalArchitectEmail');
+        if (this.project.arquitecto_email) {
+            emailLink.textContent = this.project.arquitecto_email;
+            emailLink.href = `mailto:${this.project.arquitecto_email}`;
+        } else {
+            emailLink.textContent = 'No disponible';
+            emailLink.removeAttribute('href');
+        }
+
+        document.getElementById('modalArchitectBio').textContent = this.project.arquitecto_biografia || 'No hay biografía disponible.';
 
         modal.style.display = 'flex';
     }
@@ -448,7 +316,6 @@ export class ProjectDetailController extends BasePage {
     }
 
     openImageModal(src, alt) {
-        // Esta es una implementación simplificada de modal de imagen (usarías un componente en la realidad)
-        this.uiService.showAlert(`Abriendo imagen: ${alt} (src: ${src})`);
+        this.uiService.showAlert(`Abriendo imagen: ${alt}`);
     }
 }

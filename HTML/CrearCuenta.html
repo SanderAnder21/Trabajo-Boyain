@@ -37,7 +37,6 @@
                         <a href="SubirProyecto.html">Administrar Proyectos</a>
                     </div>
                 </li>
-                </li>
             </ul>
         </nav>
         <a href="#contenidoPrincipal" class="btn-scroll-down">
@@ -67,7 +66,7 @@
                 <input type="password" id="confirm_password" name="confirm_password" required><br>
 
                 <input type="submit" value="Crear Cuenta">
-                
+
                 <p>¿Ya tienes una cuenta? <a href="IniciarSesion.html">Inicia sesión aquí</a></p>
             </form>
             <div class="imagen-lado">
@@ -116,9 +115,21 @@
             <p>Diseñado y desarrollado por DevPME</p>
         </div>
     </footer>
-    <script src="../JS/chatbot.js"></script>
-    <script src="../JS/registro.js"></script>
-    <script src="../JS/scrollDown.js"></script>
+    <!-- SCRIPTS -->
+    <script type="module" src="../JS/controllers/ChatbotController.js"></script>
+    <script type="module" src="../JS/controllers/RegistroController.js"></script>
+    <script type="module" src="../JS/controllers/ScrollController.js"></script>
+
+    <!-- Script para el dropdown del menú de usuario -->
+    <script type="module">
+        import { UIService } from '../JS/services/UIService.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const uiService = new UIService();
+            uiService.setupDropdown();
+        });
+    </script>
 
 </body>
+
 </html>

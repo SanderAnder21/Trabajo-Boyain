@@ -2,6 +2,10 @@
 import mysql from 'mysql2/promise';
 import bcrypt from 'bcryptjs';
 
+/**
+ * Clase Database para gestionar todas las operaciones de base de datos.
+ * Implementa el patrón Singleton para mantener una única conexión.
+ */
 class Database {
     constructor() {
         this.connection = null;
@@ -9,21 +13,13 @@ class Database {
 
     async registerUser(nombre, email, password, es_arquitecto) {
         const hashedPassword = await this.hashPassword(password);
-        
-        // Convertir el booleano JavaScript a un valor MySQL (0 o 1)
-        const isArchitect = es_arquitecto ? 1 : 0; 
+        const isArchitect = es_arquitecto ? 1 : 0;
+        const sql = `INSERT INTO usuarios (nombre, email, password, es_arquitecto) VALUES (?, ?, ?, ?)`;
 
-        // 2. Consulta SQL para insertar
-        const sql = `
-            INSERT INTO usuarios (nombre, email, password, es_arquitecto) 
-            VALUES (?, ?, ?, ?)
-        `;
-        
         try {
             const [result] = await this.query(sql, [nombre, email, hashedPassword, isArchitect]);
-            return result.insertId; 
+            return result.insertId;
         } catch (error) {
-            // Manejo de error si el email ya existe (UNIQUE constraint)
             if (error.code === 'ER_DUP_ENTRY') {
                 throw new Error('El email ya está registrado.');
             }
@@ -33,26 +29,18 @@ class Database {
 
     async connect() {
         try {
-            // conecta a MySQL general
             this.connection = await mysql.createConnection({
                 host: 'localhost',
                 user: 'root',
-                // Contraseña de usuario local
-                password: 'qwerty' 
+                password: 'qwerty'
             });
-            
+
             console.log('✅ Conectado a MySQL');
-            
-            // CREA la base de datos si no existe 
             await this.connection.execute('CREATE DATABASE IF NOT EXISTS plataforma_arquitectos');
             console.log('✅ Base de datos creada/verificada: plataforma_arquitectos');
-            
-            // Usa la base de datos
             await this.connection.changeUser({ database: 'plataforma_arquitectos' });
-            
             console.log('✅ Usando base de datos: plataforma_arquitectos');
             return this.connection;
-            
         } catch (error) {
             console.error('❌ Error conectando a la BD:', error.message);
             throw error;
@@ -62,7 +50,7 @@ class Database {
     async createTables() {
         try {
             console.log('🔄 Creando tablas...');
-            
+
             // 1. TABLA USUARIOS
             await this.query(`
                 CREATE TABLE IF NOT EXISTS usuarios (
@@ -130,51 +118,51 @@ class Database {
             `);
             console.log('✅ Tabla etiquetas creada');
 
-            // 5. TABLA PROYECTO_ETIQUETAS
-            await this.query(`
-                CREATE TABLE IF NOT EXISTS proyecto_etiquetas (
-                    proyecto_id INT NOT NULL,
-                    etiqueta_id INT NOT NULL,
-                    PRIMARY KEY (proyecto_id, etiqueta_id),
-                    FOREIGN KEY (proyecto_id) REFERENCES proyectos(id) ON DELETE CASCADE,
-                    FOREIGN KEY (etiqueta_id) REFERENCES etiquetas(id)
-                )
-            `);
-            console.log('✅ Tabla proyecto_etiquetas creada');
-
-            // 6. TABLA FAVORITOS
+            // 5. TABLA FAVORITOS
             await this.query(`
                 CREATE TABLE IF NOT EXISTS favoritos (
                     usuario_id INT NOT NULL,
                     proyecto_id INT NOT NULL,
                     fecha_guardado DATETIME DEFAULT CURRENT_TIMESTAMP,
                     PRIMARY KEY (usuario_id, proyecto_id),
-                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
                     FOREIGN KEY (proyecto_id) REFERENCES proyectos(id) ON DELETE CASCADE
                 )
             `);
             console.log('✅ Tabla favoritos creada');
 
-            // 7. TABLA CALIFICACIONES
+            // 6. TABLA CALIFICACIONES
             await this.query(`
                 CREATE TABLE IF NOT EXISTS calificaciones (
                     id INT PRIMARY KEY AUTO_INCREMENT,
                     usuario_id INT NOT NULL,
                     proyecto_id INT NOT NULL,
-                    puntuacion INT CHECK (puntuacion >= 1 AND puntuacion <= 5),
+                    puntuacion INT NOT NULL CHECK (puntuacion >= 1 AND puntuacion <= 5),
                     comentario TEXT,
-                    fecha_calificacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-                    FOREIGN KEY (proyecto_id) REFERENCES proyectos(id) ON DELETE CASCADE,
-                    UNIQUE KEY unique_calificacion (usuario_id, proyecto_id)
+                    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+                    FOREIGN KEY (proyecto_id) REFERENCES proyectos(id) ON DELETE CASCADE
                 )
             `);
             console.log('✅ Tabla calificaciones creada');
 
-            // 8. INSERTAR ETIQUETAS PREDEFINIDAS
+            // 7. TABLA ARCHIVOS_PROYECTO
+            await this.query(`
+                CREATE TABLE IF NOT EXISTS archivos_proyecto (
+                    id INT PRIMARY KEY AUTO_INCREMENT,
+                    proyecto_id INT NOT NULL,
+                    url_archivo VARCHAR(255) NOT NULL,
+                    nombre_archivo VARCHAR(255),
+                    tipo_archivo ENUM('pdf', 'modelo3d', 'otro') NOT NULL,
+                    fecha_subida DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (proyecto_id) REFERENCES proyectos(id) ON DELETE CASCADE
+                )
+            `);
+            console.log('✅ Tabla archivos_proyecto creada');
+
+            // 8. INSERTAR ETIQUETAS
             await this.query(`
                 INSERT IGNORE INTO etiquetas (nombre, tipo) VALUES
-                ('plano2d', 'tecnica'),
                 ('modelo3d', 'tecnica'), 
                 ('proyectoConstruido', 'tecnica'),
                 ('maqueta', 'tecnica'),
@@ -216,73 +204,109 @@ class Database {
         return await bcrypt.hash(password, 10);
     }
 
-    //BUSCAR USUARIO POR EMAIL
     async findUserByEmail(email) {
         const sql = `SELECT * FROM usuarios WHERE email = ?`;
         const [rows] = await this.query(sql, [email]);
-        return rows[0]; 
+        return rows[0];
     }
 
-    //VERIFICAR CONTRASEÑA
     async verifyPassword(inputPassword, storedHash) {
-        // Usa el 'bcrypt' importado al inicio del archivo
         return await bcrypt.compare(inputPassword, storedHash);
     }
 
-    //BUSCA USUARIOS POR ID
     async findUserById(userId) {
-        try {
-            const sql = `SELECT * FROM usuarios WHERE id = ?`;
-            const [rows] = await this.query(sql, [userId]);
-            return rows[0];
-        } catch (error) {
-            console.error('Error buscando usuario por ID:', error);
-            throw error;
-        }
+        const sql = `SELECT * FROM usuarios WHERE id = ?`;
+        const [rows] = await this.query(sql, [userId]);
+        return rows[0];
     }
 
-    //Actualizar datos personales 
-    async updateUserPersonalData(userId, data) {
-        try {
-            const sql = `
-                UPDATE usuarios 
-                SET nombre = ?, biografia = ?
-                WHERE id = ?
-            `;
-            
-            await this.query(sql, [data.nombre, data.bio, userId]);
-            
-            return { success: true, message: 'Datos personales actualizados' };
-        } catch (error) {
-            console.error('Error actualizando datos personales:', error);
-            throw error;
-        }
-    }
-    //Actualizar datos de contacto (solo arquitectos)
     async updateUserContactData(userId, data) {
-        try {
-            const sql = `
-                UPDATE usuarios 
-                SET telefono = ?, ubicacion = ?
-                WHERE id = ? AND es_arquitecto = 1
-            `;
-            
-            const [result] = await this.query(sql, [
-                data.telefono, 
-                data.estado,
-                userId
-            ]);
-            
-            if (result.affectedRows === 0) {
-                throw new Error('Usuario no encontrado o no es arquitecto');
-            }
-            
-            return { success: true, message: 'Datos de contacto actualizados' };
-        } catch (error) {
-            console.error('Error actualizando datos de contacto:', error);
-            throw error;
+        const sql = `UPDATE usuarios SET telefono = ?, ubicacion = ? WHERE id = ? AND es_arquitecto = 1`;
+        const [result] = await this.query(sql, [data.telefono, data.estado, userId]);
+        if (result.affectedRows === 0) {
+            throw new Error('Usuario no encontrado o no es arquitecto');
         }
+        return { success: true, message: 'Datos de contacto actualizados' };
+    }
+
+    async findProjectById(projectId) {
+        const sql = 'SELECT * FROM proyectos WHERE id = ?';
+        const [rows] = await this.query(sql, [projectId]);
+        return rows[0];
+    }
+
+    // Métodos de Favoritos
+    async addFavorite(userId, projectId) {
+        const sql = 'INSERT INTO favoritos (usuario_id, proyecto_id) VALUES (?, ?)';
+        return await this.query(sql, [userId, projectId]);
+    }
+
+    async removeFavorite(userId, projectId) {
+        const sql = 'DELETE FROM favoritos WHERE usuario_id = ? AND proyecto_id = ?';
+        return await this.query(sql, [userId, projectId]);
+    }
+
+    async isFavorite(userId, projectId) {
+        const sql = 'SELECT * FROM favoritos WHERE usuario_id = ? AND proyecto_id = ?';
+        const [rows] = await this.query(sql, [userId, projectId]);
+        return rows.length > 0;
+    }
+
+    async getUserFavorites(userId) {
+        const sql = `
+            SELECT p.*, u.nombre as arquitecto_nombre, u.avatar as arquitecto_avatar
+            FROM proyectos p
+            INNER JOIN favoritos f ON p.id = f.proyecto_id
+            INNER JOIN usuarios u ON p.usuario_id = u.id
+            WHERE f.usuario_id = ?
+            ORDER BY f.fecha_guardado DESC
+        `;
+        const [rows] = await this.query(sql, [userId]);
+        return rows;
+    }
+
+    // Métodos de Calificaciones
+    async addRating(userId, projectId, puntuacion, comentario) {
+        const sql = `INSERT INTO calificaciones (usuario_id, proyecto_id, puntuacion, comentario) VALUES (?, ?, ?, ?)`;
+        return await this.query(sql, [userId, projectId, puntuacion, comentario]);
+    }
+
+    async updateRating(userId, projectId, puntuacion, comentario) {
+        const sql = `UPDATE calificaciones SET puntuacion = ?, comentario = ?, fecha_calificacion = CURRENT_TIMESTAMP WHERE usuario_id = ? AND proyecto_id = ?`;
+        return await this.query(sql, [puntuacion, comentario, userId, projectId]);
+    }
+
+    async deleteRating(userId, projectId) {
+        const sql = 'DELETE FROM calificaciones WHERE usuario_id = ? AND proyecto_id = ?';
+        return await this.query(sql, [userId, projectId]);
+    }
+
+    async getUserRating(userId, projectId) {
+        const sql = 'SELECT * FROM calificaciones WHERE usuario_id = ? AND proyecto_id = ?';
+        const [rows] = await this.query(sql, [userId, projectId]);
+        return rows[0];
+    }
+
+    async getProjectRatings(projectId) {
+        const sql = `
+            SELECT c.*, u.nombre as usuario_nombre, u.avatar as usuario_avatar
+            FROM calificaciones c
+            INNER JOIN usuarios u ON c.usuario_id = u.id
+            WHERE c.proyecto_id = ?
+            ORDER BY c.fecha_calificacion DESC
+        `;
+        const [rows] = await this.query(sql, [projectId]);
+        return rows;
+    }
+
+    async updateProjectAverageRating(projectId) {
+        const sqlAvg = `SELECT AVG(puntuacion) as promedio FROM calificaciones WHERE proyecto_id = ?`;
+        const [rows] = await this.query(sqlAvg, [projectId]);
+        const promedio = rows[0].promedio || 0;
+        const sqlUpdate = `UPDATE proyectos SET rating_promedio = ? WHERE id = ?`;
+        await this.query(sqlUpdate, [promedio, projectId]);
     }
 }
 
-export default new Database();
+const database = new Database();
+export default database;

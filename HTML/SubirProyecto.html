@@ -189,7 +189,7 @@
                             <div class="tags-summary">
                                 <div class="tag-group">
                                     <h4>Estilos</h4>
-                                    <div class="tag-count" id="styleTagCount">0/3</div> 
+                                    <div class="tag-count" id="styleTagCount">0/3</div>
                                 </div>
                             </div>
                         </div>
@@ -270,11 +270,11 @@
         </div>
     </footer>
 
-    <script src="../JS/AdministrarCuentas.js"></script>
-    <script src="../JS/AdministrarProyectos.js"></script>
-    <script src="../JS/chatbot.js"></script>
-    <script src="../JS/scrollDown.js"></script>
-    <script src="../JS/rolChecker.js"></script> 
+    <script type="module" src="../JS/controllers/AdminPageController.js"></script>
+    <script type="module" src="../JS/controllers/ChatbotController.js"></script>
+    <script type="module" src="../JS/controllers/ScrollController.js"></script>
+    <script type="module" src="../JS/controllers/RoleCheckerController.js"></script>
+    <script type="module" src="../JS/controllers/UploadProjectController.js"></script>
 
     <script>
         // ⭐ LÓGICA CORREGIDA PARA EL MENÚ DESPLEGABLE EN SUBIR PROYECTO ⭐
@@ -304,7 +304,7 @@
             const logoutLink = document.getElementById('logoutLink');
             const subirProyectoLink = document.getElementById('subirProyectoLink');
             const token = localStorage.getItem('authToken');
-            
+
             console.log('🔍 Estado de autenticación en Subir Proyecto:');
             console.log('- Token:', token ? '✅ PRESENTE' : '❌ AUSENTE');
             console.log('- userRole:', localStorage.getItem('userRole'));
@@ -339,7 +339,7 @@
 
             // Manejar cierre de sesión
             if (logoutLink) {
-                logoutLink.addEventListener('click', function(e) {
+                logoutLink.addEventListener('click', function (e) {
                     e.preventDefault();
                     localStorage.removeItem('authToken');
                     localStorage.removeItem('userData');
@@ -453,7 +453,7 @@
             function resetTagCounters() {
                 const tagCountElement = document.getElementById('tagCount');
                 if (tagCountElement) tagCountElement.textContent = '0';
-                
+
                 const styleTagCountElement = document.getElementById('styleTagCount');
                 if (styleTagCountElement) styleTagCountElement.textContent = '0/3';
             }
@@ -495,4 +495,5 @@
         }
     </script>
 </body>
+
 </html>

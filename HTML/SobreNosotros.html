@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre Nosotros - PortArq</title>
+    <link rel="stylesheet" href="../CSS/index.css">
+    <link rel="stylesheet" href="../CSS/Estilos.css">
+    <style>
+        /* Estilos específicos para Sobre Nosotros */
+        .about-hero {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../IMG/arq1.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 4rem;
+        }
+
+        .about-hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .about-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .about-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 6rem;
+        }
+
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .about-image img:hover {
+            transform: translateY(-10px);
+        }
+
+        .values-section {
+            background-color: #f9f9f9;
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+        }
+
+        .value-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .value-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .team-section {
+            padding: 6rem 2rem;
+            text-align: center;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+
+        .team-member img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 3px solid #fff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-member h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .team-member p {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .about-hero h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="contenedor-imagen">
+        <img src="../IMG/arq1.jpg" alt="imagen inicio">
+        <nav1>
+            <ul>
+                <li><a href="../INDEX.html" class="logo">PortArq</a></li>
+            </ul>
+        </nav1>
+        <nav>
+            <ul>
+                <li><a href="Proyectos.html">Explorar Proyectos</a></li>
+                <li><a href="MisProyectos.html">Mis Proyectos</a></li>
+                <li class="dropdown">
+                    <a href="#" id="userIcon" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                    </a>
+
+                    <div id="dropdownMenu" class="dropdown-content">
+                        <a href="IniciarSesion.html">Iniciar Sesion</a>
+                        <a href="AdministrarCuenta.html">Mi Cuenta</a>
+                        <a href="SubirProyecto.html">Administrar Proyectos</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="about-hero">
+        <div class="hero-content">
+            <h1>Construyendo el Futuro</h1>
+            <p>Conectamos arquitectos visionarios con el mundo. Tu portafolio, tu legado.</p>
+        </div>
+    </div>
+
+    <section class="about-section">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>Nuestra Misión</h2>
+                <p>En PortArq, creemos que cada proyecto arquitectónico cuenta una historia única. Nuestra misión es
+                    proporcionar una plataforma digital de vanguardia donde los arquitectos puedan exhibir su trabajo,
+                    conectar con clientes potenciales y colaborar con otros profesionales del sector.</p>
+                <p>Nacimos de la necesidad de simplificar la gestión de portafolios y maximizar la visibilidad de los
+                    talentos emergentes y consolidados en el mundo de la arquitectura.</p>
+            </div>
+            <div class="about-image">
+                <img src="../IMG/arq2.jpg" alt="Arquitectura moderna">
+            </div>
+        </div>
+    </section>
+
+    <section class="values-section">
+        <h2>Nuestros Valores</h2>
+        <div class="values-grid">
+            <div class="value-card">
+                <div class="value-icon">🎨</div>
+                <h3>Innovación</h3>
+                <p>Impulsamos la creatividad y las nuevas ideas en cada diseño y funcionalidad de nuestra plataforma.
+                </p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">🤝</div>
+                <h3>Comunidad</h3>
+                <p>Fomentamos una red colaborativa donde el conocimiento y la inspiración fluyen libremente.</p>
+            </div>
+            <div class="value-card">
+                <div class="value-icon">⭐</div>
+                <h3>Excelencia</h3>
+                <p>Nos comprometemos con la calidad, tanto en la tecnología que desarrollamos como en los proyectos que
+                    destacamos.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <h2>El Equipo Detrás de PortArq</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <img src="../IMG/default-avatar.png" alt="Miembro del equipo">
+                <h4>Equipo DevPME</h4>
+                <p>Desarrollo y Diseño</p>
+            </div>
+            <!-- Puedes agregar más miembros aquí -->
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h3 class="logo-text">PortArq</h3>
+                <p>
+                    Una plataforma especializada para exposición, organización y gestión de proyectos para
+                    arquitectos.
+                </p>
+            </div>
+            <div class="footer-section links">
+                <h3>Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="../INDEX.html">Inicio</a></li>
+                    <li><a href="Proyectos.html">Proyectos</a></li>
+                    <li><a href="SobreNosotros.html">Nuestra Empresa</a></li>
+                    <li><a href="Contactanos.html">Contáctanos</a></li>
+                </ul>
+            </div>
+            <div class="footer-section social">
+                <h3>Síguenos</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">X</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 PortArq. Todos los derechos reservados.</p>
+            <p>Diseñado y desarrollado por DevPME</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../JS/controllers/ChatbotController.js"></script>
+    <script type="module" src="../JS/controllers/ScrollController.js"></script>
+
+    <!-- Script para el dropdown del menú de usuario -->
+    <script type="module">
+        import { UIService } from '../JS/services/UIService.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const uiService = new UIService();
+            uiService.setupDropdown();
+        });
+    </script>
+</body>
+
+</html>
