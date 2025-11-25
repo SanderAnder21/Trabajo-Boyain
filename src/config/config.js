@@ -3,11 +3,7 @@
 /**
  * Clase de Configuración Centralizada (Patrón Singleton).
  * Maneja todas las variables de entorno y constantes de la aplicación.
- * 
- * @class Config
- * @example
- * import config from './config/config.js';
- * const port = config.getPort();
+ * * @class Config
  */
 class Config {
     constructor() {
@@ -18,19 +14,21 @@ class Config {
         // Configuración del servidor
         this.PORT = process.env.PORT || 3000;
 
-        // Configuración de OpenAI
-        this.OPENAI_API_KEY = process.env.OPENAI_API_KEY || "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";
+        // 🚨 CORRECCIÓN CLAVE: Leemos OPENROUTER_API_KEY desde el .env
+        this.OPENAI_API_KEY = process.env.OPENROUTER_API_KEY || "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";
+        
+        // La URL y Modelo de OpenRouter están CORRECTOS
         this.OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://openrouter.ai/api/v1";
         this.OPENAI_MODEL = process.env.OPENAI_MODEL || "deepseek/deepseek-chat";
 
         // Configuración de JWT
-        this.JWT_SECRET = process.env.JWT_SECRET || "portarq-secret-key-2024";
+        this.JWT_SECRET = process.env.JWT_SECRET || "pMi_Pr0y3ct0_P0rtArq_2024_S3cr3t_K3y_Sup3r_S3gur4_123456789";
         this.JWT_EXPIRATION = process.env.JWT_EXPIRATION || "24h";
 
         // Configuración de Base de Datos
         this.DB_HOST = process.env.DB_HOST || 'localhost';
         this.DB_USER = process.env.DB_USER || 'root';
-        this.DB_PASSWORD = process.env.DB_PASSWORD || 'qwerty';
+        this.DB_PASSWORD = process.env.DB_PASSWORD || 'parkerox@1010';
         this.DB_NAME = process.env.DB_NAME || 'plataforma_arquitectos';
 
         // Configuración de CORS
@@ -97,16 +95,16 @@ class Config {
      */
     validate() {
         const required = [
-            { key: 'OPENAI_API_KEY', value: this.OPENAI_API_KEY },
+            { key: 'OPENROUTER_API_KEY', value: this.OPENAI_API_KEY }, // Usamos la variable de config para la validación
             { key: 'JWT_SECRET', value: this.JWT_SECRET },
             { key: 'DB_PASSWORD', value: this.DB_PASSWORD }
         ];
 
-        const missing = required.filter(({ value }) => !value);
+        const missing = required.filter(({ value }) => !value || value.includes('FALLBACK-KEY')); // Incluye chequeo de fallback key
 
         if (missing.length > 0) {
             throw new Error(
-                `Configuración incompleta. Faltan: ${missing.map(m => m.key).join(', ')}`
+                `Configuración incompleta. Faltan o son de prueba: ${missing.map(m => m.key).join(', ')}. Verifica tu archivo .env`
             );
         }
 
