@@ -32,7 +32,7 @@ class Database {
             this.connection = await mysql.createConnection({
                 host: 'localhost',
                 user: 'root',
-                password: 'popocho17'
+                password: 'parkerox@1010'
             });
 
             console.log('✅ Conectado a MySQL');
@@ -220,14 +220,112 @@ class Database {
         return rows[0];
     }
 
-    async updateUserContactData(userId, data) {
-        const sql = `UPDATE usuarios SET telefono = ?, ubicacion = ? WHERE id = ? AND es_arquitecto = 1`;
-        const [result] = await this.query(sql, [data.telefono, data.estado, userId]);
+async findUserById(userId) {
+    const sql = `SELECT * FROM usuarios WHERE id = ?`;
+    const [rows] = await this.query(sql, [userId]);
+    return rows[0];
+}
+
+// ⭐ AGREGA ESTOS MÉTODOS AQUÍ ⭐
+
+/**
+ * Actualiza los datos personales del usuario
+ * @param {number} userId - ID del usuario
+ * @param {Object} personalData - Datos personales {nombre, bio, avatar}
+ * @returns {Promise<Object>}
+ */
+async updateUserPersonalData(userId, personalData) {
+    try {
+        const fields = [];
+        const values = [];
+        
+        if (personalData.nombre !== undefined) {
+            fields.push('nombre = ?');
+            values.push(personalData.nombre);
+        }
+        
+        if (personalData.bio !== undefined) {
+            fields.push('biografia = ?');
+            values.push(personalData.bio);
+        }
+        
+        if (personalData.avatar !== undefined) {
+            fields.push('avatar = ?');
+            values.push(personalData.avatar);
+        }
+        
+        if (fields.length === 0) {
+            throw new Error('No hay datos para actualizar');
+        }
+        
+        values.push(userId);
+        const sql = `UPDATE usuarios SET ${fields.join(', ')} WHERE id = ?`;
+        
+        const [result] = await this.query(sql, values);
+        
+        if (result.affectedRows === 0) {
+            throw new Error('Usuario no encontrado');
+        }
+        
+        console.log(`✅ Datos personales actualizados para usuario ${userId}`);
+        return { success: true, affectedRows: result.affectedRows };
+        
+    } catch (error) {
+        console.error('❌ Error actualizando datos personales:', error);
+        throw error;
+    }
+}
+
+/**
+ * Actualiza los datos de contacto del usuario (solo arquitectos)
+ * @param {number} userId - ID del usuario
+ * @param {Object} contactData - Datos de contacto {telefono, estado}
+ * @returns {Promise<Object>}
+ */
+async updateUserContactData(userId, contactData) {
+    try {
+        const fields = [];
+        const values = [];
+        
+        if (contactData.telefono !== undefined) {
+            fields.push('telefono = ?');
+            values.push(contactData.telefono);
+        }
+        
+        if (contactData.estado !== undefined) {
+            fields.push('ubicacion = ?');
+            values.push(contactData.estado);
+        }
+        
+        if (fields.length === 0) {
+            throw new Error('No hay datos de contacto para actualizar');
+        }
+        
+        values.push(userId);
+        const sql = `UPDATE usuarios SET ${fields.join(', ')} WHERE id = ? AND es_arquitecto = 1`;
+        
+        const [result] = await this.query(sql, values);
+        
         if (result.affectedRows === 0) {
             throw new Error('Usuario no encontrado o no es arquitecto');
         }
-        return { success: true, message: 'Datos de contacto actualizados' };
+        
+        console.log(`✅ Datos de contacto actualizados para usuario ${userId}`);
+        return { success: true, affectedRows: result.affectedRows };
+        
+    } catch (error) {
+        console.error('❌ Error actualizando datos de contacto:', error);
+        throw error;
     }
+}
+
+// ⭐ FIN DE MÉTODOS AGREGADOS ⭐
+
+async findProjectById(projectId) {
+    const sql = 'SELECT * FROM proyectos WHERE id = ?';
+    const [rows] = await this.query(sql, [projectId]);
+    return rows[0];
+}
 
     async findProjectById(projectId) {
         const sql = 'SELECT * FROM proyectos WHERE id = ?';

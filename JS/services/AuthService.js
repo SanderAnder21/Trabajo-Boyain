@@ -37,9 +37,9 @@ export class AuthService {
     }
 
     /**
- * Verifica si el usuario está autenticado.
- * @returns {boolean}
- */
+     * Verifica si el usuario está autenticado.
+     * @returns {boolean}
+     */
     isAuthenticated() {
         return this.checkAuthStatus();
     }
@@ -50,6 +50,46 @@ export class AuthService {
      */
     getToken() {
         return localStorage.getItem('authToken');
+    }
+
+    /**
+     * Actualiza los datos del usuario en localStorage después de una modificación
+     * @param {Object} newUserData - Nuevos datos del usuario
+     */
+    updateUserData(newUserData) {
+        console.log('[AuthService] Actualizando datos de usuario:', newUserData);
+        
+        try {
+            // Obtener datos actuales
+            const currentData = this.getUserData() || {};
+            
+            // Combinar datos existentes con nuevos datos
+            const updatedData = {
+                ...currentData,
+                ...newUserData
+            };
+            
+            // Guardar en localStorage
+            localStorage.setItem('userData', JSON.stringify(updatedData));
+            
+            // Actualizar rol si es necesario
+            if (updatedData.es_arquitecto !== undefined) {
+                const role = updatedData.es_arquitecto ? 'arquitecto' : 'cliente';
+                localStorage.setItem('userRole', role);
+            }
+            
+            // Actualizar nombre si existe
+            if (updatedData.nombre) {
+                localStorage.setItem('userName', updatedData.nombre);
+            }
+            
+            console.log('[AuthService] Datos actualizados correctamente en localStorage');
+            return true;
+            
+        } catch (error) {
+            console.error('[AuthService] Error actualizando datos:', error);
+            return false;
+        }
     }
 
     /**
@@ -127,5 +167,37 @@ export class AuthService {
     logout() {
         console.log('[AuthService] Sesión cerrada. Limpiando localStorage.');
         localStorage.clear();
+    }
+
+    /**
+     * Verifica si el token actual es válido con el backend
+     * @returns {Promise<{valid: boolean, user: Object|null}>}
+     */
+    async verifyToken() {
+        const token = this.getToken();
+        
+        if (!token) {
+            return { valid: false, user: null };
+        }
+
+        try {
+            const response = await fetch(`${this.API_URL}/verify-token`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                return { valid: true, user: data.user };
+            } else {
+                // Token inválido - limpiar sesión
+                this.logout();
+                return { valid: false, user: null };
+            }
+        } catch (error) {
+            console.error('Error verificando token:', error);
+            return { valid: false, user: null };
+        }
     }
 }
