@@ -15,8 +15,8 @@ class Config {
         this.PORT = process.env.PORT || 3000;
 
         // 🚨 CORRECCIÓN CLAVE: Leemos OPENROUTER_API_KEY desde el .env
-        this.OPENAI_API_KEY = process.env.OPENROUTER_API_KEY || "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";
-        
+        this.OPENAI_API_KEY = process.env.OPENROUTER_API_KEY || "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";
+
         // La URL y Modelo de OpenRouter están CORRECTOS
         this.OPENAI_BASE_URL = process.env.OPENAI_BASE_URL || "https://openrouter.ai/api/v1";
         this.OPENAI_MODEL = process.env.OPENAI_MODEL || "deepseek/deepseek-chat";
