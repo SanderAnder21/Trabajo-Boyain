@@ -198,7 +198,27 @@
             evt.currentTarget.classList.add("active");
         }
     </script>
-    
+    <script>
+    // ⭐ AGREGAR ESTE CÓDIGO PARA EL MENÚ DESPLEGABLE ⭐
+    document.addEventListener('DOMContentLoaded', function () {
+        const userIcon = document.getElementById('userIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        if (userIcon && dropdownMenu) {
+            userIcon.addEventListener('click', function (e) {
+                e.preventDefault();
+                dropdownMenu.classList.toggle('show');
+            });
+
+            window.addEventListener('click', function (e) {
+                if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+    });
+    // ⭐ FIN DEL CÓDIGO AGREGADO ⭐
+    </script>
     <!-- SOLO ESTOS SCRIPTS -->
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>

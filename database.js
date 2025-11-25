@@ -32,7 +32,7 @@ class Database {
             this.connection = await mysql.createConnection({
                 host: 'localhost',
                 user: 'root',
-                password: 'qwerty'
+                password: 'popocho17'
             });
 
             console.log('✅ Conectado a MySQL');

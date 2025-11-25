@@ -1,0 +1,25 @@
+# .env
+# IMPORTANTE: Este archivo NO debe subirse al repositorio
+# Está protegido por .gitignore
+
+# OpenRouter API Key
+# GENERA UNA NUEVA KEY EN: https://openrouter.ai/keys
+#OPENROUTER_API_KEY=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
+
+# Database Configuration
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=popocho17
+DB_NAME=plataforma_arquitectos
+DB_PORT=3306
+
+# JWT Configuration
+JWT_SECRET=JWT_SECRET=Mi_Pr0y3ct0_P0rtArq_2024_S3cr3t_K3y_Sup3r_S3gur4_123456789
+JWT_EXPIRES_IN=24h
+
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# Frontend URL (para CORS)
+FRONTEND_URL=http://localhost:3000
