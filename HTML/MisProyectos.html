@@ -150,7 +150,7 @@
         </div>
     </footer>
 
-    <!-- Script para manejar la navegación y cierre de sesión -->
+    <!-- Script para manejar la navegación y control de roles -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const adminCuentaLink = document.getElementById('adminCuentaLink');
@@ -170,6 +170,35 @@
                 if (logoutLink) logoutLink.style.display = 'none';
             }
 
+            // ⭐ CONTROL DE ROLES - OCULTAR PUBLICADOS PARA CLIENTES ⭐
+            const userRole = localStorage.getItem('userRole');
+            console.log('Rol detectado:', userRole);
+            
+            if (userRole === 'cliente') {
+                console.log('👤 Cliente detectado - ocultando sección Publicados');
+                
+                // Ocultar pestaña "Publicados"
+                const tabPublicados = document.querySelector('.tab-link[onclick*="publicados"]');
+                if (tabPublicados) {
+                    tabPublicados.style.display = 'none';
+                }
+                
+                // Ocultar contenido de "Publicados"
+                const contentPublicados = document.getElementById('publicados');
+                if (contentPublicados) {
+                    contentPublicados.style.display = 'none';
+                }
+                
+                // Activar automáticamente la pestaña de "Guardados"
+                const tabGuardados = document.querySelector('.tab-link[onclick*="guardados"]');
+                const contentGuardados = document.getElementById('guardados');
+                
+                if (tabGuardados && contentGuardados) {
+                    tabGuardados.classList.add('active');
+                    contentGuardados.classList.add('active');
+                }
+            }
+
             // Manejar cierre de sesión
             if (logoutLink) {
                 logoutLink.addEventListener('click', function(e) {
@@ -179,6 +208,21 @@
                     localStorage.removeItem('userRole');
                     localStorage.removeItem('userId');
                     window.location.href = '../INDEX.html';
+                });
+            }
+
+            // Menú desplegable
+            const userIcon = document.getElementById('userIcon');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            if (userIcon && dropdownMenu) {
+                userIcon.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('show');
+                });
+                window.addEventListener('click', function (e) {
+                    if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
                 });
             }
         });
@@ -198,27 +242,7 @@
             evt.currentTarget.classList.add("active");
         }
     </script>
-    <script>
-    // ⭐ AGREGAR ESTE CÓDIGO PARA EL MENÚ DESPLEGABLE ⭐
-    document.addEventListener('DOMContentLoaded', function () {
-        const userIcon = document.getElementById('userIcon');
-        const dropdownMenu = document.getElementById('dropdownMenu');
 
-        if (userIcon && dropdownMenu) {
-            userIcon.addEventListener('click', function (e) {
-                e.preventDefault();
-                dropdownMenu.classList.toggle('show');
-            });
-
-            window.addEventListener('click', function (e) {
-                if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                    dropdownMenu.classList.remove('show');
-                }
-            });
-        }
-    });
-    // ⭐ FIN DEL CÓDIGO AGREGADO ⭐
-    </script>
     <!-- SOLO ESTOS SCRIPTS -->
     <script src="../JS/chatbot.js"></script>
     <script src="../JS/scrollDown.js"></script>
