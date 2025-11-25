@@ -1,0 +1,95 @@
+# ==========================================
+# ARCHIVOS SENSIBLES - NUNCA SUBIR
+# ==========================================
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+
+# ==========================================
+# Node.js
+# ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ==========================================
+# Logs
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ==========================================
+# Sistema Operativo
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# IDEs y Editores
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# ==========================================
+# Archivos Temporales
+# ==========================================
+*.tmp
+*.temp
+*.cache
+.cache/
+
+# ==========================================
+# Uploads y Archivos Generados
+# ==========================================
+uploads/
+IMG/proyectos/*
+IMG/avatars/*
+IMG/pdfs/*
+IMG/modelos3d/*
+!IMG/proyectos/.gitkeep
+!IMG/avatars/.gitkeep
+!IMG/pdfs/.gitkeep
+!IMG/modelos3d/.gitkeep
+
+# ==========================================
+# Build y Distribución
+# ==========================================
+dist/
+build/
+*.min.js
+*.min.css
+
+# ==========================================
+# Testing
+# ==========================================
+coverage/
+.nyc_output/
+
+# ==========================================
+# Otros
+# ==========================================
+.env.backup
+.env.production
