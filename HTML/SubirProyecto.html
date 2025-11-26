@@ -283,11 +283,10 @@
         </div>
     </footer>
 
-    <script type="module" src="../JS/controllers/AdminPageController.js"></script>
+    <script type="module" src="../JS/controllers/SubirProyectoController.js"></script>
     <script type="module" src="../JS/controllers/ChatbotController.js"></script>
     <script type="module" src="../JS/controllers/ScrollController.js"></script>
     <script type="module" src="../JS/controllers/RoleCheckerController.js"></script>
-    <script type="module" src="../JS/controllers/UploadProjectController.js"></script>
 
     <script>
         // ⭐ LÓGICA CORREGIDA PARA EL MENÚ DESPLEGABLE EN SUBIR PROYECTO ⭐
@@ -361,151 +360,7 @@
                     window.location.href = '../INDEX.html';
                 });
             }
-
-            // ⭐ LÓGICA DEL FORMULARIO DE PROYECTOS (se mantiene igual) ⭐
-            const projectForm = document.getElementById('projectForm');
-            const projectsList = document.getElementById('projectsList');
-
-            projectForm.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                // Obtener datos del formulario
-                const projectData = {
-                    id: Date.now(), // ID único basado en timestamp
-                    title: document.getElementById('projectName').value,
-                    description: document.getElementById('projectDescription').value,
-                    technicalTags: Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(tag => tag.value),
-                    architecturalStyles: Array.from(document.querySelectorAll('input[name="styles"]:checked')).map(style => style.value),
-                    date: new Date().toLocaleDateString('es-ES'),
-                    status: 'activo'
-                };
-
-                // Validaciones básicas
-                if (projectData.technicalTags.length === 0) {
-                    alert('Por favor selecciona al menos una etiqueta técnica.');
-                    return;
-                }
-
-                if (projectData.architecturalStyles.length === 0) {
-                    alert('Por favor selecciona al menos un estilo arquitectónico.');
-                    return;
-                }
-
-                // Guardar en localStorage (temporal)
-                saveProject(projectData);
-
-                // Agregar a la lista de proyectos
-                addProjectToList(projectData);
-
-                // Limpiar formulario
-                projectForm.reset();
-                resetTagCounters();
-
-                alert('¡Proyecto subido correctamente!');
-            });
-
-            function saveProject(project) {
-                // Guardar en localStorage temporalmente
-                let projects = JSON.parse(localStorage.getItem('userProjects') || '[]');
-                projects.push(project);
-                localStorage.setItem('userProjects', JSON.stringify(projects));
-            }
-
-            function addProjectToList(project) {
-                const noProjects = projectsList.querySelector('.no-projects');
-                if (noProjects) {
-                    noProjects.remove();
-                }
-
-                const projectCard = document.createElement('div');
-                projectCard.className = 'project-card';
-                projectCard.innerHTML = `
-            <h3>${project.title}</h3>
-            <div class="project-meta">
-                <small>Subido: ${project.date}</small>
-                <small>Estado: ${project.status}</small>
-            </div>
-            <div class="project-tags">
-                ${project.technicalTags.map(tag => `<span class="project-tag technical-tag">${getTagLabel(tag)}</span>`).join('')}
-                ${project.architecturalStyles.map(style => `<span class="project-tag style-tag">${getStyleLabel(style)}</span>`).join('')}
-            </div>
-            <p class="project-description">${project.description}</p>
-            <div class="project-actions">
-                <button class="btn-editar" onclick="editProject(${project.id})">Editar</button>
-                <button class="btn-eliminar" onclick="deleteProject(${project.id})">Eliminar</button>
-            </div>
-        `;
-
-                projectsList.appendChild(projectCard);
-            }
-
-            function getTagLabel(tagValue) {
-                const labels = {
-                    'plano2d': 'Plano 2D',
-                    'modelo3d': 'Modelo 3D',
-                    'proyectoConstruido': 'Proyecto Construido',
-                    'maqueta': 'Maqueta'
-                };
-                return labels[tagValue] || tagValue;
-            }
-
-            function getStyleLabel(styleValue) {
-                const styles = {
-                    'minimalista': 'Minimalista',
-                    'moderno': 'Moderno',
-                    'contemporaneo': 'Contemporáneo',
-                    'gotico': 'Gótico',
-                    'colonial': 'Colonial',
-                    'rustico': 'Rústico',
-                    'industrial': 'Industrial',
-                    'sostenible': 'Sostenible'
-                };
-                return styles[styleValue] || styleValue;
-            }
-
-            function resetTagCounters() {
-                const tagCountElement = document.getElementById('tagCount');
-                if (tagCountElement) tagCountElement.textContent = '0';
-
-                const styleTagCountElement = document.getElementById('styleTagCount');
-                if (styleTagCountElement) styleTagCountElement.textContent = '0/3';
-            }
-
-            // Cargar proyectos existentes al cargar la página
-            loadExistingProjects();
-
-            function loadExistingProjects() {
-                const projects = JSON.parse(localStorage.getItem('userProjects') || '[]');
-                projects.forEach(project => addProjectToList(project));
-            }
         });
-
-        // Funciones globales para los botones
-        function editProject(projectId) {
-            alert(`Editar proyecto ${projectId} - Esta función estará disponible pronto`);
-        }
-
-        function deleteProject(projectId) {
-            if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
-                // Eliminar de localStorage
-                let projects = JSON.parse(localStorage.getItem('userProjects') || '[]');
-                projects = projects.filter(p => p.id !== projectId);
-                localStorage.setItem('userProjects', JSON.stringify(projects));
-
-                // Recargar la lista
-                const projectsList = document.getElementById('projectsList');
-                projectsList.innerHTML = '';
-                if (projects.length === 0) {
-                    projectsList.innerHTML = `
-                <div class="no-projects">
-                    <p>No hay proyectos subidos aún.</p>
-                </div>
-            `;
-                } else {
-                    projects.forEach(project => addProjectToList(project));
-                }
-            }
-        }
     </script>
 </body>
 

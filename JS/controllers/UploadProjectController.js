@@ -194,7 +194,9 @@ class UploadProjectController {
             this.uiService.showAlert('Subiendo archivos, por favor espera...', false);
 
             const token = this.authService.getToken();
-            const response = await fetch('/api/projects', {
+            
+            // ✅ URL CORREGIDA - Usar URL completa
+            const response = await fetch('http://localhost:3000/api/projects', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -269,10 +271,13 @@ class UploadProjectController {
     async loadUserProjects() {
         try {
             const token = this.authService.getToken();
-            const response = await fetch('/api/user/projects', {
+            
+            // ✅ URL CORREGIDA - Usar endpoint correcto
+            const response = await fetch('http://localhost:3000/api/user/projects', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
             });
 
@@ -282,11 +287,12 @@ class UploadProjectController {
                 throw new Error(data.error || 'Error al cargar proyectos');
             }
 
-            console.log('📂 Proyectos del usuario:', data.projects);
-            this.displayUserProjects(data.projects);
+            console.log('📂 Proyectos del usuario:', data);
+            this.displayUserProjects(data.projects || []);
 
         } catch (error) {
             console.error('❌ Error cargando proyectos:', error);
+            this.displayUserProjects([]); // Mostrar lista vacía en caso de error
         }
     }
 
@@ -300,7 +306,7 @@ class UploadProjectController {
 
         if (!projectsList) return;
 
-        if (projects.length === 0) {
+        if (!projects || projects.length === 0) {
             projectsList.innerHTML = `
                 <div class="no-projects">
                     <p>No hay proyectos subidos aún.</p>
@@ -311,12 +317,12 @@ class UploadProjectController {
 
         projectsList.innerHTML = projects.map(project => `
             <div class="project-card" data-id="${project.id}">
-                <h3>${project.titulo}</h3>
+                <h3>${project.titulo || 'Proyecto sin título'}</h3>
                 <div class="project-meta">
-                    <small>Subido: ${new Date(project.fecha_publicacion).toLocaleDateString()}</small>
+                    <small>Subido: ${new Date(project.fecha_publicacion || project.fecha_creacion).toLocaleDateString()}</small>
                     <small>Vistas: ${project.total_vistas || 0}</small>
                 </div>
-                <p class="project-description">${project.descripcion}</p>
+                <p class="project-description">${project.descripcion || 'Sin descripción'}</p>
                 <div class="project-actions">
                     <button class="btn-editar" onclick="editProject(${project.id})">Editar</button>
                     <button class="btn-eliminar" onclick="deleteProject(${project.id})">Eliminar</button>
@@ -340,10 +346,12 @@ window.deleteProject = async function (projectId) {
         const authService = new AuthService();
         const token = authService.getToken();
 
-        const response = await fetch(`/api/projects/${projectId}`, {
+        // ✅ URL CORREGIDA
+        const response = await fetch(`http://localhost:3000/api/projects/${projectId}`, {
             method: 'DELETE',
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
         });
 

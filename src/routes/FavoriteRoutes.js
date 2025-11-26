@@ -22,7 +22,8 @@ class FavoriteRoutes {
      */
     initializeRoutes() {
         // Todas las rutas requieren autenticación
-        this.router.use(authMiddleware.verifyToken.bind(authMiddleware));
+        // ✅ ESTO ES CORRECTO:
+this.router.use(authMiddleware.authenticateToken.bind(authMiddleware));
 
         // Agregar a favoritos
         this.router.post('/favorites/:projectId',
