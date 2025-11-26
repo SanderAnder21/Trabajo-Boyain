@@ -426,6 +426,46 @@ class ProjectController {
             });
         }
     }
+
+    /**
+     * Obtiene todos los arquitectos con proyectos publicados.
+     * 
+     * @param {Request} req - Objeto de solicitud de Express
+     * @param {Response} res - Objeto de respuesta de Express
+     * @returns {Promise<void>}
+     */
+    async getArchitects(req, res) {
+        try {
+            const sql = `
+                SELECT DISTINCT 
+                    u.id,
+                    u.nombre as name,
+                    u.avatar,
+                    u.especialidad as specialty,
+                    u.biografia as bio,
+                    COUNT(p.id) as total_projects
+                FROM usuarios u
+                INNER JOIN proyectos p ON u.id = p.usuario_id
+                WHERE u.es_arquitecto = 1
+                GROUP BY u.id, u.nombre, u.avatar, u.especialidad, u.biografia
+                ORDER BY u.nombre ASC
+            `;
+
+            const [architects] = await database.query(sql);
+
+            res.json({
+                success: true,
+                architects: architects
+            });
+
+        } catch (error) {
+            console.error('❌ Error obteniendo arquitectos:', error);
+            res.status(500).json({
+                error: 'Error al obtener arquitectos',
+                details: error.message
+            });
+        }
+    }
 }
 
 export default new ProjectController();

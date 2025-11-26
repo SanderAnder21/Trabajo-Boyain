@@ -23,6 +23,7 @@ class ProjectRoutes {
         // Rutas públicas
         this.router.get('/projects', projectController.getAllProjects.bind(projectController));
         this.router.get('/projects/:id', projectController.getProjectById.bind(projectController));
+        this.router.get('/architects', projectController.getArchitects.bind(projectController));
 
         // Rutas protegidas (requieren autenticación)
         this.router.post('/projects',

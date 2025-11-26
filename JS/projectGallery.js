@@ -1,86 +1,65 @@
-// archivo: JS/projectsGallery.js
+// JS/projectsGallery.js
+
+import { DataService } from './services/DataService.js';
+
 class ProjectsGallery {
     constructor() {
         this.projects = [];
         this.filteredProjects = [];
+        this.dataService = new DataService();
         this.init();
     }
     
-    init() {
-        this.loadProjects();
+    async init() {
+        await this.loadProjects();
         this.setupFilters();
     }
     
-    loadProjects() {
-        // Proyectos de prueba específicos para cada tipo de archivo
+    async loadProjects() {
+        try {
+            console.log('📦 Cargando proyectos reales desde API...');
+            
+            // Cargar proyectos reales desde la API
+            this.projects = await this.dataService.getProjects();
+            console.log('📊 Proyectos cargados:', this.projects);
+            
+            this.filteredProjects = [...this.projects];
+            this.renderProjects();
+            
+        } catch (error) {
+            console.error('❌ Error cargando proyectos:', error);
+            // Fallback a datos de prueba si la API falla
+            this.loadFallbackProjects();
+        }
+    }
+    
+    /**
+     * Datos de prueba como fallback
+     */
+    loadFallbackProjects() {
+        console.log('🔄 Cargando datos de prueba...');
         this.projects = [
             {
                 id: 1,
-                title: "Casa Moderna con Imágenes",
-                architect: {
-                    name: "María González",
-                    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
-                },
-                description: "Proyecto residencial moderno con galería completa de imágenes del proceso constructivo y resultado final.",
-                image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop",
-                styles: ["moderno", "minimalista"],
-                type: "residencial",
-                rating: 4.8,
-                views: 124,
-                date: "2024-01-15",
-                tags: ["Imágenes", "Proyecto Construido"],
-                // Datos específicos para la página de detalle
-                images: [
-                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop"
-                ],
-                fileType: "images"
+                titulo: "Casa Moderna con Imágenes",
+                arquitecto_nombre: "María González",
+                arquitecto_avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+                descripcion: "Proyecto residencial moderno con galería completa de imágenes del proceso constructivo y resultado final.",
+                imagen_principal: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=400&h=250&fit=crop",
+                tipo: "residencial",
+                total_vistas: 124,
+                fecha_publicacion: "2024-01-15"
             },
             {
                 id: 2,
-                title: "Planos de Edificio Corporativo",
-                architect: {
-                    name: "Carlos Rodríguez", 
-                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
-                },
-                description: "Documentación completa de planos arquitectónicos en PDF: plantas, elevaciones y detalles constructivos.",
-                image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=250&fit=crop",
-                styles: ["moderno", "industrial"],
-                type: "comercial", 
-                rating: 4.6,
-                views: 89,
-                date: "2024-01-10",
-                tags: ["Planos PDF", "Documentación"],
-
-                pdfs: [
-                    "../IMG/PLANO-3-35-12.pdf",
-                    "../IMG/R-3_PROT._ARQUITECTONICOS.pdf"
-                ],
-                fileType: "pdf"
-            },
-            {
-                id: 3,
-                title: "Modelado 3D Residencial",
-                architect: {
-                    name: "Ana Martínez",
-                    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
-                },
-                description: "Modelo 3D interactivo de proyecto residencial con visualización de espacios interiores y exteriores.",
-                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWlBhIl8rv7EUWNxHu92uvcChKp4NEcCSQ0w&s",
-                styles: ["contemporaneo", "sostenible"],
-                type: "residencial",
-                rating: 4.9,
-                views: 156,
-                date: "2024-01-05",
-                tags: ["Modelo 3D", "Interactivo"],
-                // Información para el modelo 3D
-                model3d: {
-                    file: "../IMG/project3.obj", // Ruta a tu archivo 3D
-                    format: "obj",
-                    hasModel: true
-                },
-                fileType: "3d"
+                titulo: "Edificio Corporativo",
+                arquitecto_nombre: "Carlos Rodríguez", 
+                arquitecto_avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+                descripcion: "Documentación completa de planos arquitectónicos en PDF: plantas, elevaciones y detalles constructivos.",
+                imagen_principal: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=250&fit=crop",
+                tipo: "comercial", 
+                total_vistas: 89,
+                fecha_publicacion: "2024-01-10"
             }
         ];
         
@@ -90,7 +69,22 @@ class ProjectsGallery {
     
     renderProjects() {
         const grid = document.getElementById('projectsGrid');
+        if (!grid) {
+            console.error('❌ No se encontró el contenedor projectsGrid');
+            return;
+        }
+        
         grid.innerHTML = '';
+        
+        if (this.filteredProjects.length === 0) {
+            grid.innerHTML = `
+                <div class="no-projects-message" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <h3>📝 No se encontraron proyectos</h3>
+                    <p>No hay proyectos que coincidan con tus filtros.</p>
+                </div>
+            `;
+            return;
+        }
         
         this.filteredProjects.forEach(project => {
             const projectCard = this.createProjectCard(project);
@@ -103,36 +97,36 @@ class ProjectsGallery {
         card.href = `ProyectoDetalle.html?id=${project.id}`;
         card.className = 'project-card';
         
-        // Icono según el tipo de archivo principal
-        const fileIcon = this.getFileTypeIcon(project.fileType);
-        
         card.innerHTML = `
             <div class="project-image-container">
-                <img src="${project.image}" alt="${project.title}" class="project-image" onerror="this.src='../IMG/default-project.jpg'">
-                <div class="file-type-badge">${fileIcon}</div>
+                <img src="${project.imagen_principal || '../IMG/project1.jpg'}" 
+                     alt="${project.titulo}" 
+                     class="project-image" 
+                     onerror="this.src='../IMG/project1.jpg'">
             </div>
             <div class="project-content">
-                <h3 class="project-title">${project.title}</h3>
+                <h3 class="project-title">${project.titulo || 'Proyecto sin título'}</h3>
                 
                 <div class="project-architect">
-                    <img src="${project.architect.avatar}" alt="${project.architect.name}" class="architect-avatar" onerror="this.src='../IMG/default-avatar.jpg'">
-                    <span class="architect-name">${project.architect.name}</span>
+                    <img src="${project.arquitecto_avatar || '../IMG/default-avatar.jpg'}" 
+                         alt="${project.arquitecto_nombre || 'Arquitecto'}" 
+                         class="architect-avatar" 
+                         onerror="this.src='../IMG/default-avatar.jpg'">
+                    <span class="architect-name">${project.arquitecto_nombre || 'Arquitecto'}</span>
                 </div>
                 
-                <p class="project-description">${project.description}</p>
+                <p class="project-description">${project.descripcion || 'Sin descripción disponible'}</p>
                 
                 <div class="project-tags">
-                    ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
-                    ${project.styles.map(style => `<span class="project-tag">${this.getStyleLabel(style)}</span>`).join('')}
+                    <span class="project-tag">${this.getProjectTypeLabel(project.tipo)}</span>
+                    <span class="project-tag">${project.ubicacion || 'Ubicación no especificada'}</span>
                 </div>
                 
                 <div class="project-meta">
-                    <div class="project-rating">
-                        <span class="star">⭐</span>
-                        <span>${project.rating}</span>
-                        <span>(${project.views} vistas)</span>
+                    <div class="project-stats">
+                        <span>👁️ ${project.total_vistas || 0} vistas</span>
                     </div>
-                    <span>${this.formatDate(project.date)}</span>
+                    <span class="project-date">${this.formatDate(project.fecha_publicacion || project.fecha_creacion)}</span>
                 </div>
             </div>
         `;
@@ -140,79 +134,101 @@ class ProjectsGallery {
         return card;
     }
     
-    getFileTypeIcon(fileType) {
-        const icons = {
-            'images': '🖼️',
-            'pdf': '📄', 
-            '3d': '🎮'
+    /**
+     * Obtiene la etiqueta legible del tipo de proyecto
+     */
+    getProjectTypeLabel(type) {
+        const types = {
+            'residencial': 'Residencial',
+            'comercial': 'Comercial', 
+            'restauracion': 'Restauración',
+            'industrial': 'Industrial',
+            'institucional': 'Institucional'
         };
-        return icons[fileType] || '📁';
+        return types[type] || type || 'No especificado';
     }
     
     setupFilters() {
-        const searchInput = document.querySelector('.search-box input');
+        const searchInput = document.getElementById('projectSearch');
         const styleFilter = document.getElementById('filterStyle');
         const typeFilter = document.getElementById('filterType');
         const sortFilter = document.getElementById('filterSort');
         
-        searchInput.addEventListener('input', () => this.filterProjects());
-        styleFilter.addEventListener('change', () => this.filterProjects());
-        typeFilter.addEventListener('change', () => this.filterProjects());
-        sortFilter.addEventListener('change', () => this.filterProjects());
+        if (searchInput) {
+            searchInput.addEventListener('input', () => this.filterProjects());
+        }
+        if (styleFilter) {
+            styleFilter.addEventListener('change', () => this.filterProjects());
+        }
+        if (typeFilter) {
+            typeFilter.addEventListener('change', () => this.filterProjects());
+        }
+        if (sortFilter) {
+            sortFilter.addEventListener('change', () => this.filterProjects());
+        }
     }
     
     filterProjects() {
-        const searchTerm = document.querySelector('.search-box input').value.toLowerCase();
-        const styleFilter = document.getElementById('filterStyle').value;
-        const typeFilter = document.getElementById('filterType').value;
-        const sortFilter = document.getElementById('filterSort').value;
+        const searchInput = document.getElementById('projectSearch');
+        const styleFilter = document.getElementById('filterStyle');
+        const typeFilter = document.getElementById('filterType');
+        const sortFilter = document.getElementById('filterSort');
+        
+        if (!searchInput || !styleFilter || !typeFilter || !sortFilter) {
+            console.error('❌ No se encontraron elementos de filtro');
+            return;
+        }
+        
+        const searchTerm = searchInput.value.toLowerCase();
+        const selectedStyle = styleFilter.value;
+        const selectedType = typeFilter.value;
+        const selectedSort = sortFilter.value;
         
         this.filteredProjects = this.projects.filter(project => {
-            const matchesSearch = project.title.toLowerCase().includes(searchTerm) ||
-                                project.architect.name.toLowerCase().includes(searchTerm) ||
-                                project.description.toLowerCase().includes(searchTerm);
+            const matchesSearch = 
+                (project.titulo && project.titulo.toLowerCase().includes(searchTerm)) ||
+                (project.arquitecto_nombre && project.arquitecto_nombre.toLowerCase().includes(searchTerm)) ||
+                (project.descripcion && project.descripcion.toLowerCase().includes(searchTerm)) ||
+                (project.ubicacion && project.ubicacion.toLowerCase().includes(searchTerm));
             
-            const matchesStyle = !styleFilter || project.styles.includes(styleFilter);
-            const matchesType = !typeFilter || project.type === typeFilter;
+            const matchesType = !selectedType || project.tipo === selectedType;
             
-            return matchesSearch && matchesStyle && matchesType;
+            // Nota: Para estilos necesitarías tener un campo 'estilos' en tu proyecto
+            const matchesStyle = !selectedStyle; // Por ahora no filtramos por estilo
+            
+            return matchesSearch && matchesType && matchesStyle;
         });
         
-        this.sortProjects(sortFilter);
+        this.sortProjects(selectedSort);
         this.renderProjects();
     }
     
     sortProjects(sortBy) {
         switch(sortBy) {
             case 'newest':
-                this.filteredProjects.sort((a, b) => new Date(b.date) - new Date(a.date));
+                this.filteredProjects.sort((a, b) => 
+                    new Date(b.fecha_publicacion || b.fecha_creacion) - new Date(a.fecha_publicacion || a.fecha_creacion)
+                );
                 break;
             case 'popular':
-                this.filteredProjects.sort((a, b) => b.views - a.views);
+                this.filteredProjects.sort((a, b) => (b.total_vistas || 0) - (a.total_vistas || 0));
                 break;
             case 'rating':
-                this.filteredProjects.sort((a, b) => b.rating - a.rating);
+                // Por ahora usamos vistas como rating
+                this.filteredProjects.sort((a, b) => (b.total_vistas || 0) - (a.total_vistas || 0));
                 break;
         }
     }
     
-    getStyleLabel(style) {
-        const styles = {
-            'minimalista': 'Minimalista',
-            'moderno': 'Moderno',
-            'contemporaneo': 'Contemporáneo',
-            'gotico': 'Gótico',
-            'colonial': 'Colonial',
-            'rustico': 'Rústico',
-            'industrial': 'Industrial',
-            'sostenible': 'Sostenible'
-        };
-        return styles[style] || style;
-    }
-    
     formatDate(dateString) {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('es-ES', options);
+        if (!dateString) return 'Fecha no disponible';
+        
+        try {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('es-ES', options);
+        } catch (error) {
+            return 'Fecha inválida';
+        }
     }
 }
 
