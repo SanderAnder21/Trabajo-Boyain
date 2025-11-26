@@ -12,9 +12,7 @@
 </head>
 
 <body>
-    <!-- Script de verificación de autenticación -->
     <script>
-        // Verificar si el usuario está autenticado
         const token = localStorage.getItem('authToken');
         if (!token) {
             // Redirigir al login si no está autenticado
@@ -127,10 +125,9 @@
             <p>Diseñado y desarrollado por DevPME</p>
         </div>
     </footer>
-        <script type="module" src="../JS/controllers/ChatbotController.js"></script>
+    <script type="module" src="../JS/controllers/ChatbotController.js"></script>
     <script type="module" src="../JS/controllers/ScrollController.js"></script>
 
-    <!-- Script para manejar la navegación y control de roles -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const adminCuentaLink = document.getElementById('adminCuentaLink');
@@ -138,19 +135,16 @@
             const logoutLink = document.getElementById('logoutLink');
             const token = localStorage.getItem('authToken');
 
-            // Si está loggeado, mostrar "Mi Cuenta" y "Cerrar Sesión", ocultar "Iniciar Sesión"
             if (token) {
                 if (adminCuentaLink) adminCuentaLink.style.display = 'block';
                 if (loginLink) loginLink.style.display = 'none';
                 if (logoutLink) logoutLink.style.display = 'block';
             } else {
-                // Si NO está loggeado, ocultar "Mi Cuenta" y "Cerrar Sesión", mostrar "Iniciar Sesión"
                 if (adminCuentaLink) adminCuentaLink.style.display = 'none';
                 if (loginLink) loginLink.style.display = 'block';
                 if (logoutLink) logoutLink.style.display = 'none';
             }
 
-            // ⭐ CONTROL DE ROLES - OCULTAR PUBLICADOS PARA CLIENTES ⭐
             const userRole = localStorage.getItem('userRole');
             console.log('Rol detectado:', userRole);
 
@@ -162,14 +156,11 @@
                 if (tabPublicados) {
                     tabPublicados.style.display = 'none';
                 }
-
-                // Ocultar contenido de "Publicados"
                 const contentPublicados = document.getElementById('publicados');
                 if (contentPublicados) {
                     contentPublicados.style.display = 'none';
                 }
 
-                // Activar automáticamente la pestaña de "Guardados"
                 const tabGuardados = document.querySelector('.tab-link[onclick*="guardados"]');
                 const contentGuardados = document.getElementById('guardados');
 
@@ -191,7 +182,7 @@
                 });
             }
 
-            // Menú desplegable
+
             const userIcon = document.getElementById('userIcon');
             const dropdownMenu = document.getElementById('dropdownMenu');
             if (userIcon && dropdownMenu) {
@@ -222,8 +213,6 @@
             evt.currentTarget.classList.add("active");
         }
     </script>
-
-    <!-- Script para inicializar el controller -->
     <script type="module">
         console.log('🚀 Inicializando MisProyectosController...');
 
@@ -231,7 +220,6 @@
         import { AuthService } from '../JS/services/AuthService.js';
         import { UIService } from '../JS/services/UIService.js';
 
-        // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', async function () {
             try {
                 console.log('🔍 DOM cargado, creando controllers...');
@@ -246,7 +234,6 @@
             } catch (error) {
                 console.error('❌ Error inicializando MisProyectosController:', error);
 
-                // Mostrar mensaje de error al usuario
                 const publicadosGrid = document.getElementById('projects-grid-publicados');
                 const guardadosGrid = document.getElementById('projects-grid-guardados');
 
@@ -271,13 +258,11 @@
             }
         });
 
-        // Función global para recargar
         window.reloadPage = function () {
             location.reload();
         };
     </script>
 
-    <!-- SOLO ESTOS SCRIPTS -->
     <script type="module" src="../JS/controllers/MisProyectosController.js"></script>
     <script src="../JS/rolChecker.js"></script>
 

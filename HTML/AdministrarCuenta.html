@@ -13,7 +13,6 @@
 
 <body>
     <script>
-        // Agregar clase al body según el rol del usuario
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
         const userRole = localStorage.getItem('userRole');
         const isArchitect = userData.es_arquitecto === 1 || userData.es_arquitecto === true || userRole === 'arquitecto';
@@ -59,7 +58,6 @@
             <div class="sidebar-header">
                 <h2>Mi Cuenta</h2>
             </div>
-            <!-- SIDEBAR MODIFICADO -->
             <ul class="sidebar-nav">
                 <li class="registered-only">
                     <a href="#personal" class="nav-link active" data-section="personal">
@@ -432,7 +430,6 @@
             const logoutLink = document.getElementById('logoutLink');
             const token = localStorage.getItem('authToken');
 
-            // Si está loggeado, mostrar "Mi Cuenta" y "Cerrar Sesión", ocultar "Iniciar Sesión"
             if (token) {
                 if (adminCuentaLink) adminCuentaLink.style.display = 'block';
                 if (loginLink) loginLink.style.display = 'none';

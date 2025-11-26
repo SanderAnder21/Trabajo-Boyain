@@ -151,7 +151,6 @@
     <script type="module" src="../JS/architects.js"></script>
     <script type="module" src="../JS/controllers/ScrollController.js"></script>
     <script>
-        // ⭐ LÓGICA AGREGADA: Menú desplegable (Icono de usuario) ⭐
         document.addEventListener('DOMContentLoaded', function () {
             const userIcon = document.getElementById('userIcon');
             const dropdownMenu = document.getElementById('dropdownMenu');
@@ -169,7 +168,6 @@
                 });
             }
         });
-        // ⭐ FIN LÓGICA AGREGADA ⭐
 
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
@@ -190,9 +188,7 @@
             evt.currentTarget.classList.add("active");
         }
 
-        // --- INICIO DE LA LÓGICA CORREGIDA DE BÚSQUEDA DE ARQUITECTOS ---
 
-        // Variable para guardar la lista completa de arquitectos
         let allArchitects = [];
 
         // Función para RENDERIZAR la lista de arquitectos
@@ -202,13 +198,11 @@
 
             container.innerHTML = ''; // Limpiar
 
-            // Mensaje si no hay resultados
             if (architectList.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #666; width: 100%; padding: 40px;">No se encontraron arquitectos que coincidan con tu búsqueda.</p>';
                 return;
             }
 
-            // Crear y añadir las tarjetas de arquitecto
             architectList.forEach(architect => {
                 const architectCard = document.createElement('a');
                 architectCard.href = `PerfilArquitecto.html?id=${architect.id}`;
@@ -223,12 +217,11 @@
             });
         }
 
-        // Función para CARGAR la lista inicial de arquitectos
         async function loadArchitects() {
             try {
                 const architectDB = new ArchitectManager();
-                allArchitects = await architectDB.getArchitects(); // Esperar a que cargue
-                renderArchitects(allArchitects); // Renderizar la lista completa
+                allArchitects = await architectDB.getArchitects();
+                renderArchitects(allArchitects);
                 console.log('✅ Arquitectos cargados:', allArchitects);
             } catch (error) {
                 console.error('Error cargando arquitectos:', error);
@@ -237,21 +230,17 @@
             }
         }
 
-        // Función para FILTRAR la lista de arquitectos
         function filterArchitects() {
-            // Obtener el término de búsqueda
             const searchTerm = document.getElementById('architectSearch').value.toLowerCase().trim();
 
             console.log('🔍 Buscando:', searchTerm);
             console.log('📊 Total arquitectos:', allArchitects.length);
 
-            // Si no hay término de búsqueda, mostrar todos
             if (!searchTerm) {
                 renderArchitects(allArchitects);
                 return;
             }
 
-            // Filtrar la lista guardada
             const filteredList = allArchitects.filter(architect => {
                 const matchesName = architect.name.toLowerCase().includes(searchTerm);
                 const matchesSpecialty = architect.specialty && architect.specialty.toLowerCase().includes(searchTerm);
@@ -260,11 +249,9 @@
 
             console.log('📋 Resultados encontrados:', filteredList.length);
 
-            // Volver a renderizar la cuadrícula con la lista filtrada
             renderArchitects(filteredList);
         }
 
-        // Cargar los arquitectos cuando se cambie a la pestaña
         function loadArchitectsOnTabSwitch() {
             const architectsTab = document.getElementById('explore-architects');
             if (architectsTab && architectsTab.style.display === 'block' && allArchitects.length === 0) {
@@ -272,7 +259,6 @@
             }
         }
 
-        // Sobrescribir la función openTab para cargar arquitectos cuando sea necesario
         const originalOpenTab = openTab;
         openTab = function (evt, tabName) {
             originalOpenTab(evt, tabName);
@@ -281,9 +267,8 @@
             }
         };
 
-        // Configurar los listeners cuando el DOM esté listo
+        // Configurar los listeners cuando el DOM esté listo 
         document.addEventListener('DOMContentLoaded', function () {
-            // Configurar el listener para la barra de búsqueda de arquitectos
             const architectSearchInput = document.getElementById('architectSearch');
             if (architectSearchInput) {
                 architectSearchInput.addEventListener('input', filterArchitects);
@@ -293,12 +278,10 @@
             document.getElementById("explore-projects").style.display = "block";
         });
 
-        // --- FIN DE LA LÓGICA CORREGIDA DE BÚSQUEDA DE ARQUITECTOS ---
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Controla el menu de cuenta segun el estado de login
             const adminCuentaLink = document.getElementById('adminCuentaLink');
             const loginLink = document.getElementById('loginLink');
             const logoutLink = document.getElementById('logoutLink');

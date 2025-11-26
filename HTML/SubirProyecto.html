@@ -15,13 +15,11 @@
         const userData = JSON.parse(localStorage.getItem('userData') || '{}');
         const userRole = localStorage.getItem('userRole');
         const isArchitect = userData.es_arquitecto === 1 || userData.es_arquitecto === true || userRole === 'arquitecto';
-        
-        // Si no es arquitecto, redirigir inmediatamente
         if (!isArchitect) {
             alert('❌ Acceso restringido. Solo los arquitectos pueden subir proyectos.');
             window.location.href = '../INDEX.html';
         }
-        
+
         document.body.classList.add(isArchitect ? 'arquitecto' : 'cliente');
     </script>
     <div class="contenedor-imagen">
@@ -289,12 +287,10 @@
     <script type="module" src="../JS/controllers/RoleCheckerController.js"></script>
 
     <script>
-        // ⭐ LÓGICA CORREGIDA PARA EL MENÚ DESPLEGABLE EN SUBIR PROYECTO ⭐
         document.addEventListener('DOMContentLoaded', function () {
             const userIcon = document.getElementById('userIcon');
             const dropdownMenu = document.getElementById('dropdownMenu');
 
-            // Función para manejar el clic en el icono de usuario
             if (userIcon && dropdownMenu) {
                 userIcon.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -302,7 +298,6 @@
                     dropdownMenu.classList.toggle('show');
                 });
 
-                // Cerrar el menú al hacer clic fuera
                 window.addEventListener('click', function (e) {
                     if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
                         dropdownMenu.classList.remove('show');
@@ -310,7 +305,6 @@
                 });
             }
 
-            // ⭐ LÓGICA PARA MOSTRAR/OCULTAR ENLACES SEGÚN AUTENTICACIÓN ⭐
             const adminCuentaLink = document.getElementById('adminCuentaLink');
             const loginLink = document.getElementById('loginLink');
             const logoutLink = document.getElementById('logoutLink');
@@ -322,7 +316,6 @@
             console.log('- userRole:', localStorage.getItem('userRole'));
 
             if (token) {
-                // ✅ USUARIO LOGGEADO
                 if (adminCuentaLink) {
                     adminCuentaLink.style.display = 'block';
                     adminCuentaLink.textContent = 'Mi Cuenta';
@@ -335,7 +328,6 @@
                 }
                 console.log('✅ Mostrando: Mi Cuenta, Administrar Proyectos, Cerrar Sesión');
             } else {
-                // ❌ USUARIO NO LOGGEADO
                 if (adminCuentaLink) adminCuentaLink.style.display = 'none';
                 if (loginLink) {
                     loginLink.style.display = 'block';
@@ -349,7 +341,6 @@
                 console.log('✅ Mostrando: Iniciar Sesión, Administrar Proyectos');
             }
 
-            // Manejar cierre de sesión
             if (logoutLink) {
                 logoutLink.addEventListener('click', function (e) {
                     e.preventDefault();

@@ -8,7 +8,7 @@ import { User } from '../models/User.js'; // Usamos el modelo User
  * Encargado de cargar datos, gestionar formularios y la navegación lateral.
  */
 export class AdminPage extends BasePage {
-    
+
     /**
      * @param {import('../services/AuthService').AuthService} authService 
      * @param {import('../services/UIService').UIService} uiService 
@@ -19,7 +19,7 @@ export class AdminPage extends BasePage {
         super(authService, uiService);
         this.dataService = dataService; // Inyección de DataService
         this.currentUser = null;
-        this.currentSectionId = 'personal'; 
+        this.currentSectionId = 'personal';
     }
 
     /**
@@ -27,7 +27,7 @@ export class AdminPage extends BasePage {
      */
     init() {
         console.log('✨ AdminPage: Inicializando controlador.');
-        
+
         if (!this.authService.checkAuthStatus()) {
             this.uiService.redirect('IniciarSesion.html');
             return;
@@ -42,16 +42,16 @@ export class AdminPage extends BasePage {
 
         // Crear una instancia del modelo User para encapsular los datos
         this.currentUser = User.fromData(userData);
-        
+
         // 1. Aplicar clase de rol al body (para CSS)
         document.body.className = this.currentUser.role;
-        
+
         // 2. Cargar datos en los formularios
         this.loadUserData();
-        
+
         // 3. Configurar navegación lateral (sidebar)
         this.setupNavigationMenu();
-        
+
         // 4. Configurar manejadores de formularios
         this.setupFormHandlers();
 
@@ -61,7 +61,7 @@ export class AdminPage extends BasePage {
 
     loadUserData() {
         if (!this.currentUser) return;
-        
+
         // --- Sección Personal ---
         this.setInputValue('nombre', this.currentUser.nombre);
         this.setInputValue('bio', this.currentUser.biografia);
@@ -75,7 +75,7 @@ export class AdminPage extends BasePage {
             // El campo 'direccion' no está en el modelo, pero se cargaría si existiera
         }
     }
-    
+
     setInputValue(id, value) {
         const element = document.getElementById(id);
         if (element && value !== null) {
@@ -93,7 +93,7 @@ export class AdminPage extends BasePage {
     setupNavigationMenu() {
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('.admin-section');
-        
+
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -126,13 +126,13 @@ export class AdminPage extends BasePage {
             }
         }
     }
-    
+
     switchToSection(sectionId) {
-         // Encuentra el link y la sección y fuerza el click (para aplicar estilos)
-         const targetLink = document.querySelector(`[data-section="${sectionId}"]`);
-         if(targetLink) {
-             targetLink.click();
-         }
+        // Encuentra el link y la sección y fuerza el click (para aplicar estilos)
+        const targetLink = document.querySelector(`[data-section="${sectionId}"]`);
+        if (targetLink) {
+            targetLink.click();
+        }
     }
 
     setupFormHandlers() {
@@ -154,18 +154,18 @@ export class AdminPage extends BasePage {
             // Nota: La ruta /api/user/security no está en app.js, pero se asume su existencia
             securityForm.addEventListener('submit', this.handleSecuritySubmit.bind(this));
         }
-        
+
         // --- 4. Manejo de Foto de Perfil ---
         const profileInput = document.getElementById('profilePictureInput');
         if (profileInput) {
             profileInput.addEventListener('change', this.handleProfilePictureChange.bind(this));
         }
-        
+
         // --- 5. Manejo de Suscripción/Pago (Modales y Tabs) ---
         // (Lógica compleja que se puede delegar a un SubscriptionController o dejar aquí temporalmente)
         this.setupPaymentHandlers();
     }
-    
+
     // --- MANEJADORES DE SUBMIT ---
 
     async handlePersonalSubmit(e) {
@@ -176,7 +176,7 @@ export class AdminPage extends BasePage {
             bio: form.bio.value.trim(),
             fechaNacimiento: form.fechaNacimiento.value // Aunque la DB solo usa nombre y bio, pasamos todo
         };
-        
+
         try {
             // Llama al servicio de datos para actualizar (Abstracción)
             const result = await this.dataService.updatePersonalData(data);
@@ -197,7 +197,7 @@ export class AdminPage extends BasePage {
             estado: form.estado.value.trim(),
             direccion: form.direccion.value.trim()
         };
-        
+
         try {
             const result = await this.dataService.updateContactData(data);
             this.uiService.showAlert(result.message);
@@ -206,11 +206,11 @@ export class AdminPage extends BasePage {
             this.uiService.showAlert(error.message, true);
         }
     }
-    
+
     async handleSecuritySubmit(e) {
         e.preventDefault();
         const form = e.target;
-        
+
         const currentPassword = form.currentPassword.value;
         const newPassword = form.newPassword.value;
         const confirmPassword = form.confirmPassword.value;
@@ -224,7 +224,7 @@ export class AdminPage extends BasePage {
         // Se deja la llamada para cuando la implementes en Node.js
         try {
             // await this.dataService.updateSecurityData({ currentPassword, newPassword });
-            
+
             // Simulación temporal
             console.log('Llamada a PUT /api/user/security simulada.');
             this.uiService.showAlert('Contraseña actualizada exitosamente (Simulación)');
@@ -243,7 +243,7 @@ export class AdminPage extends BasePage {
             this.uiService.showAlert('Por favor selecciona una imagen válida.', true);
             return;
         }
-        
+
         // Simulación de carga de la imagen
         const reader = new FileReader();
         reader.onload = (e) => {
@@ -254,7 +254,7 @@ export class AdminPage extends BasePage {
         };
         reader.readAsDataURL(file);
     }
-    
+
     setupPaymentHandlers() {
         const modal = document.getElementById('paymentModal');
         const closeModalBtn = modal?.querySelector('.close-modal');
@@ -281,12 +281,12 @@ export class AdminPage extends BasePage {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
-        
+
         // Abrir modal desde botones de plan
         selectPlanBtns.forEach(btn => {
             btn.addEventListener('click', () => openModal(btn.dataset.plan));
         });
-        
+
         // Abrir modal desde el botón de actualizar pago
         btnActualizarPago?.addEventListener('click', () => openModal(null));
 
@@ -295,10 +295,10 @@ export class AdminPage extends BasePage {
         const activatePaymentTab = (tabName) => {
             payTabs.forEach(tab => tab.classList.remove('active'));
             document.querySelector(`.payment-tab[data-tab="${tabName}"]`).classList.add('active');
-            
+
             cardPaymentForm.classList.remove('active');
             cashPaymentForm.classList.remove('active');
-            
+
             if (tabName === 'tarjeta') {
                 cardPaymentForm.classList.add('active');
             } else if (tabName === 'efectivo') {
@@ -312,7 +312,7 @@ export class AdminPage extends BasePage {
 
         // Inicializar pestaña
         activatePaymentTab('tarjeta');
-        
+
         // --- Manejo de Formulario de Tarjeta ---
         const cardForm = document.getElementById('cardForm');
         cardForm?.addEventListener('submit', (e) => {
@@ -326,7 +326,7 @@ export class AdminPage extends BasePage {
         const copyBtn = document.querySelector('.btn-copy');
         copyBtn?.addEventListener('click', () => {
             const refNumber = document.getElementById('referenceNumber').textContent;
-            
+
             // Reemplazo de execCommand para evitar warnings en IFrames
             try {
                 // Usando navigator.clipboard (moderno)
@@ -343,10 +343,10 @@ export class AdminPage extends BasePage {
                     this.uiService.showAlert('¡Referencia copiada al portapapeles!');
                 });
             } catch (err) {
-                 this.uiService.showAlert('No se pudo copiar automáticamente. Inténtalo manualmente.', true);
+                this.uiService.showAlert('No se pudo copiar automáticamente. Inténtalo manualmente.', true);
             }
         });
-        
+
         // Aseguramos que el botón de efectivo siempre esté deshabilitado hasta recibir el pago
         const confirmCashBtn = document.querySelector('.btn-confirm-cash');
         confirmCashBtn?.addEventListener('click', () => {
@@ -354,10 +354,10 @@ export class AdminPage extends BasePage {
                 this.uiService.showAlert('Pago confirmado. ¡Suscripción activada!', false);
                 closeModal();
             } else {
-                 this.uiService.showAlert('El pago aún no se ha recibido o verificado.', true);
+                this.uiService.showAlert('El pago aún no se ha recibido o verificado.', true);
             }
         });
-        
+
         // Simulación de activación de botón después de un tiempo (para demo)
         setTimeout(() => {
             confirmCashBtn?.classList.add('active');

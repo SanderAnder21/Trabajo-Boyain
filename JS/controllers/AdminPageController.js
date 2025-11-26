@@ -31,14 +31,11 @@ class AdminPageController {
             return;
         }
 
-        // Cargar datos del usuario
         await this.loadUserData();
 
-        // Aplicar rol al body
         document.body.className = this.userRole;
         console.log('🎯 Rol aplicado al body:', this.userRole);
 
-        // Configurar navegación y formularios
         this.setupNavigation();
         this.setupDropdown();
         this.setupFormHandlers();
@@ -48,7 +45,6 @@ class AdminPageController {
     }
 
     /**
-     * Carga los datos del usuario desde localStorage o API.
      * @private
      */
     async loadUserData() {
@@ -180,19 +176,16 @@ class AdminPageController {
             personalForm.addEventListener('submit', (e) => this.handlePersonalDataSubmit(e));
         }
 
-        // Formulario de contacto (solo arquitectos)
         const contactForm = document.querySelector('.contact-form');
         if (contactForm && this.userRole === 'arquitecto') {
             contactForm.addEventListener('submit', (e) => this.handleContactDataSubmit(e));
         }
 
-        // Formulario de seguridad
         const securityForm = document.querySelector('.security-form');
         if (securityForm) {
             securityForm.addEventListener('submit', (e) => this.handleSecurityDataSubmit(e));
         }
 
-        // Preview de imagen de perfil
         this.setupProfilePicturePreview();
     }
 
@@ -361,7 +354,6 @@ class AdminPageController {
     }
 }
 
-// Inicializar el controlador cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     const adminPage = new AdminPageController();
     adminPage.init();

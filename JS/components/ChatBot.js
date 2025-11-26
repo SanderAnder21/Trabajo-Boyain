@@ -1,23 +1,17 @@
 // JS/components/Chatbot.js
 
-/**
- * Componente Chatbot (Clase Encapsulada).
- * Maneja la UI, la interacción de mensajes y la comunicación con el endpoint /api/chat.
- */
+
 export class Chatbot {
     constructor() {
         this.chatContainer = null;
         this.messagesContainer = null;
         this.inputElement = null;
         this.sendButton = null;
-        
-        // El chatbot debe inicializarse al cargarse el DOM, independientemente del router
+
         document.addEventListener('DOMContentLoaded', this.init.bind(this));
     }
 
-    /**
-     * Inicializa la estructura del DOM y los event listeners.
-     */
+
     init() {
         const bubble = document.querySelector('.burbuja-flotante');
         if (!bubble) {
@@ -33,9 +27,7 @@ export class Chatbot {
         console.log('✅ Chatbot inicializado.');
     }
 
-    /**
-     * Inserta la estructura HTML del chatbot en el body.
-     */
+
     renderChatStructure() {
         const chatHTML = `
             <div class="chatbot-container">
@@ -53,9 +45,7 @@ export class Chatbot {
         document.body.insertAdjacentHTML('beforeend', chatHTML);
     }
 
-    /**
-     * Obtiene referencias a los elementos clave del DOM.
-     */
+
     setupDOMReferences() {
         this.chatContainer = document.querySelector('.chatbot-container');
         this.messagesContainer = this.chatContainer.querySelector('.chatbot-messages');
@@ -68,19 +58,17 @@ export class Chatbot {
      * @param {HTMLElement} bubble - La burbuja flotante.
      */
     setupEventListeners(bubble) {
-        // Abrir/Cerrar Chat con la burbuja
+
         bubble.addEventListener('click', () => this.toggleChat());
 
-        // Cerrar con el botón 'X'
         this.chatContainer.querySelector('.close-chat').addEventListener('click', () => this.toggleChat(false));
 
-        // Enviar mensaje
         this.sendButton.addEventListener('click', () => this.sendMessage());
         this.inputElement.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.sendMessage();
         });
     }
-    
+
     /**
      * Muestra u oculta el contenedor del chat.
      * @param {boolean} [forceState] - Si se proporciona, fuerza a abrir (true) o cerrar (false).
@@ -97,20 +85,18 @@ export class Chatbot {
         }
     }
 
-    /**
-     * Procesa y envía el mensaje del usuario al backend.
-     */
+
     async sendMessage() {
         const message = this.inputElement.value.trim();
         if (!message) return;
 
         this.addMessage(message, 'user');
         this.inputElement.value = '';
-        this.sendButton.disabled = true; // Deshabilitar el botón
+        this.sendButton.disabled = true;
         this.inputElement.disabled = true;
 
         this.addTypingIndicator();
-        
+
         try {
             const response = await fetch('/api/chat', {
                 method: 'POST',
@@ -147,9 +133,7 @@ export class Chatbot {
         this.scrollToBottom();
     }
 
-    /**
-     * Añade el indicador de que el bot está escribiendo.
-     */
+
     addTypingIndicator() {
         const typingDiv = document.createElement('div');
         typingDiv.className = 'message bot-message typing';
@@ -159,9 +143,7 @@ export class Chatbot {
         this.scrollToBottom();
     }
 
-    /**
-     * Elimina el indicador de que el bot está escribiendo.
-     */
+
     removeTypingIndicator() {
         const indicator = document.getElementById('typingIndicator');
         if (indicator) {
