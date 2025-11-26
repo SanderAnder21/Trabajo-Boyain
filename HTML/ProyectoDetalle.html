@@ -242,6 +242,40 @@
             await controller.init();
         });
     </script>
+    <script>
+    // CÓDIGO PARA EL MENÚ DESPLEGABLE 
+    document.addEventListener('DOMContentLoaded', function () {
+        const userIcon = document.getElementById('userIcon');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        if (userIcon && dropdownMenu) {
+            userIcon.addEventListener('click', function (e) {
+                e.preventDefault();
+                dropdownMenu.classList.toggle('show');
+            });
+
+            window.addEventListener('click', function (e) {
+                if (!userIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        }
+
+        // Control de estado de login (opcional pero recomendado)
+        const token = localStorage.getItem('authToken');
+        const loginLink = document.querySelector('#dropdownMenu a[href="IniciarSesion.html"]');
+        const adminCuentaLink = document.querySelector('#dropdownMenu a[href="AdministrarCuenta.html"]');
+        
+        if (token) {
+            if (loginLink) loginLink.style.display = 'none';
+            if (adminCuentaLink) adminCuentaLink.style.display = 'block';
+        } else {
+            if (loginLink) loginLink.style.display = 'block';
+            if (adminCuentaLink) adminCuentaLink.style.display = 'none';
+        }
+    });
+
+</script>
 </body>
 
 </html>
