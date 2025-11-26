@@ -1,4 +1,3 @@
-// JS/controllers/ChatbotController.js
 
 /**
  * Controlador para el chatbot flotante.

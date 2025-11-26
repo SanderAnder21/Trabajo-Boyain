@@ -1,4 +1,3 @@
-// JS/controllers/FavoritesController.js
 
 import { AuthService } from '../services/AuthService.js';
 import { UIService } from '../services/UIService.js';

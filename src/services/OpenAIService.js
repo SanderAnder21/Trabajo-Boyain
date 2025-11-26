@@ -1,4 +1,3 @@
-// src/services/OpenAIService.js
 
 import OpenAI from 'openai';
 import config from '../config/config.js';

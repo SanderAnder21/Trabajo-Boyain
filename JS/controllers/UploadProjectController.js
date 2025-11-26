@@ -1,5 +1,3 @@
-// JS/controllers/UploadProjectController.js
-
 import { AuthService } from '../services/AuthService.js';
 import { UIService } from '../services/UIService.js';
 
@@ -194,7 +192,7 @@ class UploadProjectController {
             this.uiService.showAlert('Subiendo archivos, por favor espera...', false);
 
             const token = this.authService.getToken();
-            
+
             // ✅ URL CORREGIDA - Usar URL completa
             const response = await fetch('http://localhost:3000/api/projects', {
                 method: 'POST',
@@ -271,7 +269,7 @@ class UploadProjectController {
     async loadUserProjects() {
         try {
             const token = this.authService.getToken();
-            
+
             // ✅ URL CORREGIDA - Usar endpoint correcto
             const response = await fetch('http://localhost:3000/api/user/projects', {
                 method: 'GET',

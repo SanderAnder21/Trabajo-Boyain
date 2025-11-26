@@ -1,5 +1,3 @@
-// JS/controllers/RoleCheckerController.js
-
 /**
  * Controlador para verificar el estado de autenticación y gestionar el menú de usuario.
  * Maneja la visibilidad de elementos según el estado de login y el rol del usuario.

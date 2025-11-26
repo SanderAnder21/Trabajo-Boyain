@@ -1,5 +1,3 @@
-// JS/controllers/ScrollController.js
-
 /**
  * Controlador para el botón de scroll down.
  * Maneja el desplazamiento suave a secciones de la página.

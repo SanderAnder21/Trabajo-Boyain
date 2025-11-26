@@ -1,5 +1,3 @@
-// JS/controllers/SubirProyectoController.js
-
 import { AuthService } from '../services/AuthService.js';
 import { UIService } from '../services/UIService.js';
 import { DataService } from '../services/DataService.js';
@@ -20,7 +18,7 @@ export class SubirProyectoController {
 
     async init() {
         console.log('🚀 SubirProyectoController: Inicializando...');
-        
+
         // Verificar autenticación y rol
         if (!this.authService.isAuthenticated()) {
             this.uiService.redirect('IniciarSesion.html');
@@ -38,13 +36,11 @@ export class SubirProyectoController {
         // Inicializar el controlador específico de subida de proyectos
         const uploadController = new UploadProjectController(
             this.authService,
-            this.uiService, 
+            this.uiService,
             this.dataService
         );
         uploadController.init();
 
-        // Cargar proyectos reales del usuario
-        //await this.loadUserProjects();
 
         console.log('✅ SubirProyectoController: Inicializado correctamente');
     }
@@ -55,15 +51,15 @@ export class SubirProyectoController {
     async loadUserProjects() {
         try {
             console.log('📦 Cargando proyectos reales del usuario...');
-            
+
             const userProjects = await this.dataService.getUserProjects(this.currentUser.id);
-            
+
             if (userProjects && userProjects.length > 0) {
                 this.renderUserProjects(userProjects);
             } else {
                 this.showNoProjectsMessage();
             }
-            
+
         } catch (error) {
             console.error('❌ Error cargando proyectos:', error);
             this.showErrorLoadingProjects();
@@ -94,7 +90,7 @@ export class SubirProyectoController {
     createProjectCard(project) {
         const card = document.createElement('div');
         card.className = 'project-card';
-        
+
         card.innerHTML = `
             <h3>${project.titulo || 'Proyecto sin título'}</h3>
             <div class="project-meta">
@@ -120,7 +116,7 @@ export class SubirProyectoController {
     getProjectTypeLabel(type) {
         const types = {
             'residencial': 'Residencial',
-            'comercial': 'Comercial', 
+            'comercial': 'Comercial',
             'restauracion': 'Restauración',
             'institucional': 'Institucional'
         };

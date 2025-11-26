@@ -1,5 +1,3 @@
-// JS/controllers/ProjectsGalleryController.js
-
 /**
  * Controlador para la galería de proyectos.
  * Maneja la carga y visualización de proyectos en la página de exploración.

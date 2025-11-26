@@ -1,4 +1,3 @@
-// JS/controllers/LoginController.js
 
 import { AuthService } from '../services/AuthService.js';
 import { UIService } from '../services/UIService.js';
@@ -82,7 +81,6 @@ class LoginController {
         } catch (error) {
             console.error('❌ Error en login:', error);
 
-            // Si el backend no está disponible, intentar modo prueba
             if (error.message.includes('Failed to fetch') || error.message.includes('HTTP')) {
                 this.handleOfflineMode(email);
             } else {

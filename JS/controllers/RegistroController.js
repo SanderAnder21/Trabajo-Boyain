@@ -1,5 +1,3 @@
-// JS/controllers/RegistroController.js
-
 import { AuthService } from '../services/AuthService.js';
 import { UIService } from '../services/UIService.js';
 

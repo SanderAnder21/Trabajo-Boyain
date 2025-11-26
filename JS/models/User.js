@@ -1,5 +1,3 @@
-// JS/models/User.js
-
 /**
  * Clase que representa a un Usuario (Cliente o Arquitecto).
  * Encapsula la información personal y de autenticación.
@@ -15,11 +13,11 @@ export class User {
         this.email = data.email || '';
         this.role = data.es_arquitecto ? 'arquitecto' : 'cliente'; // Define el rol basado en el campo del backend
         this.isAuthenticated = !!data.token || (data.id !== null);
-        
+
         // Datos de perfil (pueden ser nulos para clientes)
         this.avatar = data.avatar || 'https://placehold.co/150x150/f0f0f0/666?text=U';
         this.biografia = data.biografia || 'Sin biografía.';
-        
+
         // Datos específicos del arquitecto
         this.especialidad = data.especialidad || null;
         this.titulacion = data.titulacion || null;

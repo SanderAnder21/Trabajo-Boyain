@@ -1,4 +1,4 @@
-// JS/controllers/BasePage.js
+
 
 /**
  * Clase base para controladores de página.

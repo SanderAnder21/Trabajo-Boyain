@@ -1,4 +1,3 @@
-// JS/controllers/MisProyectosController.js
 
 import { BasePage } from './BasePage.js';
 import FavoritesController from './FavoritesController.js';
@@ -19,7 +18,7 @@ export class MisProyectosController extends BasePage {
 
     async init() {
         console.log('🚀 MisProyectosController: Inicializando...');
-        
+
         // Verificar autenticación
         if (!this.authService.isAuthenticated()) {
             this.uiService.redirect('IniciarSesion.html');
@@ -28,13 +27,13 @@ export class MisProyectosController extends BasePage {
 
         this.currentUser = this.authService.getUserData();
         console.log('👤 Usuario actual:', this.currentUser);
-        
+
         this.setupRoleBasedUI();
         this.setupTabs();
         await this.loadMyProjects();
         await this.loadFavorites();
         this.setupEventListeners();
-        
+
         console.log('✅ MisProyectosController: Inicializado correctamente');
     }
 
@@ -55,7 +54,7 @@ export class MisProyectosController extends BasePage {
      */
     setupClientUI() {
         console.log('👤 Configurando UI para cliente');
-        
+
         // Cambiar título
         const pageTitle = document.querySelector('.mis-proyectos-container h2');
         if (pageTitle) pageTitle.textContent = 'Mis Favoritos';
@@ -81,16 +80,16 @@ export class MisProyectosController extends BasePage {
     async loadMyProjects() {
         try {
             console.log('📦 Cargando proyectos del usuario...');
-            
+
             const userProjects = await this.dataService.getUserProjects(this.currentUser.id);
             console.log('📊 Proyectos recibidos del servicio:', userProjects);
-            
+
             if (userProjects && userProjects.length > 0) {
                 this.renderMyProjects(userProjects);
             } else {
                 this.showNoProjectsMessage();
             }
-            
+
         } catch (error) {
             console.error('❌ Error cargando proyectos:', error);
             this.showErrorLoadingProjects();
@@ -124,7 +123,7 @@ export class MisProyectosController extends BasePage {
     createProjectCard(project) {
         const card = document.createElement('div');
         card.className = 'project-card';
-        
+
         card.innerHTML = `
             <img src="${project.imagen_principal || '../IMG/project1.jpg'}" alt="${project.titulo}" onerror="this.src='../IMG/project1.jpg'">
             <div class="project-info">
@@ -156,7 +155,7 @@ export class MisProyectosController extends BasePage {
     getProjectTypeLabel(type) {
         const types = {
             'residencial': 'Residencial',
-            'comercial': 'Comercial', 
+            'comercial': 'Comercial',
             'restauracion': 'Restauración',
             'institucional': 'Institucional'
         };
@@ -215,16 +214,12 @@ export class MisProyectosController extends BasePage {
      * Configura event listeners adicionales
      */
     setupEventListeners() {
-        // El menú desplegable ya está manejado en el HTML
-        // Aquí puedes agregar otros event listeners si es necesario
     }
 
     /**
      * Navega a la página de detalles del proyecto
      */
     viewProjectDetails(projectId) {
-        // Por ahora redirige a Proyectos.html con el ID
-        // Más adelante puedes crear una página de detalles específica
         window.location.href = `Proyectos.html?project=${projectId}`;
     }
 }

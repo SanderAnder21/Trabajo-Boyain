@@ -58,34 +58,34 @@ export class AuthService {
      */
     updateUserData(newUserData) {
         console.log('[AuthService] Actualizando datos de usuario:', newUserData);
-        
+
         try {
             // Obtener datos actuales
             const currentData = this.getUserData() || {};
-            
+
             // Combinar datos existentes con nuevos datos
             const updatedData = {
                 ...currentData,
                 ...newUserData
             };
-            
+
             // Guardar en localStorage
             localStorage.setItem('userData', JSON.stringify(updatedData));
-            
+
             // Actualizar rol si es necesario
             if (updatedData.es_arquitecto !== undefined) {
                 const role = updatedData.es_arquitecto ? 'arquitecto' : 'cliente';
                 localStorage.setItem('userRole', role);
             }
-            
+
             // Actualizar nombre si existe
             if (updatedData.nombre) {
                 localStorage.setItem('userName', updatedData.nombre);
             }
-            
+
             console.log('[AuthService] Datos actualizados correctamente en localStorage');
             return true;
-            
+
         } catch (error) {
             console.error('[AuthService] Error actualizando datos:', error);
             return false;
@@ -175,7 +175,7 @@ export class AuthService {
      */
     async verifyToken() {
         const token = this.getToken();
-        
+
         if (!token) {
             return { valid: false, user: null };
         }

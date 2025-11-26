@@ -1,4 +1,3 @@
-// JS/controllers/ProfileController.js
 
 import { BasePage } from './BasePage.js';
 

@@ -1,4 +1,3 @@
-// JS/controllers/ProjectDetailController.js
 
 import { BasePage } from './BasePage.js';
 import FavoritesController from './FavoritesController.js';
@@ -80,13 +79,10 @@ export class ProjectDetailController extends BasePage {
         document.getElementById('projectMainImage').src = this.project.imagen_principal || '../IMG/project-placeholder.jpg';
         document.getElementById('projectFullDescription').innerHTML = this.formatDescription(this.project.descripcion_completa || this.project.descripcion);
 
-        // Renderizar detalles técnicos
         this.renderProjectDetails();
 
-        // Renderizar archivos y media
         this.renderFiles();
 
-        // --- Arquitecto ---
         this.renderArchitectInfo();
 
         // --- Estadísticas ---

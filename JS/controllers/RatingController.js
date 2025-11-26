@@ -1,5 +1,3 @@
-// JS/controllers/RatingController.js
-
 import { AuthService } from '../services/AuthService.js';
 import { UIService } from '../services/UIService.js';
 

@@ -1,5 +1,3 @@
-// JS/models/Architect.js
-
 /**
  * Clase que representa a un Arquitecto (Perfil público).
  * Extiende la información básica del User para propósitos de visualización.
@@ -15,10 +13,10 @@ export class Architect {
         this.specialty = data.especialidad || 'Arquitectura General';
         this.experience = data.experiencia || 'No especificado';
         this.bio = data.biografia || 'Especialista en diseño y gestión de proyectos.';
-        
+
         // Contacto y redes (públicos)
         this.contact = data.email || null; // Usamos el email como contacto principal
-        this.social = data.social || { linkedin: null, instagram: null, behance: null }; 
+        this.social = data.social || { linkedin: null, instagram: null, behance: null };
     }
 
     /**

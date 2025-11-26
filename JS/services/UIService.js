@@ -1,4 +1,3 @@
-// JS/services/UIService.js
 
 /**
  * Servicio de UI (User Interface Service).
@@ -6,7 +5,7 @@
  * y elementos reutilizables (Pestañas).
  */
 export class UIService {
-    
+
     constructor() {
         this.setupScrollDown();
     }
@@ -17,7 +16,7 @@ export class UIService {
      */
     setupAuthNavigation(auth) {
         const { isAuthenticated, role, logoutHandler } = auth;
-        
+
         // Elementos de navegación
         const loginLink = document.getElementById('loginLink');
         const logoutLink = document.getElementById('logoutLink');
@@ -29,12 +28,12 @@ export class UIService {
         if (loginLink) loginLink.style.display = isAuthenticated ? 'none' : 'block';
         if (logoutLink) logoutLink.style.display = isAuthenticated ? 'block' : 'none';
         if (adminCuentaLink) adminCuentaLink.style.display = isAuthenticated ? 'block' : 'none';
-        
+
         const isArchitect = isAuthenticated && role === 'arquitecto';
 
         // Lógica específica para arquitectos
         if (subirProyectoLink) subirProyectoLink.style.display = isArchitect ? 'block' : 'none';
-        
+
         // Mis Proyectos (solo visible para arquitectos en el nav principal)
         if (navMisProyectosLink) navMisProyectosLink.style.display = isArchitect ? 'list-item' : 'none';
 
@@ -45,10 +44,10 @@ export class UIService {
                 logoutHandler();
                 alert('Sesión cerrada exitosamente.');
                 // Redirigir al home después del logout (asumiendo que el home está en el INDEX.html de la raíz)
-                window.location.href = document.querySelector('nav1 a.logo').getAttribute('href') || '../INDEX.html'; 
+                window.location.href = document.querySelector('nav1 a.logo').getAttribute('href') || '../INDEX.html';
             };
         }
-        
+
         this.setupDropdown();
     }
 
@@ -102,7 +101,7 @@ export class UIService {
     setupTabs(defaultTabName) {
         const tabsNavigation = document.querySelector('.tabs-navigation');
         if (!tabsNavigation) return;
-        
+
         const tabLinks = tabsNavigation.querySelectorAll('.tab-link');
         const tabContents = document.querySelectorAll('.tab-content');
 

@@ -1,5 +1,3 @@
-// JS/controllers/UploadProjectController.js
-
 import { BasePage } from './BasePage.js';
 
 /**
@@ -7,7 +5,7 @@ import { BasePage } from './BasePage.js';
  * Maneja el formulario de subida, la validación de archivos y la comunicación con DataService.
  */
 export class UploadProjectController extends BasePage {
-    
+
     /**
      * @param {import('../services/AuthService').AuthService} authService 
      * @param {import('../services/UIService').UIService} uiService 
@@ -21,7 +19,7 @@ export class UploadProjectController extends BasePage {
 
     init() {
         console.log('✨ UploadProjectController: Inicializando controlador.');
-        
+
         if (!this.authService.checkAuthStatus() || this.authService.getUserRole() !== 'arquitecto') {
             this.uiService.showAlert('Debes ser arquitecto para subir proyectos.', true);
             this.uiService.redirect('IniciarSesion.html');
@@ -29,14 +27,13 @@ export class UploadProjectController extends BasePage {
         }
 
         this.currentUser = this.authService.getUserData();
-        
+
         this.setupTagCounters();
         this.setupFormHandler();
-        
-        // Simular carga de proyectos existentes (para la sección lateral de SubirProyecto.html)
-        this.loadExistingProjects(); 
+
+        this.loadExistingProjects();
     }
-    
+
     // --- Lógica de Contadores y Validaciones de Tags ---
 
     setupTagCounters() {
@@ -49,17 +46,17 @@ export class UploadProjectController extends BasePage {
         styleCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', this.updateStyleCount.bind(this));
         });
-        
+
         // Inicializar contadores
         this.updateTagCount();
         this.updateStyleCount();
     }
-    
+
     updateTagCount() {
         const selectedTags = document.querySelectorAll('input[name="tags"]:checked').length;
         const tagCountElement = document.getElementById('tagCount');
         const submitBtn = document.querySelector('.btn-submit');
-        
+
         if (tagCountElement) tagCountElement.textContent = selectedTags;
 
         // Validar si al menos 1 está seleccionado
@@ -80,21 +77,21 @@ export class UploadProjectController extends BasePage {
         const maxStyles = 3;
         const selectedStyles = document.querySelectorAll('input[name="styles"]:checked').length;
         const styleTagCountElement = document.getElementById('styleTagCount');
-        
+
         if (styleTagCountElement) styleTagCountElement.textContent = `${selectedStyles}/${maxStyles}`;
 
         if (selectedStyles > maxStyles) {
             // Si el evento fue disparado por un cambio, desmarcar el último
-            if (e) e.target.checked = false; 
+            if (e) e.target.checked = false;
             this.uiService.showAlert(`Máximo ${maxStyles} estilos arquitectónicos permitidos.`, true);
-            
+
             // Recalcular después de la corrección
-            this.updateStyleCount(); 
+            this.updateStyleCount();
         }
     }
 
-    // --- Lógica de Formulario ---
-    
+    // Lógica de Formulario 
+
     setupFormHandler() {
         const form = document.getElementById('projectForm');
         form?.addEventListener('submit', this.handleProjectSubmit.bind(this));
@@ -103,12 +100,12 @@ export class UploadProjectController extends BasePage {
     async handleProjectSubmit(e) {
         e.preventDefault();
         const form = e.target;
-        
+
         // 1. Validaciones básicas
         const selectedTags = document.querySelectorAll('input[name="tags"]:checked');
         const selectedStyles = document.querySelectorAll('input[name="styles"]:checked');
         const coverImage = document.getElementById('projectCoverImage').files[0];
-        
+
         if (selectedTags.length === 0) {
             this.uiService.showAlert('Selecciona al menos 1 etiqueta técnica.', true);
             return;
@@ -120,47 +117,47 @@ export class UploadProjectController extends BasePage {
 
         // 2. Recolección de datos
         const formData = new FormData(form);
-        
+
         // Agregar el ID del arquitecto si no está implícito en el token
-        formData.append('architectId', this.currentUser.id); 
-        
+        formData.append('architectId', this.currentUser.id);
+
         // Enviar la lista de estilos y tags como arrays
         formData.delete('tags');
         formData.delete('styles');
         selectedTags.forEach(tag => formData.append('tags[]', tag.value));
         selectedStyles.forEach(style => formData.append('styles[]', style.value));
-        
+
         try {
             this.uiService.showAlert('Subiendo proyecto, por favor espera...');
             // Llama a DataService para manejar la subida (Abstracción)
             const result = await this.dataService.uploadProject(formData);
-            
+
             this.uiService.showAlert(`¡Proyecto "${result.title || form.projectName.value}" subido correctamente!`, false);
             form.reset();
             this.updateTagCount(); // Resetear contadores
             this.updateStyleCount();
-            
+
             // Recargar lista de proyectos existentes
-            this.loadExistingProjects(); 
+            this.loadExistingProjects();
 
         } catch (error) {
             console.error('Error al subir proyecto:', error);
             this.uiService.showAlert(error.message, true);
         }
     }
-    
-    // --- Lógica de Proyectos Existentes ---
+
+    // Lógica de Proyectos Existentes 
 
     async loadExistingProjects() {
         const projectsListContainer = document.getElementById('projectsList');
         if (!projectsListContainer || !this.currentUser) return;
-        
+
         try {
             // Asume que DataService puede filtrar por ID de usuario
             const userProjects = await this.dataService.getUserProjects(this.currentUser.id);
-            
+
             this.renderExistingProjects(projectsListContainer, userProjects);
-            
+
         } catch (error) {
             console.error('Error cargando proyectos existentes:', error);
             projectsListContainer.innerHTML = `<div class="no-projects"><p>Error al cargar tus proyectos.</p></div>`;
