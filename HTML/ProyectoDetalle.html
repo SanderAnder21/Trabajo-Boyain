@@ -116,7 +116,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="comments-section" id="commentsSection">
             <h2>Comentarios y Opiniones</h2>
 
@@ -149,13 +149,15 @@
                         <span class="comment-author">Arq. Ana Smith</span>
                         <span class="comment-date">Hace 1 semana</span>
                     </div>
-                    <p class="comment-text">La documentación en PDF es muy detallada. Es un gran ejemplo de planificación
+                    <p class="comment-text">La documentación en PDF es muy detallada. Es un gran ejemplo de
+                        planificación
                         urbana y sostenibilidad aplicada.</p>
                 </div>
             </div>
         </div>
-        
-    </div> <div class="burbuja-flotante">
+
+    </div>
+    <div class="burbuja-flotante">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -219,12 +221,27 @@
         </div>
     </footer>
 
-    <script src="../JS/AdministrarCuentas.js"></script>
-    <script src="../JS/chatbot.js"></script>
-    <script src="../JS/scrollDown.js"></script> <script type="module"
-        src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+    <script type="module" src="../JS/controllers/ChatbotController.js"></script>
+    <script type="module" src="../JS/controllers/ScrollController.js"></script>
+    <script type="module" src="../JS/controllers/ProjectDetailController.js"></script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 
-    <script src="../JS/projectDetail.js"></script>
+    <!-- Inicialización del controller -->
+    <script type="module">
+        import { ProjectDetailController } from '../JS/controllers/ProjectDetailController.js';
+        import { AuthService } from '../JS/services/AuthService.js';
+        import { UIService } from '../JS/services/UIService.js';
+        import { DataService } from '../JS/services/DataService.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Inicializando ProjectDetailController...');
+            const authService = new AuthService();
+            const uiService = new UIService();
+            const dataService = new DataService();
+            const controller = new ProjectDetailController(authService, uiService, dataService);
+            await controller.init();
+        });
+    </script>
 </body>
 
 </html>

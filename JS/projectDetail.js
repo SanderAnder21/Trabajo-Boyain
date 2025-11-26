@@ -22,54 +22,6 @@ class ProjectDetail {
     async loadProject() {
         // Proyectos de prueba con diferentes tipos de archivos
         const projects = {
-            '1': {
-                id: 1,
-                title: "Casa Moderna con Imágenes",
-                architect: {
-                    id: 1,
-                    name: "María González",
-                    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-                    specialty: "Arquitectura Residencial",
-                    experience: "8 años",
-                    contact: "maria@arquitectura.com",
-                    bio: "Especializada en diseño residencial contemporáneo con enfoque en sostenibilidad y integración con el entorno natural."
-                },
-                description: "Proyecto residencial moderno con galería completa de imágenes del proceso constructivo y resultado final.",
-                fullDescription: `Este proyecto representa la perfecta armonía entre la arquitectura moderna y la naturaleza. Situado en un entorno privilegiado, la casa se integra con el paisaje mediante el uso de materiales locales y técnicas de construcción sostenible.
-
-## Características Principales:
-
-• **Diseño bioclimático** que optimiza el uso de energía natural
-• **Grandes ventanales** que aprovechan la luz natural y conectan interior-exterior
-• **Sistema de recolección** de agua pluvial para riego
-• **Materiales ecológicos**: madera certificada y piedra local
-• **Espacios fluidos** que promueven la circulación y visuales continuas
-
-## Proceso Constructivo:
-
-El proyecto fue desarrollado en 3 fases principales over 18 meses, manteniendo siempre el respeto por el entorno natural y utilizando técnicas de construcción de bajo impacto ambiental.`,
-                image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
-                images: [
-                    "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600607687644-c7171b42498b?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop",
-                    "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=800&h=600&fit=crop"
-                ],
-                pdfs: [],
-                model3d: { hasModel: false },
-                styles: ["moderno", "minimalista", "sostenible"],
-                technicalTags: ["Imágenes", "Proyecto Construido", "Fotografía Profesional"],
-                type: "residencial",
-                rating: 4.8,
-                views: 124,
-                date: "2024-01-15",
-                location: "Bosque de las Lomas, Ciudad de México",
-                area: "320 m²",
-                budget: "$450,000 USD",
-                duration: "18 meses",
-                fileType: "images"
-            },
             '2': {
                 id: 2,
                 title: "Planos de Edificio Corporativo",

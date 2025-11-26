@@ -241,7 +241,7 @@
         function filterArchitects() {
             // Obtener el término de búsqueda
             const searchTerm = document.getElementById('architectSearch').value.toLowerCase().trim();
-            
+
             console.log('🔍 Buscando:', searchTerm);
             console.log('📊 Total arquitectos:', allArchitects.length);
 
@@ -259,7 +259,7 @@
             });
 
             console.log('📋 Resultados encontrados:', filteredList.length);
-            
+
             // Volver a renderizar la cuadrícula con la lista filtrada
             renderArchitects(filteredList);
         }
@@ -274,7 +274,7 @@
 
         // Sobrescribir la función openTab para cargar arquitectos cuando sea necesario
         const originalOpenTab = openTab;
-        openTab = function(evt, tabName) {
+        openTab = function (evt, tabName) {
             originalOpenTab(evt, tabName);
             if (tabName === 'explore-architects') {
                 setTimeout(loadArchitectsOnTabSwitch, 100);
@@ -282,7 +282,7 @@
         };
 
         // Configurar los listeners cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Configurar el listener para la barra de búsqueda de arquitectos
             const architectSearchInput = document.getElementById('architectSearch');
             if (architectSearchInput) {
@@ -327,4 +327,5 @@
         });
     </script>
 </body>
+
 </html>

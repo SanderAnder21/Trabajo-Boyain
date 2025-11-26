@@ -113,21 +113,24 @@
         </div>
     </footer>
 
-    <script type="module" src="../JS/controllers/AdminPageController.js"></script>
+    <script type="module" src="../JS/controllers/ArchitectProfileController.js"></script>
     <script type="module" src="../JS/controllers/ChatbotController.js"></script>
     <script type="module" src="../JS/controllers/ScrollController.js"></script>
 
-    <script src="../JS/projects.js"></script>
-    <script src="../JS/architects.js"></script>
-    <script src="../JS/perfilArquitecto.js"></script>
-
-    <!-- Script para el dropdown del menú de usuario -->
+    <!-- Inicialización del controller -->
     <script type="module">
+        import { ArchitectProfileController } from '../JS/controllers/ArchitectProfileController.js';
+        import { AuthService } from '../JS/services/AuthService.js';
         import { UIService } from '../JS/services/UIService.js';
+        import { DataService } from '../JS/services/DataService.js';
 
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Inicializando ArchitectProfileController...');
+            const authService = new AuthService();
             const uiService = new UIService();
-            uiService.setupDropdown();
+            const dataService = new DataService();
+            const controller = new ArchitectProfileController(authService, uiService, dataService);
+            await controller.init();
         });
     </script>
 

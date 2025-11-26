@@ -9,7 +9,7 @@ import { Project } from '../models/Project.js';
  * Maneja la carga y renderizado del perfil público y sus proyectos.
  */
 export class ArchitectProfileController extends BasePage {
-    
+
     /**
      * @param {import('../services/AuthService').AuthService} authService 
      * @param {import('../services/UIService').UIService} uiService 
@@ -25,7 +25,7 @@ export class ArchitectProfileController extends BasePage {
     getArchitectIdFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
         // Retorna el ID del URL o el ID 1 como fallback si no hay ID (igual que el archivo original)
-        return urlParams.get('id') || 1; 
+        return urlParams.get('id') || 1;
     }
 
     init() {
@@ -37,17 +37,29 @@ export class ArchitectProfileController extends BasePage {
         try {
             // Simulación de obtener el perfil de un arquitecto
             // Se asume un método `getArchitectById` en DataService (que ahora mismo no existe)
-            
+
             // Simulación: Buscamos un arquitecto simulado de la lista de proyectos (o usaremos uno dummy)
             const allProjects = await this.dataService.getProjects();
-            const project = allProjects.find(p => p.architect.id === parseInt(this.architectId));
-            
-            const rawData = project ? project.architect : { id: this.architectId, nombre: 'Arquitecto Desconocido' };
-            
-            this.architect = Architect.fromData(rawData);
+            const architectProjects = allProjects.filter(p => p.usuario_id === parseInt(this.architectId));
 
+            if (architectProjects.length === 0) {
+                this.uiService.showAlert('No se encontraron proyectos para este arquitecto.', true);
+                return;
+            }
+
+            const firstProject = architectProjects[0];
+            const rawData = {
+                id: firstProject.usuario_id,
+                nombre: firstProject.arquitecto_nombre || 'Arquitecto Desconocido',
+                avatar: firstProject.arquitecto_avatar || '../IMG/default-avatar.jpg',
+                especialidad: firstProject.arquitecto_especialidad || '',
+                email: firstProject.arquitecto_email || '',
+                biografia: firstProject.arquitecto_biografia || ''
+            };
+
+            this.architect = Architect.fromData(rawData);
             this.renderArchitectInfo();
-            this.renderArchitectProjects(allProjects);
+            this.renderArchitectProjects(architectProjects);
 
         } catch (error) {
             console.error('Error cargando datos del arquitecto:', error);
@@ -56,27 +68,27 @@ export class ArchitectProfileController extends BasePage {
     }
 
     renderArchitectInfo() {
-        if (!this.architect) return; 
+        if (!this.architect) return;
 
-        document.title = `${this.architect.name} - PortArq`; 
+        document.title = `${this.architect.name} - PortArq`;
 
         document.getElementById('perfil-avatar').src = this.architect.avatar;
         document.getElementById('perfil-avatar').alt = this.architect.name;
         document.getElementById('perfil-nombre').textContent = this.architect.name;
         document.getElementById('perfil-especialidad').textContent = this.architect.specialty;
-        
+
         const emailElement = document.getElementById('perfil-email');
         if (emailElement) {
             emailElement.textContent = this.architect.contact;
             emailElement.href = `mailto:${this.architect.contact}`;
         }
-        
+
         document.getElementById('perfil-bio').textContent = this.architect.bio;
 
         // Renderizar redes sociales
         const redesContainer = document.getElementById('perfil-redes');
         if (redesContainer) {
-            redesContainer.innerHTML = ''; 
+            redesContainer.innerHTML = '';
             // Esto asume que el Architect Model incluye un objeto `social`
             const social = this.architect.social || {};
             if (social.linkedin) redesContainer.innerHTML += `<a href="${social.linkedin}" target="_blank">LinkedIn</a>`;
@@ -86,13 +98,12 @@ export class ArchitectProfileController extends BasePage {
     }
 
     renderArchitectProjects(allProjects) {
-        const grid = document.getElementById('proyectosArquitecto'); 
+        const grid = document.getElementById('proyectosArquitecto');
         if (!grid) return;
 
         // Filtramos solo los proyectos de este arquitecto
-        const architectProjects = allProjects.filter(project => 
-            project.architect.id === this.architect.id
-        );
+        // Ya recibimos solo los proyectos del arquitecto
+        const architectProjects = allProjects;
 
         if (architectProjects.length === 0) {
             grid.innerHTML = "<p>Este arquitecto aún no tiene proyectos publicados.</p>";
@@ -114,7 +125,7 @@ export class ArchitectProfileController extends BasePage {
                         <div class="project-meta">
                             <div class="project-rating">
                                 <span class="star">⭐</span>
-                                <span>${project.rating.toFixed(1)}</span>
+                                <span>${parseFloat(project.rating || 0).toFixed(1)}</span>
                             </div>
                             <span>${project.getFormattedDate()}</span>
                         </div>

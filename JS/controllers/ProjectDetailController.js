@@ -248,13 +248,16 @@ export class ProjectDetailController extends BasePage {
         const images = this.project.imagenes_galeria || [];
 
         if (images.length === 0) {
-            document.querySelector('.file-tab[data-tab="images"]')?.style.display = 'none';
+            const imagesTab = document.querySelector('.file-tab[data-tab="images"]');
+            if (imagesTab) imagesTab.style.display = 'none';
         }
         if (pdfFiles.length === 0) {
-            document.querySelector('.file-tab[data-tab="pdfs"]')?.style.display = 'none';
+            const pdfsTab = document.querySelector('.file-tab[data-tab="pdfs"]');
+            if (pdfsTab) pdfsTab.style.display = 'none';
         }
         if (modelFiles.length === 0) {
-            document.querySelector('.file-tab[data-tab="3d"]')?.style.display = 'none';
+            const modelTab = document.querySelector('.file-tab[data-tab="3d"]');
+            if (modelTab) modelTab.style.display = 'none';
         }
 
         const activeTab = document.querySelector('.files-tabs .file-tab.active');
