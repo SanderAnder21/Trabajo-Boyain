@@ -1,21 +1,6 @@
-// src/controllers/UserController.js
-
 import database from '../../database.js';
 
-/**
- * Controlador para operaciones de usuario.
- * Maneja la obtención y actualización de datos de perfil.
- * 
- * @class UserController
- */
 class UserController {
-    /**
-     * Obtiene el perfil del usuario autenticado.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async getProfile(req, res) {
         try {
             const user = await database.findUserById(req.user.id);
@@ -33,14 +18,6 @@ class UserController {
         }
     }
 
-    /**
-     * Actualiza los datos personales del usuario.
-     * Disponible para todos los usuarios (clientes y arquitectos).
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async updatePersonalData(req, res) {
         try {
             const { nombre, fechaNacimiento, bio } = req.body;
@@ -59,14 +36,6 @@ class UserController {
         }
     }
 
-    /**
-     * Actualiza los datos de contacto del arquitecto.
-     * Solo disponible para usuarios con rol de arquitecto.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async updateContactData(req, res) {
         try {
             const { telefono, estado, direccion } = req.body;

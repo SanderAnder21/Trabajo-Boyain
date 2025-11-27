@@ -2,7 +2,6 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Asegurar que los directorios existen
 const uploadDirs = {
     images: 'uploads/images',
     docs: 'uploads/docs',
@@ -16,7 +15,6 @@ Object.values(uploadDirs).forEach(dir => {
     }
 });
 
-// Configuración de almacenamiento
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         let uploadPath = 'uploads/';
@@ -41,7 +39,6 @@ const storage = multer.diskStorage({
     }
 });
 
-// Filtro de archivos
 const fileFilter = (req, file, cb) => {
     if (file.fieldname === 'avatar' || file.fieldname === 'imagen_principal' || file.fieldname === 'imagenes_galeria') {
         if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
@@ -62,5 +59,5 @@ const fileFilter = (req, file, cb) => {
 export const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
-    limits: { fileSize: 50 * 1024 * 1024 } // 50MB límite (para modelos 3D grandes)
+    limits: { fileSize: 50 * 1024 * 1024 }
 });

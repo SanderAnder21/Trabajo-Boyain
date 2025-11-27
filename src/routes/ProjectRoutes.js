@@ -3,29 +3,17 @@ import projectController from '../controllers/ProjectController.js';
 import authMiddleware from '../middlewares/AuthMiddleware.js';
 import { upload } from '../middlewares/uploadMiddleware.js';
 
-/**
- * Clase para gestionar las rutas de proyectos.
- * Implementa el patrón de diseño para rutas modulares.
- * 
- * @class ProjectRoutes
- */
 class ProjectRoutes {
     constructor() {
         this.router = express.Router();
         this.initializeRoutes();
     }
 
-    /**
-     * Inicializa todas las rutas de proyectos.
-     * @private
-     */
     initializeRoutes() {
-        // Rutas públicas
         this.router.get('/projects', projectController.getAllProjects.bind(projectController));
         this.router.get('/projects/:id', projectController.getProjectById.bind(projectController));
         this.router.get('/architects', projectController.getArchitects.bind(projectController));
 
-        // Rutas protegidas (requieren autenticación)
         this.router.post('/projects',
             authMiddleware.authenticateToken.bind(authMiddleware),
             upload.fields([
@@ -59,10 +47,6 @@ class ProjectRoutes {
         );
     }
 
-    /**
-     * Obtiene el router de Express.
-     * @returns {Router} Router de Express
-     */
     getRouter() {
         return this.router;
     }

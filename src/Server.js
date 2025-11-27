@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -15,12 +14,6 @@ import ratingRoutes from './routes/RatingRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-/**
- * Clase principal del servidor.
- * Encapsula la configuración y el inicio del servidor Express.
- * 
- * @class Server
- */
 class Server {
     constructor() {
         this.app = express();
@@ -31,47 +24,30 @@ class Server {
         this.initializeErrorHandling();
     }
 
-    /**
-     * Inicializa los middlewares globales de Express.
-     * @private
-     */
     initializeMiddlewares() {
-        // CORS
         this.app.use(cors({
             origin: config.getCorsOrigin()
         }));
 
-        // Body parsers
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
 
         console.log('✅ Middlewares inicializados');
     }
 
-    /**
-     * Registra todas las rutas de la aplicación.
-     * @private
-     */
     initializeRoutes() {
-        // Rutas de autenticación
         this.app.use('/api', authRoutes.getRouter());
 
-        // Rutas de usuario
         this.app.use('/api/user', userRoutes.getRouter());
 
-        // Rutas de chat
         this.app.use('/api', chatRoutes.getRouter());
 
-        // Rutas de proyectos
         this.app.use('/api', projectRoutes.getRouter());
 
-        // Rutas de favoritos
         this.app.use('/api', favoriteRoutes.getRouter());
 
-        // Rutas de calificaciones
         this.app.use('/api', ratingRoutes.getRouter());
 
-        // Ruta principal
         this.app.get('/', (req, res) => {
             res.sendFile(path.join(__dirname, '..', 'INDEX.html'));
         });
@@ -79,23 +55,13 @@ class Server {
         console.log('✅ Rutas registradas');
     }
 
-    /**
-     * Configura el servicio de archivos estáticos.
-     * @private
-     */
     initializeStaticFiles() {
-        // Servir archivos estáticos desde el directorio raíz
         this.app.use(express.static(path.join(__dirname, '..')));
 
         console.log('✅ Archivos estáticos configurados');
     }
 
-    /**
-     * Inicializa el manejo global de errores.
-     * @private
-     */
     initializeErrorHandling() {
-        // Middleware de manejo de errores 404
         this.app.use((req, res, next) => {
             res.status(404).json({
                 error: 'Ruta no encontrada',
@@ -103,7 +69,6 @@ class Server {
             });
         });
 
-        // Middleware de manejo de errores generales
         this.app.use((err, req, res, next) => {
             console.error('❌ Error no manejado:', err);
 
@@ -117,10 +82,6 @@ class Server {
         console.log('✅ Manejo de errores configurado');
     }
 
-    /**
-     * Inicializa la base de datos.
-     * @returns {Promise<void>}
-     */
     async initializeDatabase() {
         try {
             await database.connect();
@@ -132,24 +93,17 @@ class Server {
         }
     }
 
-    /**
-     * Inicia el servidor en el puerto configurado.
-     * @returns {Promise<void>}
-     */
     async start() {
         try {
-            // Validar configuración
             config.validate();
 
-            // Inicializar base de datos
             await this.initializeDatabase();
 
-            // Iniciar servidor
             this.app.listen(this.port, () => {
                 console.log('');
-                console.log('🚀 ========================================');
-                console.log(`✅ Servidor ejecutándose en http://localhost:${this.port}`);
-                console.log('🚀 ========================================');
+                console.log(' ========================================');
+                console.log(` Servidor ejecutándose en http://localhost:${this.port}`);
+                console.log(' ========================================');
                 console.log('');
             });
 
@@ -159,11 +113,6 @@ class Server {
         }
     }
 
-    /**
-     * Obtiene la instancia de la aplicación Express.
-     * Útil para testing.
-     * @returns {Express} Aplicación Express
-     */
     getApp() {
         return this.app;
     }

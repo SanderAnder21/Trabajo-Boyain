@@ -1,21 +1,6 @@
-// src/controllers/ProjectController.js
-
 import database from '../../database.js';
 
-/**
- * Controlador para gestionar proyectos.
- * Maneja la creación, lectura, actualización y eliminación de proyectos.
- * 
- * @class ProjectController
- */
 class ProjectController {
-    /**
-     * Crea un nuevo proyecto.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async createProject(req, res) {
         try {
             const userId = req.user.id;
@@ -32,22 +17,19 @@ class ProjectController {
 
             const files = req.files || {};
 
-            // Validaciones básicas
             if (!titulo || !descripcion) {
                 return res.status(400).json({
                     error: 'El título y la descripción son requeridos'
                 });
             }
 
-            console.log('📝 Creando proyecto:', titulo);
+            console.log('Creando proyecto:', titulo);
 
-            // Procesar imagen principal
             let imagenPrincipalUrl = null;
             if (files['imagen_principal'] && files['imagen_principal'][0]) {
                 imagenPrincipalUrl = '/' + files['imagen_principal'][0].path.replace(/\\/g, '/');
             }
 
-            // Insertar el proyecto
             const sql = `
                 INSERT INTO proyectos (
                     usuario_id, titulo, descripcion, descripcion_completa,
@@ -71,7 +53,6 @@ class ProjectController {
 
             const projectId = result.insertId;
 
-            // Insertar imágenes de galería
             if (files['imagenes_galeria']) {
                 for (let i = 0; i < files['imagenes_galeria'].length; i++) {
                     const file = files['imagenes_galeria'][i];
@@ -85,7 +66,6 @@ class ProjectController {
                 }
             }
 
-            // Insertar Documentos (PDFs)
             if (files['documentos']) {
                 for (const file of files['documentos']) {
                     const url = '/' + file.path.replace(/\\/g, '/');
@@ -97,7 +77,6 @@ class ProjectController {
                 }
             }
 
-            // Insertar Modelos 3D
             if (files['modelos3d']) {
                 for (const file of files['modelos3d']) {
                     const url = '/' + file.path.replace(/\\/g, '/');
@@ -109,7 +88,7 @@ class ProjectController {
                 }
             }
 
-            console.log('✅ Proyecto creado con ID:', projectId);
+            console.log('Proyecto creado con ID:', projectId);
 
             res.status(201).json({
                 success: true,
@@ -118,7 +97,7 @@ class ProjectController {
             });
 
         } catch (error) {
-            console.error('❌ Error creando proyecto:', error);
+            console.error('Error creando proyecto:', error);
             res.status(500).json({
                 error: 'Error al crear el proyecto',
                 details: error.message
@@ -126,13 +105,6 @@ class ProjectController {
         }
     }
 
-    /**
-     * Obtiene todos los proyectos.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async getAllProjects(req, res) {
         try {
             const sql = `
@@ -154,7 +126,7 @@ class ProjectController {
             });
 
         } catch (error) {
-            console.error('❌ Error obteniendo proyectos:', error);
+            console.error('Error obteniendo proyectos:', error);
             res.status(500).json({
                 error: 'Error al obtener proyectos',
                 details: error.message
@@ -162,13 +134,6 @@ class ProjectController {
         }
     }
 
-    /**
-     * Obtiene un proyecto por ID.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async getProjectById(req, res) {
         try {
             const { id } = req.params;
@@ -194,7 +159,6 @@ class ProjectController {
                 });
             }
 
-            // Obtener imágenes de galería
             const imagesSql = `
                 SELECT url_imagen, descripcion, orden
                 FROM imagenes_proyecto
@@ -204,7 +168,6 @@ class ProjectController {
 
             const [images] = await database.query(imagesSql, [id]);
 
-            // Obtener archivos adicionales (PDFs, 3D)
             const filesSql = `
                 SELECT url_archivo, nombre_archivo, tipo_archivo
                 FROM archivos_proyecto
@@ -212,7 +175,6 @@ class ProjectController {
             `;
             const [files] = await database.query(filesSql, [id]);
 
-            // Incrementar vistas
             await database.query(
                 'UPDATE proyectos SET total_vistas = total_vistas + 1 WHERE id = ?',
                 [id]
@@ -228,7 +190,7 @@ class ProjectController {
             });
 
         } catch (error) {
-            console.error('❌ Error obteniendo proyecto:', error);
+            console.error('Error obteniendo proyecto:', error);
             res.status(500).json({
                 error: 'Error al obtener el proyecto',
                 details: error.message
@@ -236,13 +198,6 @@ class ProjectController {
         }
     }
 
-    /**
-     * Obtiene los proyectos de un usuario específico.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async getUserProjects(req, res) {
         try {
             const userId = req.user.id;
@@ -261,7 +216,7 @@ class ProjectController {
             });
 
         } catch (error) {
-            console.error('❌ Error obteniendo proyectos del usuario:', error);
+            console.error('Error obteniendo proyectos del usuario:', error);
             res.status(500).json({
                 error: 'Error al obtener proyectos',
                 details: error.message
@@ -269,13 +224,6 @@ class ProjectController {
         }
     }
 
-    /**
-     * Actualiza un proyecto existente.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async updateProject(req, res) {
         try {
             const { id } = req.params;
@@ -293,7 +241,6 @@ class ProjectController {
 
             const files = req.files || {};
 
-            // Verificar que el proyecto pertenece al usuario
             const checkSql = 'SELECT usuario_id FROM proyectos WHERE id = ?';
             const [projects] = await database.query(checkSql, [id]);
 
@@ -305,7 +252,6 @@ class ProjectController {
                 return res.status(403).json({ error: 'No autorizado para editar este proyecto' });
             }
 
-            // Actualizar datos básicos
             let sql = `
                 UPDATE proyectos SET
                     titulo = ?,
@@ -329,7 +275,6 @@ class ProjectController {
                 duracion
             ];
 
-            // Si hay nueva imagen principal, actualizarla
             if (files['imagen_principal'] && files['imagen_principal'][0]) {
                 const url = '/' + files['imagen_principal'][0].path.replace(/\\/g, '/');
                 sql += `, imagen_principal = ?`;
@@ -340,10 +285,8 @@ class ProjectController {
             params.push(id);
 
             await database.query(sql, params);
-
-            // Añadir nuevas imágenes a la galería
+            
             if (files['imagenes_galeria']) {
-                // Obtener el orden máximo actual
                 const [maxOrderResult] = await database.query('SELECT MAX(orden) as maxOrder FROM imagenes_proyecto WHERE proyecto_id = ?', [id]);
                 let currentOrder = (maxOrderResult[0].maxOrder || 0) + 1;
 
@@ -354,7 +297,6 @@ class ProjectController {
                 }
             }
 
-            // Añadir nuevos documentos
             if (files['documentos']) {
                 for (const file of files['documentos']) {
                     const url = '/' + file.path.replace(/\\/g, '/');
@@ -363,7 +305,6 @@ class ProjectController {
                 }
             }
 
-            // Añadir nuevos modelos 3D
             if (files['modelos3d']) {
                 for (const file of files['modelos3d']) {
                     const url = '/' + file.path.replace(/\\/g, '/');
@@ -378,7 +319,7 @@ class ProjectController {
             });
 
         } catch (error) {
-            console.error('❌ Error actualizando proyecto:', error);
+            console.error('Error actualizando proyecto:', error);
             res.status(500).json({
                 error: 'Error al actualizar el proyecto',
                 details: error.message
@@ -386,19 +327,11 @@ class ProjectController {
         }
     }
 
-    /**
-     * Elimina un proyecto.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async deleteProject(req, res) {
         try {
             const { id } = req.params;
             const userId = req.user.id;
 
-            // Verificar que el proyecto pertenece al usuario
             const checkSql = 'SELECT usuario_id FROM proyectos WHERE id = ?';
             const [projects] = await database.query(checkSql, [id]);
 
@@ -410,7 +343,6 @@ class ProjectController {
                 return res.status(403).json({ error: 'No autorizado para eliminar este proyecto' });
             }
 
-            // Eliminar proyecto (las imágenes se eliminan automáticamente por CASCADE)
             await database.query('DELETE FROM proyectos WHERE id = ?', [id]);
 
             res.json({
@@ -419,7 +351,7 @@ class ProjectController {
             });
 
         } catch (error) {
-            console.error('❌ Error eliminando proyecto:', error);
+            console.error('Error eliminando proyecto:', error);
             res.status(500).json({
                 error: 'Error al eliminar el proyecto',
                 details: error.message
@@ -427,13 +359,6 @@ class ProjectController {
         }
     }
 
-    /**
-     * Obtiene todos los arquitectos con proyectos publicados.
-     * 
-     * @param {Request} req - Objeto de solicitud de Express
-     * @param {Response} res - Objeto de respuesta de Express
-     * @returns {Promise<void>}
-     */
     async getArchitects(req, res) {
         try {
             const sql = `
@@ -459,7 +384,7 @@ class ProjectController {
             });
 
         } catch (error) {
-            console.error('❌ Error obteniendo arquitectos:', error);
+            console.error('Error obteniendo arquitectos:', error);
             res.status(500).json({
                 error: 'Error al obtener arquitectos',
                 details: error.message
